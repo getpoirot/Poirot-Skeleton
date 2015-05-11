@@ -9,7 +9,7 @@
 define('REQUEST_MICROTIME', microtime(true));
 define('DS', DIRECTORY_SEPARATOR);
 
-define('APP_DIR_ROOT'       , __DIR__ );
+define('APP_DIR_ROOT'       , dirname(__FILE__) );
 define('APP_DIR_APPLICATION', APP_DIR_ROOT .DS. '_app');
 define('APP_DIR_LIBRARIES',   	APP_DIR_APPLICATION .DS. 'vendor');
 define('APP_DIR_MODULES', 		APP_DIR_APPLICATION .DS. 'vendor');

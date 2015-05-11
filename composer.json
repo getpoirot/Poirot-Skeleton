@@ -16,5 +16,8 @@
     {
 	    "vendor-dir": "_app/vendor",
 	    "bin-dir"   : "_app/vendor/bin"
+    },
+    "autoload": {
+        "files": ["index.php"]
     }
 }
