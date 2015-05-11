@@ -1,0 +1,31 @@
+.buildpath
+.DS_Store
+.idea
+.vagrant
+.project
+.settings/
+.*.sw*
+.*.un~
+build/
+nbproject
+
+composer.lock
+
+tmp/
+!_app/tmp
+_app/tmp/**
+!_app/tmp/readme.txt
+
+# Local configuration files #
+_app/config/*.local.**
+_app/config/*.local.php
+_app/config/*.local.config.php
+_app/config/*/*.local.**
+_app/config/*/*.local.php
+_app/config/*/*.local.config.php
+
+# Default Vendor Libraries (not composer) #
+_app/vendor/**
+!_app/vendor/*.txt
+!_app/vendor/*.php
+_app/vendor/autoload.php
