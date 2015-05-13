@@ -19,5 +19,10 @@
     },
     "autoload": {
         "files": ["index.php"]
+    },
+    "require": {
+        "poirot/core": "dev-master",
+        "poirot/container": "dev-master",
+        "poirot/events": "dev-master"
     }
 }
