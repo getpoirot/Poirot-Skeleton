@@ -21,6 +21,6 @@ namespace
 
     }
     catch (Exception $e) {
-        // Exception Handling
+        throw $e;
     }
 }
