@@ -22,6 +22,7 @@
     },
     "require": {
         "poirot/core": "dev-master",
-        "poirot/application": "dev-master"
+        "poirot/application": "dev-master",
+        "poirot/http": "dev-master"
     }
 }
