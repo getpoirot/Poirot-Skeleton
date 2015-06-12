@@ -22,7 +22,6 @@
     },
     "require": {
         "poirot/core": "dev-master",
-        "poirot/container": "dev-master",
-        "poirot/events": "dev-master"
+        "poirot/application": "dev-master"
     }
 }

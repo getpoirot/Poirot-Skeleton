@@ -2,7 +2,7 @@
 namespace
 {
     (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 ) and
-    exit('Needs at least PHP5.3; youre current php version is ' . phpversion() . '.');
+    exit('Needs at least PHP5.3; your current php version is ' . phpversion() . '.');
 
     /*
      * Application Consistencies and AutoLoad
@@ -12,14 +12,13 @@ namespace
         and die('put index.consist file beside '.basename(__FILE__));
 
     /*
-     * This makes our life easier when dealing with paths. Everything is relative
-     * to the application root now.
+     * change cwd to the application root by default
      */
     chdir(__DIR__);
 
     // Run the application!
     try {
-        
+
     }
     catch (Exception $e) {
         throw $e;
