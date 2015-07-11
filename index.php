@@ -8,8 +8,6 @@ namespace
      * Application Consistencies and AutoLoad
      */
     require 'index.consist.php';
-    (APP_DIR_WWW !== dirname(__FILE__))
-        and die('put index.consist file beside '.basename(__FILE__));
 
     /*
      * change cwd to the application root by default
