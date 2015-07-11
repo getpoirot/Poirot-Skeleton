@@ -1,5 +1,5 @@
 {
-    "name": "poirot/application",
+    "name": "poirot/skeleton",
     "description": "Poirot Skeleton Application.",
     "keywords": [
         "application framework",
@@ -23,6 +23,9 @@
     "require": {
         "poirot/core": "dev-master",
         "poirot/application": "dev-master",
-        "poirot/http": "dev-master"
+            "poirot/events": "dev-master",
+        "poirot/http": "dev-master",
+            "poirot/pathuri": "dev-master",
+            "poirot/container": "dev-master"
     }
 }
