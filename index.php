@@ -17,7 +17,7 @@ namespace
     chdir(__DIR__);
 
     // Run the application!
-    $app = new Sapi();
+    $app = new Sapi(APP_DIR_CONFIG.'application.config.php');
     try {
         $app->run();
 
