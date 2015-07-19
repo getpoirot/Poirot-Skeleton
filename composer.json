@@ -27,5 +27,9 @@
         "poirot/http": "dev-master",
             "poirot/pathuri": "dev-master",
             "poirot/container": "dev-master"
+    },
+    "require-dev":
+    {
+        "oodle/krumo": "*"
     }
 }
