@@ -6,11 +6,17 @@
  */
 return [
     'modules' =>
-        # module options
+        /**
+         * container builder options
+         * @see Poirot\Application\ModuleManager\ModuleManagerOpts
+         */
         [
             'enabled' => [
-                'application',
-                'analytics',
+                'Application',
+            ],
+            'dir_map' => [
+                # directory that application module folder exists
+                'Application' => APP_DIR_APPLICATION.'/modules'
             ],
         ],
 
