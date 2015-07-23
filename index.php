@@ -1,24 +1,21 @@
 <?php
 namespace
 {
-    use Poirot\Application\Sapi;
+    use Poirot\Application\Sapi as PoirotApplication;
 
     (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 ) and
     exit('Needs at least PHP5.3; your current php version is ' . phpversion() . '.');
 
-    /*
-     * Application Consistencies and AutoLoad
-     */
+    // Application Consistencies and AutoLoad:
+    #  as separated file to used from 3rd party applications
     require_once 'index.consist.php';
 
-    /*
-     * change cwd to the application root by default
-     */
+     # change cwd to the application root by default
     chdir(__DIR__);
 
-    // Run the application!
+    // Run the application:
     $conf = include_once APP_DIR_CONFIG.'/application.config.php';
-    $app  = new Sapi($conf);
+    $app  = new PoirotApplication($conf);
     try {
         $app->run();
 
