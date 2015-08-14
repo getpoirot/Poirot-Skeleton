@@ -4,10 +4,13 @@
  *
  * - pass to Application as SetterBuilder
  *   @see \Poirot\Application\Sapi::__construct
- *
  */
 return [
     'modules' =>
+        /**
+         * this list used by Module Manager To Load Modules
+         * @see \Poirot\Application\ModuleManager\AbstractModuleManager::loadModule
+         */
         [
             // Enabled Application Module(s)
             'Application',
@@ -16,6 +19,7 @@ return [
             ## 'Application' => new Module()
 
             # instance module loading with module manager options
+            #                   module manager option .....................
             # 'Application' => ['dir_map' => APP_DIR_APPLICATION.'/modules'],
         ],
     'module_manager' =>
