@@ -4,7 +4,7 @@
  *
  * - pass to Application as SetterBuilder
  *   @see \Poirot\Application\Sapi::__construct
- * 
+ *
  */
 return [
     'modules' =>
@@ -29,7 +29,6 @@ return [
                 'dir_map' => [
                     # directory that application module folder exists
                     'Application' => APP_DIR_APPLICATION.'/modules',
-                    'NewModule'   => APP_DIR_APPLICATION.'/modules',
                 ],
             ],
         ],
