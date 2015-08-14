@@ -15,9 +15,16 @@ namespace
     chdir(__DIR__);
 
     // Run the application:
-    $conf = include_once APP_DIR_CONFIG.'/application.config.php';
-    $app  = new PoirotApplication($conf);
     try {
+        # merge application config with local one:
+        $conf  = include_once APP_DIR_CONFIG.'/application.config.php';
+        $local = APP_DIR_CONFIG.'/application.local.config.php';
+        (!file_exists($local)) ?: (
+            ($local = include_once $local) ? $conf = \Poirot\Core\array_merge($conf, $local) : null
+        );
+
+        # start application:
+        $app  = new PoirotApplication($conf);
         $app->run();
 
     } catch (Exception $e) {
