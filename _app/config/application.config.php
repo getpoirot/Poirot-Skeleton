@@ -6,6 +6,10 @@
  *   @see \Poirot\Application\Sapi::__construct
  */
 return [
+    /**
+     * @see \Poirot\Application\Sapi\SBuilderConfig::build
+     */
+
     'modules' =>
         /**
          * this list used by Module Manager To Load Modules
@@ -24,11 +28,12 @@ return [
         ],
     'module_manager' =>
         /**
-         * container builder options
-         * @see Poirot\Application\Sapi\ModuleManagerOpts
+         * build module manager:
+         * @see \Poirot\Application\Sapi\SBuilderConfig::build
          */
         [
             'options' => [
+                /** @see Poirot\Application\Sapi\ModuleManagerOpts */
                 # options setter
                 'dir_map' => [
                     # directory that application module folder exists
@@ -36,8 +41,6 @@ return [
                 ],
             ],
         ],
-
-    // set default container service
     'container' =>
         /**
          * container builder options
