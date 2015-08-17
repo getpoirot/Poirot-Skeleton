@@ -32,12 +32,17 @@ return [
          * @see \Poirot\Application\Sapi\SBuilderConfig::build
          */
         [
+            # options setter
             'options' => [
                 /** @see Poirot\Application\Sapi\ModuleManagerOpts */
-                # options setter
                 'dir_map' => [
                     # directory that application module folder exists
-                    'Application' => APP_DIR_APPLICATION.'/modules',
+                    # 'myModule' => APP_DIR_APPLICATION.'/modules',
+                ],
+
+                'modules_dir' => [
+                    # default modules directory
+                    APP_DIR_APPLICATION.'/modules',
                 ],
             ],
         ],
