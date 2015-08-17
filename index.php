@@ -16,15 +16,23 @@ namespace
 
     // Run the application:
     try {
-        # merge application config with local one:
-        $conf  = include_once APP_DIR_CONFIG.'/application.config.php';
-        $local = APP_DIR_CONFIG.'/application.local.config.php';
-        (!file_exists($local)) ?: (
-            ($local = include_once $local) ? $conf = \Poirot\Core\array_merge($conf, $local) : null
-        );
+        # merge application config:
+        $config = [];
+        $conFiles = APP_DIR_CONFIG .DS. '*.{,local.}config.php';
+
+        ob_start();
+        set_error_handler(function($errno, $errstr) {
+            throw new \ErrorException($errstr, $errno);
+        }, E_ALL);
+        foreach (glob($conFiles, GLOB_BRACE) as $file) {
+            $hostConf = include $file;
+            $config = \Poirot\Core\array_merge($config, $hostConf);
+        }
+        restore_error_handler();
+        ob_get_clean();
 
         # start application:
-        $app  = new PoirotApplication($conf);
+        $app  = new PoirotApplication($config);
         $app->run();
 
     } catch (Exception $e) {
