@@ -9,7 +9,7 @@ namespace
 
     // Application Consistencies and AutoLoad:
     #  as separated file to used from 3rd party applications
-    require_once 'index.consist.php';
+    require_once __DIR__.'/index.consist.php';
 
     # change cwd to the application root by default
     chdir(__DIR__);
@@ -18,7 +18,7 @@ namespace
     try {
         # merge application config:
         $config = [];
-        $conFiles = APP_DIR_CONFIG .DS. '*.{,local.}config.php';
+        $conFiles = APP_DIR_CONFIG .DS. '*.{,local.}conf.php';
 
         ob_start();
         set_error_handler(function($errno, $errstr) {

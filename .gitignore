@@ -19,10 +19,10 @@ _app/tmp/**
 # Local configuration files #
 _app/config/*.local.**
 _app/config/*.local.php
-_app/config/*.local.config.php
+_app/config/*.local.conf.php
 _app/config/*/*.local.**
 _app/config/*/*.local.php
-_app/config/*/*.local.config.php
+_app/config/*/*.local.conf.php
 
 # Default Vendor Libraries (not composer) #
 _app/vendor/**

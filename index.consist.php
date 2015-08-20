@@ -5,6 +5,7 @@
  *
  */
 
+
 // Define Consts:
 define('REQUEST_MICROTIME', microtime(true));
 define('DS', DIRECTORY_SEPARATOR);
@@ -22,3 +23,5 @@ define('APP_DIR_TEMP', 			    APP_DIR_APPLICATION .DS. 'tmp');
 // Setup autoLoading:
 if (file_exists(APP_DIR_VENDOR .DS. 'autoload.php'))
     require_once APP_DIR_VENDOR .DS. 'autoload.php';
+
+## (!) Don't add something on below lines
