@@ -1,7 +1,6 @@
 <?php
 namespace
 {
-    # hope one day can use internal php server
     use Poirot\Application\Sapi as PoirotApplication;
 
     (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 ) and
