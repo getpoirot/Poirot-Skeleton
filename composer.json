@@ -26,6 +26,7 @@
             "poirot/events": "dev-master",
         "poirot/http": "dev-master",
             "poirot/pathuri": "dev-master",
+            "poirot/stream": "dev-master",
             "poirot/container": "dev-master"
     },
     "require-dev":
