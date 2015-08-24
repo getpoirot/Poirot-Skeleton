@@ -53,6 +53,10 @@ return [
          */
 
         [
-
+            'services' => [
+                ## sapi server application
+                /** @see \Poirot\Application\Sapi\Server\SapiContainerService */
+                'Poirot\Application\Sapi\Server\SapiContainerService',
+            ],
         ],
 ];
