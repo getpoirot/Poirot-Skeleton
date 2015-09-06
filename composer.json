@@ -19,13 +19,10 @@
     }
     , "autoload": {
         "files": ["index.php"]
-        , "psr-0": {
-            "Poirot\\ArgsResolver": "/poirot/args-resolver"
-        }
     }
     , "require": {
         "poirot/core": "dev-master"
-            , "poirot/autoloader": "dev-master"
+            , "poirot/loader": "dev-master"
         , "poirot/application": "dev-master"
             , "poirot/router": "dev-master"
             , "poirot/events": "dev-master"
@@ -34,6 +31,7 @@
                 , "poirot/pathuri": "dev-master"
                 , "poirot/stream": "dev-master"
             , "poirot/container": "dev-master"
+            , "poirot/view": "dev-master"
     }
     , "require-dev":
     {
