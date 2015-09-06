@@ -30,6 +30,7 @@
             , "poirot/action-responder": "dev-master"
                 , "poirot/pathuri": "dev-master"
                 , "poirot/stream": "dev-master"
+                , "poirot/args-resolver": "dev-master"
             , "poirot/container": "dev-master"
             , "poirot/view": "dev-master"
     }
