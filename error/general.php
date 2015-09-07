@@ -1,5 +1,6 @@
 <?php
 /**
+ * @var $this      \Poirot\View\Interpreter\IsoRenderer
  * @var $exception \Exception
  */
 ?>

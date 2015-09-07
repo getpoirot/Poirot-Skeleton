@@ -2,7 +2,7 @@
 namespace
 {
     use Poirot\Application\Sapi as PoirotApplication;
-    use Poirot\View\PermutationViewModel;
+    use Poirot\View\Interpreter\IsoRenderer;
 
     (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 ) and
     exit('Needs at least PHP5.3; your current php version is ' . phpversion() . '.');
@@ -37,14 +37,13 @@ namespace
 
     } catch (Exception $e) {
         try {
-            $view = new PermutationViewModel([
-                'variables' => ['exception' => $e],
-                'template'  => __DIR__.'/error/general.php',
-            ]);
-            echo $view->render();
+            echo (new IsoRenderer())->capture(
+                __DIR__.'/error/general.php'
+                , ['exception' => $e]
+            );
         } catch(\Exception $ve) {
             ## throw exception if can't render template
-            throw $e;
+            throw $ve;
         }
     }
 
