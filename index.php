@@ -1,6 +1,7 @@
 <?php
 namespace
 {
+    use Poirot\Application\Config;
     use Poirot\Application\Sapi as PoirotApplication;
     use Poirot\View\Interpreter\IsoRenderer;
 
@@ -16,34 +17,19 @@ namespace
 
     // Run the application:
     try {
-        # merge application config:
-        $config = [];
-        $conFiles = APP_DIR_CONFIG .DS. '*.{,local.}conf.php';
-
-        ob_start();
-        set_error_handler(function($errno, $errstr) {
-            throw new \ErrorException($errstr, $errno);
-        }, E_ALL);
-        foreach (glob($conFiles, GLOB_BRACE) as $file) {
-            $hostConf = include $file;
-            $config = \Poirot\Core\array_merge($config, $hostConf);
-        }
-        restore_error_handler();
-        ob_get_clean();
-
         # start application:
-        $app  = new PoirotApplication($config);
+        $app  = new PoirotApplication(new Config(APP_DIR_CONFIG));
         $app->run();
-
+    ## beauty exception messages
     } catch (Exception $e) {
         try {
             echo (new IsoRenderer())->capture(
-                __DIR__.'/error/general.php'
+                APP_DIR_THEME_DEFAULT.'/error/general.php'
                 , ['exception' => $e]
             );
         } catch(\Exception $ve) {
             ## throw exception if can't render template
-            throw $ve;
+            throw $e;
         }
     }
 

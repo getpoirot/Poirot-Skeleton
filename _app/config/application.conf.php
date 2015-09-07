@@ -4,6 +4,8 @@
  *
  * - pass to Application as SetterBuilder
  *   @see \Poirot\Application\Sapi::__construct
+ *
+ * - merged config will set as service with (config) name
  */
 return [
     /**
@@ -55,8 +57,8 @@ return [
         [
             'services' => [
                 ## sapi server application
-                /** @see \Poirot\Application\Sapi\Server\SapiContainerService */
-                'Poirot\Application\Sapi\Server\SapiContainerService',
+                /** @see \Poirot\Application\Sapi\Server\SapiServerService */
+                'Poirot\Application\Sapi\Server\SapiServerService',
             ],
         ],
 ];
