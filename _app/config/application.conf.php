@@ -1,6 +1,6 @@
 <?php
 /**
- * Default Application Options
+ * Default Sapi Application Options
  *
  * - pass to Application as SetterBuilder
  *   @see \Poirot\Application\Sapi::__construct
@@ -9,7 +9,7 @@
  */
 return [
     /**
-     * @see \Poirot\Application\Sapi\SBuilderConfig::build
+     * @see \Poirot\Application\Sapi\SapiAppBuilder::build
      */
 
     'modules' =>
@@ -55,7 +55,7 @@ return [
          */
 
         [
-            'services' => [
+            'services'   => [
                 ## sapi server application
                 /** @see \Poirot\Application\Sapi\Server\SapiServerService */
                 'Poirot\Application\Sapi\Server\SapiServerService',
