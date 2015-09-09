@@ -13,15 +13,14 @@ return [
      */
 
         [
-            'interfaces' => [
-                'Request'  => 'Poirot\Http\Interfaces\Message\iHttpRequest',
-                'Response' => 'Poirot\Http\Interfaces\Message\iHttpResponse',
-                'Router'   => 'Poirot\Router\Interfaces\Http\iHChainingRouter',
-            ],
             'services'   => [
-                #'Request'  => '..',
-                #'Response' => '..',
-                #'Router'   => '..',
+                'HttpSapi.ServiceBuilder' => [
+                    ## default http sapi services as builder
+                    /** @see \Poirot\Application\Sapi\Server\Http\Service\DefaultServicesAsBuilder */
+
+                    '_class_' => 'InstanceService',
+                    'service' => 'Poirot\Application\Sapi\Server\Http\Service\DefaultServicesAsBuilder',
+                ]
             ],
         ],
 ];
