@@ -24,6 +24,10 @@ _app/config/*/*.local.**
 _app/config/*/*.local.php
 _app/config/*/*.local.conf.php
 
+# modules
+_app/modules/*
+!_app/modules/Application
+
 # Default Vendor Libraries (not composer) #
 _app/vendor/**
 !_app/vendor/*.txt
