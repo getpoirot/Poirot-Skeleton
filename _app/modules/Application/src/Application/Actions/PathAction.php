@@ -93,6 +93,9 @@ class PathAction extends AbstractAResponder
      * - assembleUri($uri);                          # using default class variables
      * - assembleUri($uri, ['variable' => 'value']); # replace default class variables
      *
+     * - variable can be a valid callable
+     *   ['variable' => function() { return 'fetched-value'; }]
+     *
      * @param string $uri  Uri or Registered Path
      * @param array  $vars
      *
@@ -108,7 +111,7 @@ class PathAction extends AbstractAResponder
          * $matches[0] retrun array of full variables matched, exp. $path
          * $matches[1] retrun array of variables name matched, exp. path
          */
-        preg_match_all('/\:(\w[\w\d]*)/', $uri, $matches);
+        preg_match_all('/\$(\w[\w\d]*)/', $uri, $matches);
 
         if (count($matches[0]) === 0)
             // we don't have any variable in uri
@@ -124,7 +127,11 @@ class PathAction extends AbstractAResponder
                     'Value of variable (%s) is not defined.', $var
                 ));
 
-            $vars[$i] = $vars[$var];
+            $currValue = $vars[$var];
+            if ($currValue instanceof \Closure)
+                $currValue = $currValue();
+
+            $vars[$i]  = $currValue;
             unset($vars[$var]);
         }
 
