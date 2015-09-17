@@ -88,9 +88,12 @@ class Module implements iSapiModule
      * resolveToServices(iHRouter $router = null, $sapi = null, $other = null)
      * [/code]
      *
+     * @param Container   $services
+     * @param RChainStack $router
+     *
      * @return void
      */
-    function resolveToServices($router = null)
+    function resolveToServices($services = null, $router = null)
     {
         $this->__withHttpRouter($router);
     }
