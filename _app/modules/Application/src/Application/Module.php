@@ -109,7 +109,8 @@ class Module implements iSapiModule
     {
         $router->addRoutes([
             'home'  => [
-                'route'   => 'segment',
+                'route'    => 'segment',
+                # 'override' => true, ## default is true
                 'options' => [
                     'criteria'    => '/',
                     'exact_match' => true,
