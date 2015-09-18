@@ -34,8 +34,4 @@
             , "poirot/container": "dev-master"
             , "poirot/view": "dev-master"
     }
-    , "require-dev":
-    {
-        "oodle/krumo": "*"
-    }
 }
