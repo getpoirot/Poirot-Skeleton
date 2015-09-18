@@ -23,4 +23,7 @@ define('APP_DIR_TEMP', 			     APP_DIR_APPLICATION.'/tmp');
 if (file_exists(APP_DIR_VENDOR.'/autoload.php'))
     require_once APP_DIR_VENDOR.'/autoload.php';
 
+if (file_exists(APP_DIR_VENDOR.'/poirot-autoload.php'))
+    require_once APP_DIR_VENDOR.'/poirot-autoload.php';
+
 ## (!) Don't add something on lines below
