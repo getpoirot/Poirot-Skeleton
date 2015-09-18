@@ -34,6 +34,21 @@ class Module implements iSapiModule
     }
 
     /**
+     * Register class autoload on Autoload
+     *
+     * priority: 999
+     *
+     * @param AggregateAutoloader $autoloader
+     *
+     * @return void
+     */
+    function withAutoload(AggregateAutoloader $autoloader)
+    {
+        $autoloader->loader('Poirot\Loader\Autoloader\NamespaceAutoloader')
+            ->setStack(__NAMESPACE__, __DIR__);
+    }
+
+    /**
      * Build Service Container
      *
      * - register services
@@ -48,21 +63,6 @@ class Module implements iSapiModule
     function withServiceContainer(Container $services)
     {
         $services->extend('path', '\application.actions\path');
-    }
-
-    /**
-     * Register class autoload on Autoload
-     *
-     * priority: 999
-     *
-     * @param AggregateAutoloader $autoloader
-     *
-     * @return void
-     */
-    function withAutoload(AggregateAutoloader $autoloader)
-    {
-        $autoloader->loader('Poirot\Loader\Autoloader\NamespaceAutoloader')
-            ->setStack(__NAMESPACE__, __DIR__);
     }
 
     /**
