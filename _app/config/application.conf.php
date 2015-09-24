@@ -55,12 +55,6 @@ return [
          */
 
         [
-            'interfaces' => [
-                ### program into interface
-                'sapi.server' => '\Poirot\Application\Interfaces\Sapi\iSapiServer',
-                ## application config
-                'sapi.config' => '\Poirot\Core\Interfaces\iPoirotEntity',
-            ],
             'services'   => [
                 ## sapi server application
                 /** @see \Poirot\Application\Sapi\Server\SapiServerService */
