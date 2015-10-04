@@ -24,7 +24,7 @@ class PathAction extends AbstractAResponder
      * @inheritdoc
      *
      * - path('path-name')
-     * - path(':user/path/uri')
+     * - path('$user/path/uri')
      *
      * - path($uriOrName, ['var' => 'value'])
      * @see PathAction::_assemble
@@ -228,6 +228,15 @@ class PathAction extends AbstractAResponder
         return isset($this->paths[$n]);
     }
 
+    /**
+     * Get All Registered Paths
+     *
+     * @return array
+     */
+    function getPaths()
+    {
+        return $this->paths;
+    }
 
     // ...
 

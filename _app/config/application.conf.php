@@ -7,6 +7,7 @@
  *
  * - merged config will set as service with (config) name
  */
+
 return [
     /**
      * @see \Poirot\Application\Sapi\SapiAppBuilder::build
@@ -31,12 +32,12 @@ return [
     'module_manager' =>
         /**
          * build module manager:
-         * @see \Poirot\Application\Sapi\SBuilderConfig::build
+         * @see \Poirot\Application\Sapi\SapiAppBuilder::build
          */
         [
             # options setter
             'options' => [
-                /** @see Poirot\Application\Sapi\ModuleManagerOpts */
+                /** @see Poirot\Application\Sapi\SapiModuleManagerOpts */
                 'dir_map' => [
                     # directory that application module folder exists
                     # 'myModule' => APP_DIR_APPLICATION.'/modules',
@@ -62,10 +63,22 @@ return [
          */
 
         [
+            'interfaces' => [
+                ### program into interface
+                'sapi.server' => '\Poirot\Application\Interfaces\Sapi\iSapiServer',
+                ## application config
+                'sapi.config' => '\Poirot\Core\Interfaces\iPoirotEntity',
+            ],
             'services'   => [
                 ## sapi server application
                 /** @see \Poirot\Application\Sapi\Server\SapiServerService */
                 'Poirot\Application\Sapi\Server\SapiServerService',
+
+                'sapi.config' => [
+                    '_class_'  => 'InstanceService',
+                    'service'  => 'Poirot\Application\Config',
+                    'allow_override' => false,
+                ],
             ],
         ],
 ];
