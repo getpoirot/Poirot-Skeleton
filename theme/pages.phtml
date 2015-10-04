@@ -1,0 +1,16 @@
+<?php
+/** @var \Poirot\View\Interpreter\IsoRenderer $this */
+?>
+
+<html>
+
+    <?php echo $this->capture('inc.header.phtml') ?>
+
+    <body>
+
+        <?php echo $this->capture('inc.decorate-content.phtml') ?>
+
+        <?php echo $this->capture('inc.footer.phtml') ?>
+    </body>
+
+</html>
