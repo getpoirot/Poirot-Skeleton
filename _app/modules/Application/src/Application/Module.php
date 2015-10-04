@@ -44,7 +44,7 @@ class Module implements iSapiModule
      */
     function withAutoload(AggregateAutoloader $autoloader)
     {
-        $autoloader->loader('Poirot\Loader\Autoloader\NamespaceAutoloader')
+        $autoloader->loader('NamespaceAutoloader')
             ->setStack(__NAMESPACE__, __DIR__);
     }
 

@@ -1,5 +1,5 @@
 <?php
-namespace Application\Actions;
+namespace Application\Actions\Helper;
 
 use Poirot\AaResponder\AbstractAResponder;
 

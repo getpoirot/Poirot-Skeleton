@@ -1,5 +1,5 @@
 <?php
-namespace Application\Actions;
+namespace Application\Actions\Helper;
 
 use Poirot\Container\Service\AbstractService;
 use Poirot\Http\Interfaces\Message\iHttpRequest;

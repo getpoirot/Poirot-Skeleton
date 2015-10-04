@@ -47,6 +47,13 @@ return [
                     APP_DIR_APPLICATION.'/modules',
                 ],
             ],
+            'events' => [
+                /** @see Poirot\Events\EventBuilder */
+                #'listeners' => [
+                   // ...
+                #],
+                #'then' => []// ...,
+            ],
         ],
     'container' =>
         /**

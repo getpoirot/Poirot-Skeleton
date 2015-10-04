@@ -12,9 +12,9 @@ class ApplicationActionsBuilder extends ContainerBuilder
 
     protected $services =
         [
-            'url'  => 'Application\Actions\UrlService',
-            'path' => 'Application\Actions\PathService',
-
+            ## Helpers
+            'url'  => 'Application\Actions\Helper\UrlService',
+            'path' => 'Application\Actions\Helper\PathService',
         ];
 }
  

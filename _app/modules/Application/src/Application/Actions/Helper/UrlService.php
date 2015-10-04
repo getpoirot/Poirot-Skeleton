@@ -1,7 +1,6 @@
 <?php
-namespace Application\Actions;
+namespace Application\Actions\Helper;
 
-use Poirot\Application\Sapi\Event\ApplicationEvents;
 use Poirot\Container\Service\AbstractService;
 
 class UrlService extends AbstractService
@@ -21,9 +20,8 @@ class UrlService extends AbstractService
         $rootSrv = $this->services()->from('/');
 
         $router  = $rootSrv->get('router');
-        /** @var ApplicationEvents $events */
-        $events  = $rootSrv->get('sapi.events');
-        $matched = $events->getMatchedRoute();
+        /** @see onRouteMatchListener */
+        $matched = $rootSrv->get('route.match');
 
         $rAction = (new UrlAction)
             ->setRouter($router)
