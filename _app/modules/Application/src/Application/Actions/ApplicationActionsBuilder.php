@@ -15,6 +15,8 @@ class ApplicationActionsBuilder extends ContainerBuilder
             ## Helpers
             'url'  => 'Application\Actions\Helper\UrlService',
             'path' => 'Application\Actions\Helper\PathService',
+
+            'HomeInfo' => 'Application\Actions\HomeInfo',
         ];
 }
  

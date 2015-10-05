@@ -126,7 +126,7 @@ class Module implements iSapiModule
                     'exact_match' => true,
                 ],
                 'params'  => [
-                    # '_then_' => '/module/application.action/xxxx',
+                    '_then_' => '/module/application.action/HomeInfo',
                 ],
             ],
         ]);
