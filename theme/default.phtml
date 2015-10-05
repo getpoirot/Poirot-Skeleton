@@ -45,68 +45,9 @@
 </header><!--/header-->
 
 <?php echo $content; ?>
-
-<footer id="footer" class="midnight-blue">
-    <div class="container">
-        <div class="row">
-            <div class="col-sm-6">
-                &copy; 2013 <a target="_blank" href="http://shapebootstrap.net/" title="Free Twitter Bootstrap WordPress Themes and HTML templates">ShapeBootstrap</a>. All Rights Reserved.
-            </div>
-            <div class="col-sm-6">
-                <ul class="pull-right">
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Faq</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a id="gototop" class="gototop" href="#"><i class="icon-chevron-up"></i></a></li><!--#gototop-->
-                </ul>
-            </div>
-        </div>
-    </div>
-</footer><!--/#footer-->
-
-<script src="<?php echo $this->path('app-assets') ?>/js/jquery.js"></script>
-<script src="<?php echo $this->path() ?>/js/bootstrap.min.js"></script>
-<script src="<?php echo $this->path() ?>/js/jquery.prettyPhoto.js"></script>
-<script src="<?php echo $this->path() ?>/js/main.js"></script>
-</body>
-</html>
-
-
-
-<?php return ; ?>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<html>
-
-
-
-<body>
-<a href="<?php echo $this->action()->url('site/pages/page', ['request_page'=>'about'])?>">About</a>
-<a href="<?php echo $this->action()->url('site/pages/page', ['request_page'=>'contact'])?>">Contact</a>
-<a href="<?php echo $this->action()->url('site/auth')?>">Register</a>
-<hr/>
-
-<?php echo $this->capture('inc.decorate-content.phtml') ?>
+<?php // TODO $content not available inside captured script ?>
+<?php //echo $this->capture('inc.decorate-content.phtml') ?>
 
 <?php echo $this->capture('inc.footer.phtml') ?>
 </body>
-
 </html>
