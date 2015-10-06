@@ -1,5 +1,5 @@
 <?php
-/** @var \Poirot\Application\Sapi\Server\Http\Service\ViewModelRenderer $this */
+/** @var \Application\HttpSapi\ViewModelRenderer $this */
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -16,36 +16,19 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="index.html"><img src="<?php echo $this->path('app-assets') ?>/images/logo.png" alt="logo"></a>
+            <a class="navbar-brand" href="<?php echo $this->url('site/home') ?>">
+<!--                <img src="--><?php //echo $this->path('app-assets') ?><!--/images/logo.png" alt="logo">-->
+                <h4>Application Platform</h4>
+            </a>
         </div>
-        <div class="collapse navbar-collapse">
-            <ul class="nav navbar-nav navbar-right">
-                <li class="active"><a href="<?php echo $this->url('site/home') ?>">Home</a></li>
-                <li><a href="about-us.html">About Us</a></li>
-                <li><a href="services.html">Services</a></li>
-                <li><a href="portfolio.html">Portfolio</a></li>
-                <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Pages <i class="icon-angle-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="career.html">Career</a></li>
-                        <li><a href="blog-item.html">Blog Single</a></li>
-                        <li><a href="pricing.html">Pricing</a></li>
-                        <li><a href="404.html">404</a></li>
-                        <li><a href="registration.html">Registration</a></li>
-                        <li class="divider"></li>
-                        <li><a href="privacy.html">Privacy Policy</a></li>
-                        <li><a href="terms.html">Terms of Use</a></li>
-                    </ul>
-                </li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="contact-us.html">Contact</a></li>
-            </ul>
-        </div>
+
+        <?php echo $this->capture('inc.navigation-menu.phtml') ?>
+
     </div>
 </header><!--/header-->
 
 <?php echo $content; ?>
-<?php // TODO $content not available inside captured script ?>
+
 <?php //echo $this->capture('inc.decorate-content.phtml') ?>
 
 <?php echo $this->capture('inc.footer.phtml') ?>

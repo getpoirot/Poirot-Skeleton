@@ -66,7 +66,8 @@ class Module implements iSapiModule
     function withServiceContainer(Container $services)
     {
         ## replace default renderer with Application renderer including stuffs
-        $services->set(new InstanceService('ViewModelRenderer', new ViewModelRenderer));
+        if ($services->has('ViewModelRenderer'))
+            $services->set(new InstanceService('ViewModelRenderer', new ViewModelRenderer));
     }
 
     /**

@@ -717,6 +717,7 @@ ul.tag-cloud li {
   font-size: 36px;
   line-height: 50px;
   color: #fff;
+  height: 80px;
 }
 .navbar-inverse .navbar-nav {
   margin-top: 20px;
