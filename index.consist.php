@@ -12,8 +12,8 @@ define('APP_DIR_WWW'          , dirname(__FILE__) );
 define('APP_DIR_THEME_DEFAULT', APP_DIR_WWW.'/theme' );
 # by default application folder is in www public
 # it can be changed to any other folder like APP_DIR_WWW.'/../app-folder'
+define('APP_DIR_VENDOR',   	   APP_DIR_WWW.'/vendor');
 define('APP_DIR_APPLICATION',  APP_DIR_WWW.'/_app');
-define('APP_DIR_VENDOR',   	      APP_DIR_APPLICATION.'/vendor');
 define('APP_DIR_CORE', 			     APP_DIR_APPLICATION.'/modules');
 define('APP_DIR_CONFIG', 		     APP_DIR_APPLICATION.'/config');
 define('APP_DIR_TEMP', 			     APP_DIR_APPLICATION.'/tmp');

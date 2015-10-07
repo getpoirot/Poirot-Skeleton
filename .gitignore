@@ -29,7 +29,7 @@ _app/modules/*
 !_app/modules/Application
 
 # Default Vendor Libraries (not composer) #
-_app/vendor/**
-!_app/vendor/*.txt
-!_app/vendor/*.php
-_app/vendor/autoload.php
+vendor/**
+!vendor/*.txt
+!vendor/*.php
+vendor/autoload.php
