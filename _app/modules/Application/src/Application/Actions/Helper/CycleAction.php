@@ -3,6 +3,21 @@ namespace Application\Actions\Helper;
 
 use Poirot\AaResponder\AbstractAResponder;
 
+/*
+<div class="row">
+    <?php foreach ($events as $event) { ?>
+    <?php $cycle = $this->cycle('<div class="col-md-4"> <!-- START -->', [1, 3]) ?>
+        <blockquote>
+            <p><strong><?php echo $event->repo->name; ?>:</strong> <?php echo $event->payload->message; ?></p>
+        </blockquote>
+    <?php $cycle = $this->cycle('</div> <!-- END -->', [$cycle, 3]) ?>
+    <?php } ?>
+    <?php if ($cycle->getCounter() !== 3) { ?>
+        </div> <!-- END -->
+    <?php } ?>
+</div>
+ */
+
 class CycleAction extends AbstractAResponder
 {
     protected static $_cycle_actions = [
