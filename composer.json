@@ -14,8 +14,8 @@
     ]
     , "config":
     {
-	    "vendor-dir": "vendor"
-	    , "bin-dir"   : "vendor/bin"
+	    "vendor-dir": "./vendor"
+	    , "bin-dir"   : "./vendor/bin"
     }
     , "require": {
         "poirot/core": "dev-master"
