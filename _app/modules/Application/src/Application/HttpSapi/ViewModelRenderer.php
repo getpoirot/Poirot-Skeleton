@@ -6,6 +6,11 @@ use Poirot\Container\Interfaces\Respec\iCServiceAware;
 use Poirot\Container\Interfaces\Respec\iCServiceProvider;
 use Poirot\View\Interpreter\IsoRenderer;
 
+/**
+ * @method \Application\Actions\Helper\UrlAction   url($routeName = null, $params = [])
+ * @method \Application\Actions\Helper\PathAction  path($arg = null)
+ * @method \Application\Actions\Helper\CycleAction cycle($action = null, $steps = 1, $reset = true)
+ */
 class ViewModelRenderer extends IsoRenderer
     // services injected and accessible
     implements iCServiceAware
