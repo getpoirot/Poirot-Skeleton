@@ -22,6 +22,9 @@ namespace
         $app->run();
     ## beauty exception messages
     } catch (Exception $e) {
+        if (ob_get_level())
+            ## clean output buffer, display just error page
+            ob_end_clean();
         try {
             echo (new IsoRenderer())->capture(
                 APP_DIR_THEME_DEFAULT.'/error/general.php'
