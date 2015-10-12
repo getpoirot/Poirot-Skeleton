@@ -16,6 +16,7 @@ class ApplicationActionsBuilder extends ContainerBuilder
             'url'   => 'Application\Actions\Helper\UrlService',
             'path'  => 'Application\Actions\Helper\PathService',
             'cycle' => 'Application\Actions\Helper\CycleAction',
+            'script' => 'Application\Actions\Helper\ScriptAction',
 
             # Data Actions
             'HomeInfo'      => 'Application\Actions\HomeInfo',
