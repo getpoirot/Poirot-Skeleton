@@ -1,6 +1,10 @@
 <?php
 /** @var \Application\HttpSapi\ViewModelRenderer $this */
 $_f__ = function () use (&$events) {
+    if (!$events)
+        ## events not exists
+        return;
+
     # hide extra variables from scope
     $_events = []; $i = 0;
     foreach ($events as $event) {

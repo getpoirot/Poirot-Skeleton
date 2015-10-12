@@ -32,6 +32,10 @@ class Module implements iSapiModule
      */
     function Initialize(iApplication $app)
     {
+        // init requirements
+        if (!getenv('HTTP_MOD_REWRITE'))
+            throw new \RuntimeException('It seems that you don\'t have "MOD_REWRITE" enabled on the server.');
+
         if (!$app instanceof \Poirot\Application\Sapi)
             throw new \Exception('This module is not compatible with application.');
     }
@@ -127,7 +131,11 @@ class Module implements iSapiModule
                     'exact_match' => true,
                 ],
                 'params'  => [
-                    '_then_' => '/module/application.action/HomeInfo',
+                    '_then_' => [
+                        ## chain actions
+                        '/module/application.action/HomeInfo',
+                        '/module/application.action/RenderContent',
+                    ],
                 ],
             ],
         ]);

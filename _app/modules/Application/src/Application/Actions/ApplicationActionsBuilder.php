@@ -18,7 +18,8 @@ class ApplicationActionsBuilder extends ContainerBuilder
             'cycle' => 'Application\Actions\Helper\CycleAction',
 
             # Data Actions
-            'HomeInfo' => 'Application\Actions\HomeInfo',
+            'HomeInfo'      => 'Application\Actions\HomeInfo',
+            'RenderContent' => 'Application\Actions\RenderContent',
         ];
 }
  
