@@ -8,6 +8,8 @@
 // Define Consts:
 define('REQUEST_MICROTIME', microtime(true));
 
+define('DEBUG', true);
+
 define('APP_DIR_WWW'          , dirname(__FILE__) );
 define('APP_DIR_THEME_DEFAULT', APP_DIR_WWW.'/theme' );
 # by default application folder is in www public

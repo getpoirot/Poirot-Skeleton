@@ -3,6 +3,7 @@ namespace
 {
     use Poirot\Application\Config;
     use Poirot\Application\Sapi as PoirotApplication;
+    use Poirot\ErrorHandling\SettingsFactory;
     use Poirot\View\Interpreter\IsoRenderer;
 
     (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 ) and
@@ -17,6 +18,13 @@ namespace
 
     // Run the application:
     try {
+        # set environment settings
+        $EnvSettings = SettingsFactory::factory(function() {
+            // TODO detect from env global exact name of settings
+            return (defined('DEBUG') && constant('DEBUG')) ? 'dev' : 'default' /* 'prod' */;
+        });
+        $EnvSettings::setupSystemWide();
+
         # start application:
         $app  = new PoirotApplication(new Config(APP_DIR_CONFIG));
         $app->run();
