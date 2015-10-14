@@ -36,3 +36,8 @@ $_f__ = function () use (&$events) {
 };
 
 $_f__->__invoke();
+
+// put section features into theme as widget
+## render partial section feature from view script belong to application module
+## @see section-features.phtml
+$section_features = $this->action()->view('partial/section-features');

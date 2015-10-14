@@ -146,6 +146,7 @@ class Module implements iSapiModule
         # Register Module Default View Scripts Path To View Resolver
         $viewModelResolver->attach(new PathStackResolver([
             'site/home' => [__DIR__.'/../../view/site/home'],
+            'partial'   => [__DIR__.'/../../view/partial'],
         ]));
 
         # Define Assets Paths
