@@ -12,7 +12,9 @@ use Poirot\Application\Sapi\Module\ModuleActionsContainer;
 use Poirot\Container\Container;
 use Poirot\Container\Service\InstanceService;
 use Poirot\Core\Interfaces\iDataSetConveyor;
+use Poirot\Loader\AggregateLoader;
 use Poirot\Loader\Autoloader\AggregateAutoloader;
+use Poirot\Loader\PathStackResolver;
 use Poirot\Router\Http\RChainStack;
 
 class Module implements iSapiModule
@@ -133,19 +135,25 @@ class Module implements iSapiModule
      * resolveToServices(iHRouter $router = null, $sapi = null, $other = null)
      * [/code]
      *
-     * @param Container   $services
-     * @param RChainStack $router
+     * @param Container       $services
+     * @param RChainStack     $router
+     * @param AggregateLoader $viewModelResolver
      *
-     * @return void
+     * @throws \Exception
      */
-    function withContainerServices($services = null, $router = null)
+    function withContainerServices($services = null, $router = null, $viewModelResolver = null)
     {
+        # Register Module Default View Scripts Path To View Resolver
+        $viewModelResolver->attach(new PathStackResolver([
+            'site/home' => [__DIR__.'/../../view/site/home'],
+        ]));
+
+        # Define Assets Paths
         /** @var PathAction $path */
         $path = $services->from('\module\application.action')->get('path');
         $path->setPath('app-assets', '$basePath/theme/www');
 
-        // ...
-
+        # Register Routes:
         $this->__withHttpRouter($router);
     }
 
