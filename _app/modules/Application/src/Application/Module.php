@@ -99,8 +99,10 @@ class Module implements iSapiModule
                     ## full name of class exception
 
                     ## use null on second index cause view template render as final layout
-                    ## 'Exception' => ['error/error', null],
+                    // 'Exception' => ['error/error', null],
+                    // 'Specific\Error\Exception' => ['error/spec', 'override_layout_name_here']
 
+                    ## here (blank) is defined as default layout for all error pages
                     'Exception' => ['error/error', 'blank'],
                     'Poirot\Application\Exception\RouteNotMatchException' => 'error/404',
                 ],
