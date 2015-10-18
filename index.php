@@ -3,7 +3,8 @@ namespace
 {
     use Poirot\Application\Config;
     use Poirot\Application\Sapi as PoirotApplication;
-    use Poirot\ErrorHandling\SettingsFactory;
+    use Poirot\Core\PHPEnv;
+    use Poirot\Core\PHPEnvFactory;
     use Poirot\View\Interpreter\IsoRenderer;
 
     (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 ) and
@@ -19,7 +20,7 @@ namespace
     // Run the application:
     try {
         # set environment settings
-        $EnvSettings = SettingsFactory::factory(function() {
+        $EnvSettings = PHPEnvFactory::factory(function() {
             // TODO detect from env global exact name of settings
             return (defined('DEBUG') && constant('DEBUG')) ? 'dev' : 'default' /* 'prod' */;
         });
