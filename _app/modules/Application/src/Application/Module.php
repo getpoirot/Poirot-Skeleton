@@ -1,13 +1,15 @@
 <?php
 namespace Application;
 
+
+use Poirot\Application\Sapi;
 use Application\Actions\ApplicationActionsBuilder;
 use Application\Actions\Helper\PathAction;
 use Application\HttpSapi\ViewModelRenderer;
 use Poirot\Application\Config;
 use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
-use Poirot\Application\Sapi;
+use Poirot\Application\AbstractSapi;
 use Poirot\Application\Sapi\Module\ModuleActionsContainer;
 use Poirot\Container\Container;
 use Poirot\Container\Service\InstanceService;
@@ -30,7 +32,7 @@ class Module implements iSapiModule
      *
      * priority: 1000
      *
-     * @param iApplication|Sapi $app Application Instance
+     * @param iApplication|AbstractSapi $app Application Instance
      *
      * @throws \Exception
      * @return void
@@ -41,7 +43,7 @@ class Module implements iSapiModule
         if (!getenv('HTTP_MOD_REWRITE'))
             throw new \RuntimeException('It seems that you don\'t have "MOD_REWRITE" enabled on the server.');
 
-        if (!$app instanceof \Poirot\Application\Sapi)
+        if (!$app instanceof \Poirot\Application\AbstractSapi)
             throw new \Exception('This module is not compatible with application.');
     }
 

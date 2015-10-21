@@ -5,13 +5,37 @@
  * - pass to Application as SetterBuilder
  *   @see \Poirot\Application\Sapi::__construct
  *
- * - merged config will set as service with (config) name
+ * - merged config will set as service with (sapi.config) name
  */
 
 return [
     /**
      * @see \Poirot\Application\Sapi\SapiAppBuilder::build
      */
+
+    'container' =>
+        /**
+         * container builder options
+         * @see \Poirot\Container\ContainerBuilder
+         */
+        [
+            'interfaces' => [
+                ## program into interfaces
+
+                ### application config
+                'sapi.config' => '\Poirot\Core\Interfaces\iPoirotEntity',
+            ],
+            'services'   => [
+                ## sapi application
+                'Poirot\Application\SapiService',
+
+                'sapi.config' => [
+                    '_class_'  => 'InstanceService',
+                    'service'  => 'Poirot\Application\Config',
+                    'allow_override' => false,
+                ],
+            ],
+        ],
 
     'modules' =>
         /**
@@ -54,31 +78,6 @@ return [
                    // ...
                 #],
                 #'then' => []// ...,
-            ],
-        ],
-    'container' =>
-        /**
-         * container builder options
-         * @see \Poirot\Container\ContainerBuilder
-         */
-
-        [
-            'interfaces' => [
-                ### program into interface
-                'sapi.server' => '\Poirot\Application\Interfaces\Sapi\iSapiServer',
-                ## application config
-                'sapi.config' => '\Poirot\Core\Interfaces\iPoirotEntity',
-            ],
-            'services'   => [
-                ## sapi server application
-                /** @see \Poirot\Application\Sapi\Server\SapiServerService */
-                'Poirot\Application\Sapi\Server\SapiServerService',
-
-                'sapi.config' => [
-                    '_class_'  => 'InstanceService',
-                    'service'  => 'Poirot\Application\Config',
-                    'allow_override' => false,
-                ],
             ],
         ],
 ];

@@ -1,7 +1,27 @@
 <?php
 namespace Poirot
 {
+    use Poirot\Application\Config;
+    use Poirot\Container\Container;
+    use Poirot\Container\ContainerBuilder;
     use Poirot\View\Interpreter\IsoRenderer;
+
+    /**
+     * IoC Container Gateway
+     *
+     * @return Container
+     */
+    function ioc() {
+        static $IoC;
+        if ($IoC)
+            return $IoC;
+
+        $config = new Config(APP_DIR_CONFIG);
+        $IoC    = new Container(new ContainerBuilder($config->get('container')));
+        $IoC->has('sapi.config') && $IoC->get('sapi.config')->from($config);
+
+        return $IoC;
+    };
 
     /**
      * Print Exception Object Error Page
@@ -25,3 +45,4 @@ namespace Poirot
         }
     }
 }
+

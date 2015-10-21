@@ -1,8 +1,6 @@
 <?php
 namespace Poirot
 {
-    use Poirot\Application\Config;
-    use Poirot\Application\Sapi as PoirotApplication;
     use Poirot\Core\ErrorStack;
     use Poirot\Core\PHPEnv;
     use Poirot\Core\PHPEnvFactory;
@@ -34,8 +32,7 @@ namespace Poirot
     });
 
     # start application:
-    $app  = new PoirotApplication(new Config(APP_DIR_CONFIG));
-    $app->run();
+    ioc()->get('sapi')->run();
 
     ErrorStack::handleDone();
     ErrorStack::handleDone();
