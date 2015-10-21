@@ -20,6 +20,7 @@
     , "require": {
         "poirot/core": "dev-master"
             , "poirot/loader": "dev-master"
+        , "poirot/logger": "dev-master"
         , "poirot/application": "dev-master"
             , "poirot/router": "dev-master"
             , "poirot/events": "dev-master"
