@@ -1,8 +1,8 @@
 <?php
 namespace Application;
 
-
 use Poirot\Application\Sapi;
+
 use Application\Actions\ApplicationActionsBuilder;
 use Application\Actions\Helper\PathAction;
 use Application\HttpSapi\ViewModelRenderer;
