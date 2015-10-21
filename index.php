@@ -28,11 +28,16 @@ namespace Poirot
 
     // Run the application:
     ErrorStack::handleException('\Poirot\print_exception');
+    ErrorStack::handleError(E_ERROR|E_RECOVERABLE_ERROR|E_USER_ERROR, function() {
+        // handle runtime errors
+        if ($errExpt = ErrorStack::handleDone()) throw $errExpt;
+    });
 
     # start application:
     $app  = new PoirotApplication(new Config(APP_DIR_CONFIG));
     $app->run();
 
+    ErrorStack::handleDone();
     ErrorStack::handleDone();
 
     die(); // every soul shall taste of death

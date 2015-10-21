@@ -3,7 +3,14 @@ namespace Poirot
 {
     use Poirot\View\Interpreter\IsoRenderer;
 
-    function print_exception($e) {
+    /**
+     * Print Exception Object Error Page
+     *
+     * @param \Exception $e
+     *
+     * @throws \Exception cant render exception
+     */
+    function print_exception(\Exception $e) {
         if (ob_get_level())
             ## clean output buffer, display just error page
             ob_end_clean();
