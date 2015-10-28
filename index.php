@@ -32,7 +32,7 @@ namespace Poirot
     });
 
     # start application:
-    ioc()->get('sapi')->run();
+    ioC()->get('sapi')->run();
 
     ErrorStack::handleDone();
     ErrorStack::handleDone();
