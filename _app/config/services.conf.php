@@ -14,9 +14,17 @@ return [
     ],
     'services'   => [
         ## config
-        'Poirot\Application\ConfigService' => ['_name_' => 'app.config', 'options' => APP_DIR_CONFIG.'/sapi.conf.php' ],
+        'Poirot\Application\ConfigService'
+            => [
+                '_name_'  => 'app.config',
+                'options' => new \Poirot\Core\Config(glob(APP_DIR_CONFIG.'/sapi.{,local.}conf.php', GLOB_BRACE)),
+            ],
 
         ## sapi application
-        'Poirot\Application\SapiService' => ['_name_' => 'sapi', 'config' => 'app.config' ], # using service as config
+        'Poirot\Application\SapiService'
+            => [
+                '_name_' => 'sapi',
+                'config' => 'app.config' # set registered service as sapi config builder
+            ],
     ],
 ];
