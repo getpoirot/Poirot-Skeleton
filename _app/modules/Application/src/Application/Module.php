@@ -12,6 +12,7 @@ use Poirot\Application\AbstractSapi;
 use Poirot\Application\Sapi\Module\ModuleActionsContainer;
 use Poirot\Container\Container;
 use Poirot\Container\Service\InstanceService;
+use Poirot\Core\Config;
 use Poirot\Core\Interfaces\EntityInterface;
 use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Loader\AggregateLoader;
@@ -137,14 +138,27 @@ class Module implements iSapiModule
      * resolveToServices(iHRouter $router = null, $sapi = null, $other = null)
      * [/code]
      *
-     * @param Container       $services
-     * @param RChainStack     $router
-     * @param AggregateLoader $viewModelResolver
+     * @param Container                           $services
+     * @param RChainStack                         $router
+     * @param AggregateLoader                     $viewModelResolver
+     * @param Sapi\Server\Http\ViewRenderStrategy $viewRenderStrategy
      *
      * @throws \Exception
      */
-    function withContainerServices($services = null, $router = null, $viewModelResolver = null)
-    {
+    function withContainerServices(
+        $services = null,
+        $router = null,
+        $viewModelResolver = null,
+        $viewRenderStrategy = null
+    ) {
+        /** @var Config $config */
+        $config = $services->get('app.config');
+
+        # View Render Strategy
+        ($viewRenderStrategy !== null) ?: $viewRenderStrategy->setDefaultLayout(
+            $config->get('view_renderer')['default_layout']
+        );
+
         # Register Module Default View Scripts Path To View Resolver
         $viewModelResolver->attach(new PathStackResolver([
             'site/home' => [__DIR__.'/../../view/site/home'],

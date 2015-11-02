@@ -60,4 +60,6 @@ return [
 
     // Other Options Key Merged Into Config Service
     // ...
+
+    'extra_config' => 'other extra configs can set like this one.'
 ];
