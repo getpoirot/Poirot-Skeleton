@@ -6,13 +6,13 @@ use Poirot\Application\Sapi;
 use Application\Actions\ApplicationActionsBuilder;
 use Application\Actions\Helper\PathAction;
 use Application\HttpSapi\ViewModelRenderer;
-use Poirot\Application\Config;
 use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
 use Poirot\Application\AbstractSapi;
 use Poirot\Application\Sapi\Module\ModuleActionsContainer;
 use Poirot\Container\Container;
 use Poirot\Container\Service\InstanceService;
+use Poirot\Core\Interfaces\EntityInterface;
 use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Loader\AggregateLoader;
 use Poirot\Loader\Autoloader\AggregateAutoloader;
@@ -87,11 +87,11 @@ class Module implements iSapiModule
      * - you may return an array or iDataSetConveyor
      *   that would be merge with config current data
      *
-     * @param Config $config
+     * @param EntityInterface $config
      *
      * @return array|iDataSetConveyor
      */
-    function withConfig(Config $config)
+    function withConfig(EntityInterface $config)
     {
         return [
             'view_renderer' => [
