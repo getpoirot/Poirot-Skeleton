@@ -18,8 +18,8 @@ namespace Poirot
 
     // Set environment settings:
     $EnvSettings = PHPEnvFactory::factory(function() {
-        // TODO detect from env global exact name of settings
-        return (defined('DEBUG') && constant('DEBUG')) ? 'dev' : 'default' /* 'prod' */;
+        $default = isset($_ENV['env']) ? $_ENV['env'] : 'default';
+        return (defined('DEBUG') && constant('DEBUG')) ? 'dev' : $default;
     });
     $EnvSettings::setupSystemWide();
 
