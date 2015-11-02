@@ -3,6 +3,7 @@ namespace Poirot
 {
     use Poirot\Container\Container;
     use Poirot\Container\ContainerBuilder;
+    use Poirot\Core\Config;
     use Poirot\View\Interpreter\IsoRenderer;
 
     /**
@@ -15,8 +16,8 @@ namespace Poirot
         if ($IoC)
             return $IoC;
 
-        $config = include_once APP_DIR_CONFIG.'/services.conf.php';
-        $IoC    = new Container(new ContainerBuilder($config));
+        $config = new Config(glob(APP_DIR_CONFIG.'/services.{,local.}conf.php', GLOB_BRACE));
+        $IoC    = new Container(new ContainerBuilder($config->toArray()));
 
         return $IoC;
     };
