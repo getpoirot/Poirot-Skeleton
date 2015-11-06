@@ -26,7 +26,6 @@ SetEnv POIROT_ENV_MODE prod
 
 DirectoryIndex index.php
 
-### Rewrite rules for Zend Framework
 <IfModule mod_rewrite.c>
 	SetEnv HTTP_MOD_REWRITE On
 	RewriteEngine On
