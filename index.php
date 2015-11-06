@@ -18,7 +18,7 @@ namespace Poirot
 
     // Set environment settings:
     $EnvSettings = PHPEnvFactory::factory(function() {
-        $default = isset($_ENV['env']) ? $_ENV['env'] : 'default';
+        $default = ($env_mode = getenv('POIROT_ENV_MODE')) ? $env_mode : 'default';
         return (defined('DEBUG') && constant('DEBUG')) ? 'dev' : $default;
     });
     $EnvSettings::setupSystemWide();
@@ -32,7 +32,8 @@ namespace Poirot
     });
 
     # start application:
-    ioC()->get('sapi')->run();
+    require_once PR_DIR_WWW.'/flex.php';
+    // ioC()->get('sapi')->run();
 
     ErrorStack::handleDone();
     ErrorStack::handleDone();

@@ -18,8 +18,9 @@
 #</IfModule>
 
 ### Change Application enviorment cause load various Config
-# production is default 
-# SetEnv APP_ENV debug
+# php server default config is default
+# SetEnv POIROT_ENV_MODE default
+SetEnv POIROT_ENV_MODE prod
 
 ### Application requirement , dont change below !!
 
