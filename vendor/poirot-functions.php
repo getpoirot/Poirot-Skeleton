@@ -16,7 +16,7 @@ namespace Poirot
         if ($IoC)
             return $IoC;
 
-        $config = new Config(glob(APP_DIR_CONFIG.'/services.{,local.}conf.php', GLOB_BRACE));
+        $config = new Config(glob(PR_DIR_CONFIG.'/services.{,local.}conf.php', GLOB_BRACE));
         $IoC    = new Container(new ContainerBuilder($config->toArray()));
 
         return $IoC;
@@ -35,7 +35,7 @@ namespace Poirot
             ob_end_clean();
         try {
             echo (new IsoRenderer())->capture(
-                APP_DIR_THEME_DEFAULT.'/error/general.php'
+                PR_DIR_THEME_DEFAULT.'/error/general.php'
                 , ['exception' => $e]
             );
         } catch(\Exception $ve) {

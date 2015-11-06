@@ -17,7 +17,7 @@ return [
         'Poirot\Application\ConfigService'
             => [
                 '_name_'  => 'app.config',
-                'options' => new \Poirot\Core\Config(glob(APP_DIR_CONFIG.'/sapi.{,local.}conf.php', GLOB_BRACE)),
+                'options' => new \Poirot\Core\Config(glob(PR_DIR_CONFIG.'/sapi.{,local.}conf.php', GLOB_BRACE)),
             ],
 
         ## sapi application
