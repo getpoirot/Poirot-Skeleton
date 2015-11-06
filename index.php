@@ -32,8 +32,7 @@ namespace Poirot
     });
 
     # start application:
-    require_once PR_DIR_WWW.'/flex.php';
-    // ioC()->get('sapi')->run();
+    ioC()->get('sapi')->run();
 
     ErrorStack::handleDone();
     ErrorStack::handleDone();
