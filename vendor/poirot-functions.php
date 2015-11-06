@@ -23,6 +23,16 @@ namespace Poirot
     };
 
     /**
+     * Is Sapi Command Line?
+     *
+     * @return bool
+     */
+    function isCommandLine()
+    {
+        return (php_sapi_name() == 'cli');
+    }
+
+    /**
      * Print Exception Object Error Page
      *
      * @param \Exception $e
