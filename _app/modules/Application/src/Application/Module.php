@@ -1,6 +1,7 @@
 <?php
 namespace Application;
 
+use AssetManager\Assetic;
 use Poirot\Application\Sapi;
 
 use Application\Actions\ApplicationActionsBuilder;
@@ -146,10 +147,11 @@ class Module implements iSapiModule
      * @throws \Exception
      */
     function withContainerServices(
-        $services = null,
-        $router = null,
-        $viewModelResolver = null,
-        $viewRenderStrategy = null
+        $services = null
+        , $router = null
+        , $viewModelResolver = null
+        , $viewRenderStrategy = null
+        , $AssetManager = null
     ) {
         /** @var Config $config */
         $config = $services->get('app.config');
@@ -166,9 +168,15 @@ class Module implements iSapiModule
         ]));
 
         # Define Assets Paths
+        $themesFolder = basename(PR_DIR_THEME_DEFAULT);
+
         /** @var PathAction $path */
         $path = $services->from('\module\application.action')->get('path');
-        $path->setPath('app-assets', '$basePath/theme/www');
+        $path->setPath('app-assets', "\$basePath/{$themesFolder}/www");
+
+        /** @var Assetic $AssetManager */
+        (!$AssetManager) ?: $AssetManager->resolver()
+            ->attach(new PathStackResolver([$themesFolder => [PR_DIR_THEME_DEFAULT]]), 100);
 
         # Register Routes:
         $this->__withHttpRouter($router);
