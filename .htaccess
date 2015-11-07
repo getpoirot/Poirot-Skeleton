@@ -20,7 +20,7 @@
 ### Change Application enviorment cause load various Config
 # php server default config is default
 # SetEnv POIROT_ENV_MODE default
-SetEnv POIROT_ENV_MODE prod
+SetEnv POIROT_ENV_MODE development
 
 ### Application requirement , dont change below !!
 
