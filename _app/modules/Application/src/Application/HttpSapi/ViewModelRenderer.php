@@ -18,8 +18,30 @@ class ViewModelRenderer extends IsoRenderer
 {
     use ActionComplexTrait;
 
+    /** @var bool  */
+    protected static $isInitialized = false;
+
     /**
-     * Call to default actions in container
+     * Construct
+     *
+     */
+    function __construct()
+    {
+        if (!static::$isInitialized) {
+            ## Avoid display white screen on fatal errors on render
+            $self = $this;
+            register_shutdown_function(function () use ($self) {
+                $self->__alertError();
+            });
+
+            static::$isInitialized = true;
+        }
+    }
+
+    /**
+     * Proxy Call to default Action`s container
+     *
+     * exp. $this->action('application')->url(..)
      *
      * @param $method
      * @param $args
@@ -33,11 +55,9 @@ class ViewModelRenderer extends IsoRenderer
         $invokableActions = $this->action();
         return call_user_func_array([$invokableActions, $method], $args);
     }
-}
 
-// Fatal Errors don`t display white screen
-register_shutdown_function(
-    function () {
+    protected function __alertError()
+    {
         $errfile = "unknown file";
         $errstr  = "shutdown";
         $errno   = E_CORE_ERROR;
@@ -57,4 +77,4 @@ register_shutdown_function(
             echo "<script type=\"text/javascript\">alert('{$message}')</script>";
         }
     }
-);
+}
