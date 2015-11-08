@@ -1,11 +1,9 @@
 <?php
 namespace Application;
 
-use AssetManager\Assetic;
 use Poirot\Application\Sapi;
 
 use Application\Actions\ApplicationActionsBuilder;
-use Application\Actions\Helper\PathAction;
 use Application\HttpSapi\ViewModelRenderer;
 use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
@@ -13,7 +11,6 @@ use Poirot\Application\AbstractSapi;
 use Poirot\Application\Sapi\Module\ModuleActionsContainer;
 use Poirot\Container\Container;
 use Poirot\Container\Service\InstanceService;
-use Poirot\Core\Config;
 use Poirot\Core\Interfaces\EntityInterface;
 use Poirot\Core\Interfaces\iDataSetConveyor;
 use Poirot\Loader\AggregateLoader;
@@ -65,7 +62,27 @@ class Module implements iSapiModule
     }
 
     /**
+     * Register config key/value
+     * @see InitModuleListener
+     *
+     * priority: 800
+     *
+     * - you may return an array or iDataSetConveyor
+     *   that would be merge with config current data
+     *
+     * @param EntityInterface $config
+     *
+     * @return array|iDataSetConveyor
+     */
+    function withConfig(EntityInterface $config)
+    {
+        return include_once __DIR__.'/../../config/module.conf.php';
+    }
+
+    /**
      * Build Service Container
+     *
+     * priority: 700
      *
      * - register services
      * - define aliases
@@ -84,23 +101,9 @@ class Module implements iSapiModule
     }
 
     /**
-     * Register config key/value
-     * @see InitModuleListener
-     *
-     * - you may return an array or iDataSetConveyor
-     *   that would be merge with config current data
-     *
-     * @param EntityInterface $config
-     *
-     * @return array|iDataSetConveyor
-     */
-    function withConfig(EntityInterface $config)
-    {
-        return include_once __DIR__.'/../../config/module.conf.php';
-    }
-
-    /**
      * Get Action Services
+     *
+     * priority 400
      *
      * @return ModuleActionsContainer
      */
@@ -150,13 +153,6 @@ class Module implements iSapiModule
             'site/home' => [__DIR__.'/../../view/site/home'],
             'partial'   => [__DIR__.'/../../view/partial'],
         ]));
-
-        # Define Assets Paths
-        $themesFolder = basename(PR_DIR_THEME_DEFAULT);
-
-        /** @var Assetic $AssetManager */
-        (!$AssetManager) ?: $AssetManager->resolver()
-            ->attach(new PathStackResolver([$themesFolder => [PR_DIR_THEME_DEFAULT]]), 100);
 
         # Register Routes:
         $this->__withHttpRouter($router);

@@ -9,6 +9,13 @@ return [
         ],
     ],
 
+    // Asset Manager Module Config (for enabled AssetManager module)
+    'asset_manager' => [
+        'AggregateLoader' => [
+            100 => new \Poirot\Loader\PathStackResolver([$themesFolder => [PR_DIR_THEME_DEFAULT]]),
+        ]
+    ],
+
     // View Renderer Options
     'view_renderer' => [
         'default_layout'   => 'default',
