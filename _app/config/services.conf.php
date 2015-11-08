@@ -13,10 +13,10 @@ return [
         'sapi'   => 'Poirot\Application\Interfaces\iApplication',
     ],
     'services'   => [
-        ## config
+        ## Sapi Settings Builder, it can also include base app merged config data
         'Poirot\Application\ConfigService'
             => [
-                '_name_'  => 'app.config',
+                '_name_'  => 'sapi.settings',
                 'options' => new \Poirot\Core\Config(glob(PR_DIR_CONFIG.'/sapi.{,local.}conf.php', GLOB_BRACE)),
             ],
 
@@ -24,7 +24,7 @@ return [
         'Poirot\Application\SapiService'
             => [
                 '_name_' => 'sapi',
-                'config' => 'app.config' # set registered service as sapi config builder
+                'config' => 'sapi.settings' # set registered service as sapi config builder
             ],
     ],
 ];

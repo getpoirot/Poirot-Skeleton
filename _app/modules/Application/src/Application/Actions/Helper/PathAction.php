@@ -7,7 +7,7 @@ class PathAction extends AbstractAResponder
 {
     /** @var array key value of paths name and uri */
     protected $paths = [
-        ## name => ':var/uri/to/path'
+        ## name => '$var/uri/to/path'
     ];
 
     /** @var array Path names Restricted from override */

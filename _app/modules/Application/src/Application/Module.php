@@ -85,6 +85,7 @@ class Module implements iSapiModule
 
     /**
      * Register config key/value
+     * @see InitModuleListener
      *
      * - you may return an array or iDataSetConveyor
      *   that would be merge with config current data
@@ -95,25 +96,7 @@ class Module implements iSapiModule
      */
     function withConfig(EntityInterface $config)
     {
-        return [
-            'view_renderer' => [
-                /** @see ViewRenderStrategy::getDefaultLayout */
-                'default_layout'   => 'default',
-
-                /** @see onErrorListener::__invoke */
-                'error_view_template' => [
-                    ## full name of class exception
-
-                    ## use null on second index cause view template render as final layout
-                    // 'Exception' => ['error/error', null],
-                    // 'Specific\Error\Exception' => ['error/spec', 'override_layout_name_here']
-
-                    ## here (blank) is defined as default layout for all error pages
-                    'Exception' => ['error/error', 'blank'],
-                    'Poirot\Application\Exception\RouteNotMatchException' => 'error/404',
-                ],
-            ],
-        ];
+        return include_once __DIR__.'/../../config/module.conf.php';
     }
 
     /**
@@ -133,13 +116,15 @@ class Module implements iSapiModule
     /**
      * Resolve to service with name and type
      *
+     * ! after all modules loaded
+     *
      * - arguments must has default values
      *
      * [code]
      * resolveToServices(iHRouter $router = null, $sapi = null, $other = null)
      * [/code]
      *
-     * @param Container                           $services
+     * @param AbstractSapi                        $sapi
      * @param RChainStack                         $router
      * @param AggregateLoader                     $viewModelResolver
      * @param Sapi\Server\Http\ViewRenderStrategy $viewRenderStrategy
@@ -147,21 +132,20 @@ class Module implements iSapiModule
      * @throws \Exception
      */
     function withContainerServices(
-        $services = null
+        $sapi = null
         , $router = null
         , $viewModelResolver = null
         , $viewRenderStrategy = null
         , $AssetManager = null
     ) {
-        /** @var Config $config */
-        $config = $services->get('app.config');
+        $config = $sapi->config();
 
-        # View Render Strategy
+        // Set Default Template Name From Config ----------------------------------------------------\
         ($viewRenderStrategy !== null) ?: $viewRenderStrategy->setDefaultLayout(
             $config->get('view_renderer')['default_layout']
         );
 
-        # Register Module Default View Scripts Path To View Resolver
+        // Register Module Default View Scripts Path To View Resolver -------------------------------\
         $viewModelResolver->attach(new PathStackResolver([
             'site/home' => [__DIR__.'/../../view/site/home'],
             'partial'   => [__DIR__.'/../../view/partial'],
@@ -169,10 +153,6 @@ class Module implements iSapiModule
 
         # Define Assets Paths
         $themesFolder = basename(PR_DIR_THEME_DEFAULT);
-
-        /** @var PathAction $path */
-        $path = $services->from('\module\application.action')->get('path');
-        $path->setPath('app-assets', "\$basePath/{$themesFolder}/www");
 
         /** @var Assetic $AssetManager */
         (!$AssetManager) ?: $AssetManager->resolver()

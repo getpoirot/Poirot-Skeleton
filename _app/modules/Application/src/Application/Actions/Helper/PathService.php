@@ -2,6 +2,7 @@
 namespace Application\Actions\Helper;
 
 use Poirot\Container\Service\AbstractService;
+use Poirot\Core\Config;
 use Poirot\Http\Interfaces\Message\iHttpRequest;
 use Poirot\Http\Plugins\Request\PhpServer;
 
@@ -19,7 +20,11 @@ class PathService extends AbstractService
      */
     function createService()
     {
-        $pathAction = new PathAction;
+        /** @var Config $config */
+        $config = $this->services()->from('/')->get('sapi')->config();
+        $config = $config->get('path_statics', []);
+
+        $pathAction = new PathAction($config);
 
         # register default paths and variables
         if ($this->services()->from('/')->get('request') instanceof iHttpRequest) {
