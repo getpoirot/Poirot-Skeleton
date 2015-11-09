@@ -28,4 +28,3 @@ class ApplicationActionsBuilder extends ContainerBuilder
             'RenderContent' => 'Application\Actions\RenderContent',
         ];
 }
- 

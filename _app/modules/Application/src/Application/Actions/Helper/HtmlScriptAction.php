@@ -3,6 +3,8 @@ namespace Application\Actions\Helper;
 
 use Poirot\AaResponder\AbstractAResponder;
 
+// TODO Script/Link Both Extend Something Like ObjectCollection, Reduce Code Clone
+
 class HtmlScriptAction extends AbstractAResponder
 {
     /** @var string Current Script Section */
@@ -59,16 +61,21 @@ class HtmlScriptAction extends AbstractAResponder
      * Attach Script File
      *
      * @param string    $src    Http Url To File
-     * @param string    $type   Text/Javascript
      * @param array|int $attrs  Attributes Or Priority Offset
+     * @param string    $type   Text/Javascript
      * @param int|null  $offset Script Priority Offset
      *
      * @return $this
      */
-    function attachFile($src, $type = 'text/javascript', $attrs = [], $offset = null)
+    function attachFile($src, $attrs = [], $type = 'text/javascript', $offset = null)
     {
         if (is_int($attrs))
             $offset = $attrs;
+
+        if (isset($attrs['type'])) {
+            $type = $attrs['type'];
+            unset($attrs['type']);
+        }
 
         $item = [
             "type"       => $type,
@@ -84,14 +91,19 @@ class HtmlScriptAction extends AbstractAResponder
      * Attach Script Content
      *
      * @param string    $script Script Content
-     * @param string    $type   Text/Javascript
      * @param array|int $attrs  Attributes Or Priority Offset
+     * @param string    $type   Text/Javascript
      * @param int|null  $offset Script Priority Offset
      *
      * @return $this
      */
-    function attachScript($script, $type = 'text/javascript', $attrs = [], $offset = null)
+    function attachScript($script, $attrs = [], $type = 'text/javascript', $offset = null)
     {
+        if (isset($attrs['type'])) {
+            $type = $attrs['type'];
+            unset($attrs['type']);
+        }
+
         $item = [
             "source"     => (string) $script,
             "type"       => $type,
