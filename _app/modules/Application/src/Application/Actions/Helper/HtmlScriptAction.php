@@ -5,12 +5,15 @@ use Poirot\AaResponder\AbstractAResponder;
 
 class HtmlScriptAction extends AbstractAResponder
 {
+    /** @var string Current Script Section */
+    protected $_currSection;
 
-    protected $currentPos;
+    /** @var array Attached Scripts */
+    protected $scripts = [
+        // 'section' => [],
+    ];
 
     /**
-     * !! Override code
-     *
      * Flag whether to automatically escape output, must also be
      * enforced in the child class if __toString/toString is overridden
      *
@@ -19,17 +22,13 @@ class HtmlScriptAction extends AbstractAResponder
     protected $autoEscape = true;
 
     /**
-     * !! Override code
-     *
      * Are arbitrary attributes allowed?
      *
      * @var bool
      */
-    protected $arbitraryAttributes = false;
+    protected $_arbitraryAttributes = false;
 
     /**
-     * !! Override code
-     *
      * Optional allowed attributes for script tag
      *
      * @var array
@@ -43,132 +42,158 @@ class HtmlScriptAction extends AbstractAResponder
     ];
 
     /**
-     * the script is inserted in the head section right before the title element.
+     * Invoke HtmlScript
+     *
+     * @param string $section
+     *
+     * @return $this
      */
-    const POS_HEAD = 0;
-    protected $headPos = [];
-
-    /**
-     *  the script is inserted at the beginning of the body section.
-     */
-    const POS_BEGIN = 1;
-    protected $beginPos = [];
-
-    /**
-     * the script is inserted at the end of the body section.
-     */
-    const POS_END = 2;
-    protected $endPos = [];
-
-
-    function __invoke($pos = null)
+    function __invoke($section = 'inline')
     {
-        if ($pos === $this::POS_BEGIN || $pos === $this::POS_END || $pos === $this::POS_HEAD) {
-            $this->currentPos = $pos;
-        }
+        $this->_currSection = (string) $section;
+
         return $this;
     }
 
-    public function appendFile($src, $type = 'text/javascript', $attrs = array())
+    /**
+     * Attach Script File
+     *
+     * @param string    $src    Http Url To File
+     * @param string    $type   Text/Javascript
+     * @param array|int $attrs  Attributes Or Priority Offset
+     * @param int|null  $offset Script Priority Offset
+     *
+     * @return $this
+     */
+    function attachFile($src, $type = 'text/javascript', $attrs = [], $offset = null)
     {
-        $item = array(
-            "type" => $type,
-            "attributes" => array_merge(array("src" => $src), $attrs)
-        );
+        if (is_int($attrs))
+            $offset = $attrs;
 
-        $this->addObject($this->itemToString((object)$item, "", "", ""));
+        $item = [
+            "type"       => $type,
+            "attributes" => array_merge(["src" => (string) $src], $attrs)
+        ];
 
-    }
+        $this->__insertScriptStr($this->__itemToString($item), $offset);
 
-    public function offsetSetFile($index, $src, $type = 'text/javascript', $attrs = array())
-    {
-        $item = array(
-            "type" => $type,
-            "attributes" => array_merge(array("src" => $src), $attrs)
-        );
-        $this->addObject($this->itemToString((object)$item, "", "", ""), $index);
-    }
-
-    public function appendScript($script, $type = 'text/javascript', $attrs = array())
-    {
-        $item = array(
-            "source" => $script,
-            "type" => $type,
-            "attributes" => $attrs
-        );
-
-        $this->addObject($this->itemToString((object)$item, "", "", ""));
-
-    }
-
-    public function offsetSetScript($index, $script, $type = 'text/javascript', $attrs = array())
-    {
-        $item = array(
-            "source" => $script,
-            "type" => $type,
-            "attributes" => $attrs
-        );
-
-        $this->addObject($this->itemToString((object)$item, "", "", ""), $index);
-
-    }
-
-    public function addObject($object, $index = null)
-    {
-        if(!$this->isDuplicate($object)){
-            switch ($this->currentPos) {
-                case $this::POS_HEAD:
-                default:
-                    $this->insertArrayIndex($this->headPos, $object, $index);
-                    break;
-                case $this::POS_BEGIN:
-                    $this->insertArrayIndex($this->beginPos, $object, $index);
-                    break;
-                case $this::POS_END:
-                    $this->insertArrayIndex($this->endPos, $object, $index);
-                    break;
-            }
-        }
-    }
-
-    function insertArrayIndex(&$array, $new_element, $index)
-    {
-            /*** get the start of the array ***/
-            $start = array_slice($array, 0, $index);
-            /*** get the end of the array ***/
-            $end = array_slice($array, $index);
-            /*** add the new element to the array ***/
-            $start = $start + array($index => $new_element);
-            /*** glue them back together and return ***/
-            $array = array_merge($start , $end);
-         arsort($array);
-
-        return $array;
+        return $this;
     }
 
     /**
-     * !! Override code
+     * Attach Script Content
      *
-     * @param $item
+     * @param string    $script Script Content
+     * @param string    $type   Text/Javascript
+     * @param array|int $attrs  Attributes Or Priority Offset
+     * @param int|null  $offset Script Priority Offset
+     *
+     * @return $this
+     */
+    function attachScript($script, $type = 'text/javascript', $attrs = [], $offset = null)
+    {
+        $item = [
+            "source"     => (string) $script,
+            "type"       => $type,
+            "attributes" => $attrs
+        ];
+
+        $this->__insertScriptStr($this->__itemToString($item), $offset);
+
+        return $this;
+    }
+
+    /**
+     * Is the script specified a duplicate?
+     *
+     * - look in all sections
+     *
+     * @param string $scrStr
+     *
+     * @return bool
+     */
+    function hasAttached($scrStr)
+    {
+        $duplicate = false;
+        foreach(array_keys($this->scripts) as $section) {
+            $duplicate |= $this->_hasAttached__equalSrc($section, $scrStr);
+
+            if ($duplicate)
+                break;
+        }
+
+        return $duplicate;
+    }
+
+    /**
+     * Render Attached Scripts
+     *
+     * @return string
+     */
+    function __toString()
+    {
+        $scripts = (isset($this->scripts[$this->_currSection]))
+            ? $this->scripts[$this->_currSection]
+            : [];
+
+        return implode('\r\n', $scripts);
+    }
+
+    /**
+     * Add Script To List
+     *
+     * @param string  $scrStr
+     * @param int     $offset
+     */
+    protected function __insertScriptStr($scrStr, $offset = null)
+    {
+        if ($this->hasAttached($scrStr))
+            return;
+
+
+        if (!array_key_exists($this->_currSection, $this->scripts))
+            $this->scripts[$this->_currSection] = [];
+
+        $this->__insertIntoPosArray($this->scripts[$this->_currSection], $scrStr, $offset);
+    }
+
+    protected function __insertIntoPosArray(&$array, $element, $offset)
+    {
+        // [1, 2, x, 4, 5, 6] ---> before [1, 2], after [4, 5, 6]
+        $beforeOffsetPart = array_slice($array, 0, $offset);
+        $afterOffsetPart  = array_slice($array, $offset);
+        # insert element in offset
+        $beforeOffsetPart = $beforeOffsetPart + [$offset => $element];
+        # glue them back
+        $array = array_merge($beforeOffsetPart , $afterOffsetPart);
+        arsort($array);
+    }
+
+    /**
+     * Convert Script Array Representation To String
+     *
+     * @param array        $item Script Array Representation
      * @param $indent
      * @param $escapeStart
      * @param $escapeEnd
+     *
      * @return string
      */
-    public function itemToString($item, $indent, $escapeStart, $escapeEnd)
+    protected function __itemToString(array $item, $indent = '', $escapeStart = '', $escapeEnd = '')
     {
-        $attrString = '';
+        $item = (object) $item;
 
+        $attrString = '';
         if (!empty($item->attributes)) {
             foreach ($item->attributes as $key => $value) {
-                if ((!$this->arbitraryAttributesAllowed() && !in_array($key, $this->optionalAttributes))
+                if ((!$this->_isArbitraryAttributesAllowed() && !in_array($key, $this->optionalAttributes))
                     || in_array($key, ['conditional', 'noescape'])
-                ) {
+                )
                     continue;
-                }
-                if ('defer' == $key) {
+
+                if ('defer' == $key)
                     $value = 'defer';
-                }
+
                 $attrString .= sprintf(' %s="%s"', $key, ($this->autoEscape) ? addslashes($value) : $value);
             }
         }
@@ -182,15 +207,13 @@ class HtmlScriptAction extends AbstractAResponder
         if (!empty($item->source)) {
             $html .= PHP_EOL;
 
-            if ($addScriptEscape) {
+            if ($addScriptEscape)
                 $html .= $indent . '    ' . $escapeStart . PHP_EOL;
-            }
 
             $html .= $indent . '    ' . $item->source;
 
-            if ($addScriptEscape) {
+            if ($addScriptEscape)
                 $html .= PHP_EOL . $indent . '    ' . $escapeEnd;
-            }
 
             $html .= PHP_EOL . $indent;
         }
@@ -202,13 +225,12 @@ class HtmlScriptAction extends AbstractAResponder
             && is_string($item->attributes['conditional'])
         ) {
             // inner wrap with comment end and start if !IE
-            if (str_replace(' ', '', $item->attributes['conditional']) === '!IE') {
+            if (str_replace(' ', '', $item->attributes['conditional']) === '!IE')
                 $html = '<!-->' . $html . '<!--';
-            }
+
             $html = $indent . '<!--[if ' . $item->attributes['conditional'] . ']>' . $html . '<![endif]-->';
-        } else {
+        } else
             $html = $indent . $html;
-        }
 
         return $html;
     }
@@ -220,61 +242,29 @@ class HtmlScriptAction extends AbstractAResponder
      *
      * @return bool
      */
-    protected function arbitraryAttributesAllowed()
+    protected function _isArbitraryAttributesAllowed()
     {
-        return $this->arbitraryAttributes;
-    }
-
-
-    /**
-     * Is the file specified a duplicate?
-     * @param $file
-     * @return bool
-     */
-    protected function isDuplicate($file)
-    {
-        if($this->equalSrc($this->headPos, $file))
-            return true;
-        if($this->equalSrc($this->beginPos, $file))
-            return true;
-        if($this->equalSrc($this->endPos, $file))
-            return true;
-        return false;
+        return $this->_arbitraryAttributes;
     }
 
     /**
-     *  Help to find duplicate file in 3 sections
-     * @param $scriptArray
-     * @param $file
+     * Find duplicate scripts in sections by src
+     *
+     * @param $section
+     * @param $scrStr
+     *
      * @return bool
      */
-    protected function equalSrc(&$scriptArray, $file){
-        foreach ($scriptArray as $item) {
+    protected function _hasAttached__equalSrc($section, $scrStr)
+    {
+        foreach ($section as $item) {
             $pattern = '/src=(["\'])(.*?)\1/';
-            if(preg_match($pattern, $item, $matches)>=0){
-                if (substr_count($file, $matches[2])>0) {
+
+            if(preg_match($pattern, $item, $matches) >= 0)
+                if (substr_count($scrStr, $matches[2]) > 0)
                     return true;
-                }
-            }
         }
+
         return false;
-    }
-
-    function __toString()
-    {
-
-        switch ($this->currentPos) {
-            case $this::POS_HEAD:
-            default:
-                return implode(' ', $this->headPos);
-                break;
-            case $this::POS_BEGIN:
-                return implode(' ', $this->beginPos);
-                break;
-            case $this::POS_END:
-                return implode(' ', $this->endPos);
-                break;
-        }
-        return implode(',', $this->scripts);
     }
 }
