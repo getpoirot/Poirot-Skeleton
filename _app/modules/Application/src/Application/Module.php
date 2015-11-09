@@ -23,7 +23,7 @@ class Module implements iSapiModule
     , Sapi\Module\Feature\AutoloadFeature
     , Sapi\Module\Feature\ServiceContainerFeature
     , Sapi\Module\Feature\ActionProviderFeature
-    , Sapi\Module\Feature\ResolveToServicesFeature
+    , Sapi\Module\Feature\PostLoadModulesServicesFeature
     , Sapi\Module\Feature\ConfigFeature
 {
     /**
@@ -76,7 +76,7 @@ class Module implements iSapiModule
      */
     function withConfig(EntityInterface $config)
     {
-        return include_once __DIR__.'/../../config/module.conf.php';
+        return include __DIR__.'/../../config/module.conf.php';
     }
 
     /**
@@ -134,7 +134,7 @@ class Module implements iSapiModule
      *
      * @throws \Exception
      */
-    function withContainerServices(
+    function onModulesLoadedWithServices(
         $sapi = null
         , $router = null
         , $viewModelResolver = null
