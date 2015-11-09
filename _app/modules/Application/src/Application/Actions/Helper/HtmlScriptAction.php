@@ -3,11 +3,7 @@ namespace Application\Actions\Helper;
 
 use Poirot\AaResponder\AbstractAResponder;
 
-/**
- * Class ScriptAction for manages JavaScripts for views.
- * @package Application\Actions\Helper
- */
-class ScriptAction extends AbstractAResponder
+class HtmlScriptAction extends AbstractAResponder
 {
 
     protected $currentPos;

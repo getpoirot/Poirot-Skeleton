@@ -13,11 +13,15 @@ class ApplicationActionsBuilder extends ContainerBuilder
     protected $services =
         [
             ## Helpers
+            'view'   => 'Application\Actions\Helper\ViewService',
             'url'    => 'Application\Actions\Helper\UrlService',
             'path'   => 'Application\Actions\Helper\PathService',
-            'script' => 'Application\Actions\Helper\ScriptAction',
+
             'cycle'  => 'Application\Actions\Helper\CycleAction',
-            'view'   => 'Application\Actions\Helper\ViewService',
+
+            # Html Tag Helpers
+            'htmlScript' => 'Application\Actions\Helper\HtmlScriptAction',
+            'htmlLink'   => 'Application\Actions\Helper\HtmlLinkAction',
 
             # Data Actions
             'HomeInfo'      => 'Application\Actions\HomeInfo',

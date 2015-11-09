@@ -3,11 +3,7 @@ namespace Application\Actions\Helper;
 
 use Poirot\AaResponder\AbstractAResponder;
 
-/**
- * Class LinkAction for manages StyleSheet for views.
- * @package Application\Actions\Helper
- */
-class LinkAction extends AbstractAResponder
+class HtmlLinkAction extends AbstractAResponder
 {
 
     /**
@@ -108,7 +104,7 @@ class LinkAction extends AbstractAResponder
      * !! Override code
      * Create HTML link element from data item
      *
-     * @param  stdClass $item
+     * @param  \stdClass $item
      * @return string
      */
     public function itemToString($item)
