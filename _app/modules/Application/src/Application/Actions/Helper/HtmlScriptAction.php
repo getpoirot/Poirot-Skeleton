@@ -50,7 +50,7 @@ class HtmlScriptAction extends AbstractAResponder
      *
      * @return $this
      */
-    function __invoke($section = 'inline')
+    function exec($section = 'inline')
     {
         $this->_currSection = (string) $section;
 

@@ -14,7 +14,7 @@ class HomeInfo extends AbstractSapiAction
      * - Route Params Will Resolved As Argument On Invoke
      *   you can use param name if needed.
      */
-    function __invoke($arg = null)
+    function exec()
     {
         // TODO load latest events as ajax widget on view
 

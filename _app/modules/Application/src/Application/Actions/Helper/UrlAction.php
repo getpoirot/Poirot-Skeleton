@@ -26,7 +26,7 @@ class UrlAction extends AbstractAResponder
      *
      * @return mixed
      */
-    function __invoke($routeName = null, $params = [])
+    function exec($routeName = null, $params = [])
     {
         if ($this->_router === null )
             throw new \RuntimeException('No RouteStackInterface instance provided');

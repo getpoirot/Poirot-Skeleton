@@ -33,7 +33,7 @@ class PathAction extends AbstractAResponder
      *
      * @return mixed
      */
-    function __invoke($arg = null)
+    function exec()
     {
         $funcArgs = func_get_args();
 

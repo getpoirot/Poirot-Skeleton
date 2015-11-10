@@ -13,7 +13,7 @@ use Application\AbstractSapiAction;
 
 class RenderContent extends AbstractSapiAction
 {
-    function __invoke($arg = null)
+    function exec()
     {
         ## force to render, every action that return variable will render
         return [];

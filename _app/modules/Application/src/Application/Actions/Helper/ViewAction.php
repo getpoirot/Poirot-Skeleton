@@ -28,7 +28,7 @@ class ViewAction extends AbstractAResponder
      *
      * @return iViewModel|PermutationViewModel|string
      */
-    function __invoke($template = null, $variables = null)
+    function exec($template = null, $variables = null)
     {
         $viewModel = $this->viewModel;
 

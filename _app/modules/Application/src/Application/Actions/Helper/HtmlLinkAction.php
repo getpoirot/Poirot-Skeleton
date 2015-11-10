@@ -45,7 +45,7 @@ class HtmlLinkAction extends AbstractAResponder
      *
      * @return $this
      */
-    function __invoke($arg = null)
+    function exec()
     {
         return $this;
     }

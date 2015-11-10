@@ -23,7 +23,7 @@ class ConfigAction extends AbstractAResponder
      *
      * @return $this
      */
-    function __invoke($confKey = null)
+    function exec($confKey = null)
     {
         $config = $this->_getConfig();
         if ($confKey !== null)

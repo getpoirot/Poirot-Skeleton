@@ -43,7 +43,7 @@ class CycleAction extends AbstractAResponder
      *
      * @return CycleAction Clone this
      */
-    function __invoke($action = null, $steps = 1, $reset = true)
+    function exec($action = null, $steps = 1, $reset = true)
     {
         $this->__registerCycleAction($action, $steps);
 
