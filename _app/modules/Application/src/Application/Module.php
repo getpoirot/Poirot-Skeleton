@@ -102,10 +102,13 @@ class Module implements iSapiModule
 
     /**
      * Get Action Services
+     * @see onAttainModuleActionsListener
      *
      * priority 400
      *
-     * @return ModuleActionsContainer
+     * - return Array used to Build ModuleActionsContainer
+     *
+     * @return array|ModuleActionsContainer
      */
     function getActions()
     {

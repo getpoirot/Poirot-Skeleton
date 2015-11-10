@@ -11,7 +11,8 @@ class HomeInfo extends AbstractSapiAction
     const REPO_URL = 'https://api.github.com/orgs/phpoirot/events';
 
     /**
-     * @inheritdoc
+     * - Route Params Will Resolved As Argument On Invoke
+     *   you can use param name if needed.
      */
     function __invoke($arg = null)
     {

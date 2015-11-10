@@ -33,7 +33,7 @@ class UrlAction extends AbstractAResponder
 
         if ($routeName === null)
             ## using matched route
-            $router = $this->__getRouteMatch();
+            $router = $this->getMatchedRoute();
         else
             $router = $this->_router->explore($routeName);
 
@@ -55,6 +55,24 @@ class UrlAction extends AbstractAResponder
         $params = $this->_c__lastInvokedRouter[1];
 
         return $router->assemble($params);
+    }
+
+    /**
+     * Attain Route Match
+     * @return HAbstractChainRouter
+     */
+    function getMatchedRoute()
+    {
+        if ($this->_routeMatch)
+            return $this->_routeMatch;
+
+        /** @var \Poirot\Http\Message\HttpRequest $request */
+        // TODO fresh because route (RSegment) manipulate meta DataFiled and must be reset
+        $request = $this->_sContainer->from('/')->fresh('request');
+        $router  = $this->_router;
+
+        $this->_routeMatch = $router->match($request);
+        return $this->_routeMatch;
     }
 
     function __toString()
@@ -95,24 +113,6 @@ class UrlAction extends AbstractAResponder
         $this->_routeMatch = $routeMatch;
 
         return $this;
-    }
-
-    /**
-     * Attain Route Match
-     * @return HAbstractChainRouter
-     */
-    protected function __getRouteMatch()
-    {
-        if ($this->_routeMatch)
-            return $this->_routeMatch;
-
-        /** @var \Poirot\Http\Message\HttpRequest $request */
-        // TODO fresh because route (RSegment) manipulate meta DataFiled and must be reset
-        $request = $this->_sContainer->from('/')->fresh('request');
-        $router  = $this->_router;
-
-        $this->_routeMatch = $router->match($request);
-        return $this->_routeMatch;
     }
 
 
