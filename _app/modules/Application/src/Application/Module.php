@@ -179,6 +179,9 @@ class Module implements iSapiModule
                     'exact_match' => true,
                 ],
                 'params'  => [
+                    ## use last action result or merged params
+                    ## default is params
+                    # '_use_' => 'params',
                     '_then_' => [
                         ## chain actions
                         '/module/application.action/HomeInfo',
