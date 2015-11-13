@@ -81,6 +81,7 @@ class Module implements iSapiModule
 
     /**
      * Build Service Container
+     * @see onAttainModuleBuildServicesListener
      *
      * priority: 700
      *
@@ -91,7 +92,7 @@ class Module implements iSapiModule
      *
      * @param Container $services
      *
-     * @return void
+     * @return array|void Container Builder Config
      */
     function withServiceContainer(Container $services)
     {
