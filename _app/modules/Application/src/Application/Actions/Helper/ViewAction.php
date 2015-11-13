@@ -30,7 +30,8 @@ class ViewAction extends AbstractAResponder
      */
     function exec($template = null, $variables = null)
     {
-        $viewModel = $this->viewModel;
+        #! view must be immutable
+        $viewModel = clone $this->viewModel;
 
         if ($template !== null)
             $viewModel->setTemplate($template);
@@ -38,14 +39,42 @@ class ViewAction extends AbstractAResponder
         if ($variables)
             $viewModel->variables()->from($variables);
 
-        return $this;
+        #! view helper action is immutable
+        return new self(['view_model' => $viewModel]);
     }
 
-    function __toString()
+    /**
+     * Proxy To View Model Render
+     *
+     * ! to avoid echo $view->render() that output twice
+     *
+     * @return string
+     */
+    function render()
     {
         return $this->viewModel->render();
     }
 
+    function __toString()
+    {
+        try {
+            $rendered = $this->render();
+        } catch (\Exception $e) {
+            ## avoid exception error on __toString, display exception within html body
+            $rendered = $this->__renderException($e);
+        }
+
+        return $rendered;
+    }
+
+    /**
+     * Proxy all method calls to ViewModel
+     *
+     * @param $method
+     * @param $arguments
+     *
+     * @return mixed
+     */
     function __call($method, $arguments)
     {
         return call_user_func_array([$this->viewModel, $method], $arguments);
@@ -63,5 +92,24 @@ class ViewAction extends AbstractAResponder
         $this->viewModel = $viewModel;
 
         return $this;
+    }
+
+    protected function __renderException($e)
+    {
+        $eClass = get_class($e);
+        return <<<HTML
+        <h3>{$eClass}</h3>
+        <dl style="direction: ltr">
+            <dt>File:</dt>
+            <dd>
+                <pre class="prettyprint linenums">{$e->getFile()}:{$e->getLine()}</pre>
+            </dd>
+            <dt>Message:</dt>
+            <dd>
+                <pre class="prettyprint linenums">{$e->getMessage()}</pre>
+            </dd>
+        </dl>
+HTML;
+
     }
 }
