@@ -29,7 +29,7 @@ namespace Poirot
      */
     function isCommandLine()
     {
-        return (php_sapi_name() == 'cli');
+        return ( strpos(php_sapi_name(), 'cli') === 0 );
     }
 
     /**
