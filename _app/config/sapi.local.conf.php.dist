@@ -1,0 +1,41 @@
+<?php
+/**
+ * Local Sapi Application Options
+ *
+ * - pass to Application as SetterBuilder
+ *   @see \Poirot\Application\Sapi::__construct
+ *
+ * - merged config will set as service with (app.config) name
+ */
+
+return [
+    /**
+     * @see \Poirot\Application\Sapi\SapiAppBuilder::build
+     */
+
+    'modules' =>
+        /**
+         * this list used by Module Manager To Load Modules
+         * @see \Poirot\Application\ModuleManager\AbstractModuleManager::loadModule
+         */
+        [
+            // Enabled Application Module(s)
+            'Application',
+
+            # instance direct load module
+            ## 'Application' => new Module()
+
+            # instance module loading with module manager options
+            #                   module manager option .....................
+            # 'Application' => ['dir_map' => APP_DIR_APPLICATION.'/modules'],
+        ],
+
+    // extra options
+
+    'db' => [
+        'driver'         => 'Pdo',
+        'driver_options' => [
+            PDO::MYSQL_ATTR_INIT_COMMAND => 'SET NAMES \'UTF8\''
+        ],
+    ],
+];

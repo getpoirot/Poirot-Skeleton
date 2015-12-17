@@ -1,0 +1,13 @@
+<?php
+return [
+    /**
+     * container builder options
+     * @see \Poirot\Container\ContainerBuilder
+     */
+    'interfaces' => [
+        ## program into interfaces
+    ],
+    'services'   => [
+        ## services ...
+    ],
+];
