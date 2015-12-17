@@ -1,0 +1,22 @@
+++
+#throw, #exception, #error
+
+Be careful on every line inside classes that you used another class methods and
+may throws exception with this call
+try and catch or rise an exception belong to the class itself
+
+[code:]
+try{
+    $resource = $streamClient->getConnect();
+} catch(\Exception $e)
+{
+    throw new \Exception(sprintf(
+        'Cannot connect to (%s).'
+        , $this->options()->getServerUrl()->toString()
+        , $e->getCode()
+        , $e ## as previous exception
+    ));
+}
+[code]
+
+++
