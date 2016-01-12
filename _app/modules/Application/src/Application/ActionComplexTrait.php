@@ -3,7 +3,7 @@ namespace Application;
 
 use Poirot\Container\Container;
 use Poirot\Container\Interfaces\iContainer;
-use Poirot\Container\Plugins\InvokablePlugins;
+use Poirot\Container\Plugins\PluginsInvokable;
 
 trait ActionComplexTrait
 {
@@ -13,7 +13,7 @@ trait ActionComplexTrait
     protected $_cache__InvokablePlugins = [
         # 'namespace' => InvokablePlugins
     ];
-    /** @var InvokablePlugins */
+    /** @var PluginsInvokable */
     protected $__cache_callProxyInvokable;
 
     /** @var Container */
@@ -30,7 +30,7 @@ trait ActionComplexTrait
      *
      * @param string $namespacePath
      *
-     * @return InvokablePlugins
+     * @return PluginsInvokable
      */
     function action($namespacePath = null)
     {
@@ -61,7 +61,7 @@ trait ActionComplexTrait
                 , $actions
             ));
 
-        return $this->_cache__InvokablePlugins[$namespacePath] = new InvokablePlugins($aContainer);
+        return $this->_cache__InvokablePlugins[$namespacePath] = new PluginsInvokable($aContainer);
     }
 
 

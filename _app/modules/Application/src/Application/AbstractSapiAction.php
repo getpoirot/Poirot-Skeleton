@@ -4,7 +4,7 @@ namespace Application;
 use Poirot\AaResponder\AbstractAResponder;
 use Poirot\Container\Interfaces\Respec\iCServiceAware;
 use Poirot\Container\Interfaces\Respec\iCServiceProvider;
-use Poirot\Container\Plugins\InvokablePlugins;
+use Poirot\Container\Plugins\PluginsInvokable;
 
 abstract class AbstractSapiAction extends AbstractAResponder
     implements iCServiceAware
@@ -24,7 +24,7 @@ abstract class AbstractSapiAction extends AbstractAResponder
     {
         // forward proxy call to invokablePlugins instantiate
         if (!$this->__cache_callProxyInvokable)
-            $this->__cache_callProxyInvokable = new InvokablePlugins($this->services());
+            $this->__cache_callProxyInvokable = new PluginsInvokable($this->services());
 
         return $this->__cache_callProxyInvokable->__call($method, $args);
     }
