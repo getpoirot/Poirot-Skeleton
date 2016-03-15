@@ -18,7 +18,7 @@
 	    , "bin-dir"   : "./vendor/bin"
     }
     , "require": {
-        "poirot/core": "dev-master"
+        "poirot/std": "dev-master"
             , "poirot/loader": "dev-master"
         , "poirot/logger": "dev-master"
         , "poirot/application": "dev-master"
