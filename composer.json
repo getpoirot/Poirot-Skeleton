@@ -28,9 +28,9 @@
             , "poirot/action-responder": "dev-devel"
                 , "poirot/pathuri": "dev-devel"
                 , "poirot/stream": "dev-devel"
-                , "poirot/args-resolver": "dev-devel"
             , "poirot/container": "dev-devel"
             , "poirot/view": "dev-devel"
+            , "poirot/psr7-http": "dev-devel"
     }
     ,"require-dev": {
        "oodle/krumo": "^0.5.0"
@@ -47,6 +47,5 @@
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Events.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Router.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/psr7.git" }
-      ,{ "type": "git" ,"url": "https://github.com/phPoirot/ArgsResolver.git" }
     ]
 }
