@@ -14,21 +14,21 @@
     ]
     , "config":
     {
-	    "vendor-dir": "./vendor"
-	    , "bin-dir"   : "./vendor/bin"
+        "vendor-dir": "./vendor"
+        , "bin-dir"   : "./vendor/bin"
     }
     , "require": {
         "poirot/std": "dev-devel"
-            , "poirot/loader": "dev-devel"
-        , "poirot/logger": "dev-devel"
+        , "poirot/loader": "dev-devel"
         , "poirot/application": "dev-devel"
+        , "poirot/action-responder": "dev-devel"
+        , "poirot/logger": "dev-devel"
             , "poirot/router": "dev-devel"
             , "poirot/events": "dev-devel"
             , "poirot/http": "dev-devel"
-            , "poirot/action-responder": "dev-devel"
                 , "poirot/pathuri": "dev-devel"
                 , "poirot/stream": "dev-devel"
-            , "poirot/container": "dev-devel"
+            , "poirot/ioc": "dev-devel"
             , "poirot/view": "dev-devel"
             , "poirot/psr7-http": "dev-devel"
     }
@@ -38,6 +38,8 @@
     ,"repositories": [
        { "type": "git" ,"url": "https://github.com/phPoirot/Std.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Loader.git" }
+      ,{ "type": "git" ,"url": "https://github.com/phPoirot/Application.git" }
+      ,{ "type": "git" ,"url": "https://github.com/phPoirot/AaResponder.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Logger.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/IoC.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Stream.git" }
