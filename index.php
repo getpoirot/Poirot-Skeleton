@@ -28,8 +28,5 @@ namespace Poirot
     # start application:
     IoC()->get('sapi')->run();
 
-    P\Std\ErrorStack::handleDone();
-    P\Std\ErrorStack::handleDone();
-
     die(); // every soul shall taste of death
 }
