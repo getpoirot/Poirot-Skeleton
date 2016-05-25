@@ -2,7 +2,6 @@
 namespace Poirot
 {
     use Poirot\Ioc\Container;
-    use Poirot\Std\ErrorStack;
     use Poirot\View\ViewModel\RendererPhp;
 
     /**
@@ -14,28 +13,8 @@ namespace Poirot
         static $IoC;
         if ($IoC) return $IoC;
 
-        $config = array();
-        foreach (glob(PT_DIR_CONFIG.'/services.{,local.}conf.php', GLOB_BRACE) as $filePath) {
-            ErrorStack::handleException(function ($e) use ($filePath) {
-                ob_end_clean();
-                throw new \RuntimeException(
-                    sprintf('Error while loading config: %s', $filePath)
-                    , $e
-                );
-            });
-
-            ErrorStack::handleError(E_ALL, function ($e){ throw $e; });
-
-            ob_start();
-            $fConf = include_once $filePath;
-            if (!is_array($fConf)) throw new \RuntimeException('Config file must provide array.');
-            ob_get_clean();
-
-            ErrorStack::handleDone();
-            ErrorStack::handleDone();
-        }
-
-        $IoC = new Container(new Container\BuildContainer($config));
+        $config = \Poirot\Config\load(PT_DIR_CONFIG.'/services');
+        $IoC    = new Container(new Container\BuildContainer($config));
         return $IoC;
     };
 
@@ -73,3 +52,59 @@ namespace Poirot
     }
 }
 
+namespace Poirot\Config
+{
+    use Poirot\Std\ErrorStack;
+    use Poirot\Std\Type\StdArray;
+
+    /**
+     * Load Config Files From Given Directory
+     *
+     * - file name can be in form of dir/to/file then:
+     *   it will looking for files
+     *   "file.local.conf.php" and "file.conf.php"
+     *
+     * - if given argument is directory:
+     *   load all files with extension
+     *   ".local.conf.php" and ".conf.php"
+     *
+     * @param string $dirOrFile file or dir path
+     *
+     * @return StdArray
+     */
+    function load($dirOrFile)
+    {
+        $config = new StdArray();
+        
+        $globPattern = $dirOrFile;
+        if (is_dir($dirOrFile)) {
+            $globPattern = str_replace('\\', '/', $globPattern); // normalize path separator
+            $globPattern = rtrim($globPattern, '/').'/*';
+        }
+        if (!is_file($dirOrFile))
+            $globPattern .= '.{,local.}conf.php';
+
+        foreach (glob($globPattern, GLOB_BRACE) as $filePath) {
+            ErrorStack::handleException(function ($e) use ($filePath) {
+                ob_end_clean();
+                throw new \RuntimeException(
+                    sprintf('Error while loading config: %s', $filePath)
+                    , $e
+                );
+            });
+
+            ErrorStack::handleError(E_ALL, function ($e){ throw $e; });
+
+            ob_start();
+            $fConf = include_once $filePath;
+            if (!is_array($fConf)) throw new \RuntimeException('Config file must provide array.');
+            $config = $config->withMergeRecursive($fConf);
+            ob_get_clean();
+
+            ErrorStack::handleDone();
+            ErrorStack::handleDone();
+        }
+
+        return $config;
+    }
+}
