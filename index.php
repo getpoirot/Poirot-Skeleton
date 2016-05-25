@@ -27,6 +27,4 @@ namespace Poirot
 
     # start application:
     IoC()->get('sapi')->run();
-
-    die(); // every soul shall taste of death
 }
