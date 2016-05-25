@@ -30,7 +30,7 @@ return array(
                 array(
                     ':class'  => 'Poirot\Application\ServiceConfigSapiDefault',
                     #':class'  => \Poirot\Application\ServiceConfigSapiDefault::class,
-                    'setting' => \Poirot\Config\load(PT_DIR_CONFIG.'/sapi'),
+                    'setting' => \Poirot\Config\load(PT_DIR_CONFIG.'/sapi_default'),
                 ),
         ),
 );
