@@ -2,7 +2,7 @@
 return [
     /**
      * container builder options
-     * @see \Poirot\Container\ContainerBuilder
+     * @see \Poirot\Ioc\Container\BuildContainer
      */
     'interfaces' =>
         [

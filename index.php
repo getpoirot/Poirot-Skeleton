@@ -22,11 +22,8 @@ namespace Poirot
 
 
     // Run the application:
-    P\Std\ErrorStack::handleException('\Poirot\printException');
-    P\Std\ErrorStack::handleError(E_ERROR|E_RECOVERABLE_ERROR|E_USER_ERROR, function($error) {
-        // handle runtime errors
-        throw $error;
-    });
+    P\Std\ErrorStack::handleError(E_ERROR|E_RECOVERABLE_ERROR|E_USER_ERROR, function($error) { throw $error; });
+    P\Std\ErrorStack::handleException(function ($error) { printException($error); die; });
 
     # start application:
     IoC()->get('sapi')->run();
