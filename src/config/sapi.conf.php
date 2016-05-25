@@ -45,7 +45,7 @@ return [
 
                 'modules_dir' => [
                     # default modules directory
-                    PR_DIR_APPLICATION.'/modules',
+                    PT_DIR_SOURCE.'/modules',
                 ],
             ],
             'events' => [

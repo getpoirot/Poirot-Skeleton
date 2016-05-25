@@ -12,21 +12,21 @@ nbproject
 composer.lock
 
 tmp/
-!_app/tmp
-_app/tmp/**
-!_app/tmp/readme.txt
+!src/tmp
+src/tmp/**
+!src/tmp/readme.txt
 
 # Local configuration files #
-_app/config/*.local.**
-_app/config/*.local.php
-_app/config/*.local.conf.php
-_app/config/*/*.local.**
-_app/config/*/*.local.php
-_app/config/*/*.local.conf.php
+src/config/*.local.**
+src/config/*.local.php
+src/config/*.local.conf.php
+src/config/*/*.local.**
+src/config/*/*.local.php
+src/config/*/*.local.conf.php
 
 # modules
-_app/modules/*
-!_app/modules/Application
+src/modules/*
+!src/modules/Application
 
 # Default Vendor Libraries (not composer) #
 vendor/**

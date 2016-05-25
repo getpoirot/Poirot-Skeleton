@@ -1,12 +1,10 @@
 <?php
 namespace Poirot
 {
-    use Poirot\Core\ErrorStack;
-    use Poirot\Core\PHPEnv;
-    use Poirot\Core\PHPEnvFactory;
-
-    (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 ) and
-    exit('Needs at least PHP5.3; your current php version is ' . phpversion() . '.');
+    use Poirot as P;
+    
+    (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 )
+    and exit('Needs at least PHP5.3; your current php version is ' . phpversion() . '.');
 
     // Application Consistencies and AutoLoad:
     #  as separated file to used from 3rd party applications
@@ -17,25 +15,24 @@ namespace Poirot
 
 
     // Set environment settings:
-    $EnvSettings = PHPEnvFactory::factory(function() {
-        $default = ($env_mode = getenv('POIROT_ENV_MODE')) ? $env_mode : 'default';
-        return (defined('DEBUG') && constant('DEBUG')) ? 'dev' : $default;
-    });
-    $EnvSettings::setupSystemWide();
+    P\Std\Environment\FactoryEnvironment::of(function() {
+        $default = ($env_mode = getenv('PT_ENVIRONMENT'))        ? $env_mode : 'default';
+        return     (defined('PT_DEBUG') && constant('PT_DEBUG')) ? 'dev'     : $default;
+    })->apply();
 
 
     // Run the application:
-    ErrorStack::handleException('\Poirot\print_exception');
-    ErrorStack::handleError(E_ERROR|E_RECOVERABLE_ERROR|E_USER_ERROR, function() {
+    P\Std\ErrorStack::handleException('\Poirot\printException');
+    P\Std\ErrorStack::handleError(E_ERROR|E_RECOVERABLE_ERROR|E_USER_ERROR, function($error) {
         // handle runtime errors
-        if ($errExpt = ErrorStack::handleDone()) throw $errExpt;
+        throw $error;
     });
 
     # start application:
-    ioC()->get('sapi')->run();
+    IoC()->get('sapi')->run();
 
-    ErrorStack::handleDone();
-    ErrorStack::handleDone();
+    P\Std\ErrorStack::handleDone();
+    P\Std\ErrorStack::handleDone();
 
     die(); // every soul shall taste of death
 }

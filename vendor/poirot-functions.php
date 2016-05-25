@@ -1,24 +1,41 @@
 <?php
 namespace Poirot
 {
-    use Poirot\Container\Container;
-    use Poirot\Container\ContainerBuilder;
-    use Poirot\Core\Config;
-    use Poirot\View\Interpreter\IsoRenderer;
+    use Poirot\Ioc\Container;
+    use Poirot\Std\ErrorStack;
+    use Poirot\View\ViewModel\RendererPhp;
 
     /**
      * IoC Container Gateway
      *
      * @return Container
      */
-    function ioC() {
+    function IoC() {
         static $IoC;
-        if ($IoC)
-            return $IoC;
+        if ($IoC) return $IoC;
 
-        $config = new Config(glob(PR_DIR_CONFIG.'/services.{,local.}conf.php', GLOB_BRACE));
-        $IoC    = new Container(new ContainerBuilder($config->toArray()));
+        $config = array();
+        foreach (glob(PT_DIR_CONFIG.'/services.{,local.}conf.php', GLOB_BRACE) as $filePath) {
+            ErrorStack::handleException(function ($e) use ($filePath) {
+                ob_end_clean();
+                throw new \RuntimeException(
+                    sprintf('Error while loading config: %s', $filePath)
+                    , $e
+                );
+            });
 
+            ErrorStack::handleError(E_ALL, function ($e){ throw $e; });
+
+            ob_start();
+            $fConf = include_once $filePath;
+            if (!is_array($fConf)) throw new \RuntimeException('Config file must provide array.');
+            ob_get_clean();
+
+            ErrorStack::handleDone();
+            ErrorStack::handleDone();
+        }
+
+        $IoC = new Container(new Container\BuildContainer($config));
         return $IoC;
     };
 
@@ -39,14 +56,15 @@ namespace Poirot
      *
      * @throws \Exception cant render exception
      */
-    function print_exception(\Exception $e) {
+    function printException(\Exception $e) {
         if (ob_get_level())
             ## clean output buffer, display just error page
             ob_end_clean();
         try {
-            echo (new IsoRenderer())->capture(
-                PR_DIR_THEME_DEFAULT.'/error/general.php'
-                , ['exception' => $e]
+            $renderer = new RendererPhp();
+            echo $renderer->capture(
+                PT_DIR_THEME_DEFAULT.'/error/general.php'
+                , array('exception' => $e)
             );
         } catch(\Exception $ve) {
             ## throw exception if can't render template

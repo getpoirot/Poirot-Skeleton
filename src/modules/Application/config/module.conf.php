@@ -1,5 +1,5 @@
 <?php
-$themesFolder = basename(PR_DIR_THEME_DEFAULT);
+$themesFolder = basename(PT_DIR_THEME_DEFAULT);
 
 return [
     // Path Helper Action Options
@@ -13,7 +13,7 @@ return [
     'asset_manager' => [
         'Poirot\Loader\AggregateLoader' => [
             'attach' => [
-                100 => new \Poirot\Loader\PathStackResolver([$themesFolder => [PR_DIR_THEME_DEFAULT]]),
+                100 => new \Poirot\Loader\PathStackResolver([$themesFolder => [PT_DIR_THEME_DEFAULT]]),
             ]
         ]
     ],

@@ -26,7 +26,7 @@ return [
             'Poirot\Application\ConfigService' =>
                 [
                     '_name_'  => 'sapi.settings',
-                    'options' => new \Poirot\Core\Config(glob(PR_DIR_CONFIG.'/sapi.{,local.}conf.php', GLOB_BRACE)),
+                    'options' => new \Poirot\Core\Config(glob(PT_DIR_CONFIG.'/sapi.{,local.}conf.php', GLOB_BRACE)),
                 ],
         ],
 ];

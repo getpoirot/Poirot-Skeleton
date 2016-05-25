@@ -6,25 +6,25 @@
  */
 
 // Define Consts:
-define('PR_REQUEST_MICROTIME', microtime(true));
+define('PT_TIME_REQUEST_MICRO', microtime(true));
 
-define('PR_DEBUG', true);
+define('PT_DEBUG', ($debug = getenv('PT_DEBUG')) ? $debug : true);
 
-define('PR_DIR_WWW'          , dirname(__FILE__) );
-define('PR_DIR_THEME_DEFAULT', PR_DIR_WWW.'/theme' );
+define('PT_DIR_WWW'          , dirname(__FILE__) );
+define('PT_DIR_THEME_DEFAULT', PT_DIR_WWW.'/theme' );
 # by default application folder is in www public
 # it can be changed to any other folder like APP_DIR_WWW.'/../app-folder'
-define('PR_DIR_VENDOR',   	   PR_DIR_WWW.'/vendor');
-define('PR_DIR_APPLICATION',  PR_DIR_WWW.'/_app');
-define('PR_DIR_CORE', 			     PR_DIR_APPLICATION.'/modules');
-define('PR_DIR_CONFIG', 		     PR_DIR_APPLICATION.'/config');
-define('PR_DIR_TEMP', 			     PR_DIR_APPLICATION.'/tmp');
+define('PT_DIR_VENDOR',       PT_DIR_WWW.'/vendor');
+define('PT_DIR_SOURCE',       PT_DIR_WWW.'/src');
+define('PT_DIR_MODULES',             PT_DIR_SOURCE.'/modules');
+define('PT_DIR_CONFIG',              PT_DIR_SOURCE.'/config');
+define('PT_DIR_TEMP',                PT_DIR_SOURCE.'/tmp');
 
 // Setup autoLoading:
-if (file_exists(PR_DIR_VENDOR.'/autoload.php'))
-    require_once PR_DIR_VENDOR.'/autoload.php';
+if (file_exists(PT_DIR_VENDOR.'/autoload.php'))
+    require_once PT_DIR_VENDOR.'/autoload.php';
 
-if (file_exists(PR_DIR_VENDOR.'/poirot-autoload.php'))
-    require_once PR_DIR_VENDOR.'/poirot-autoload.php';
+if (file_exists(PT_DIR_VENDOR.'/poirot-autoload.php'))
+    require_once PT_DIR_VENDOR.'/poirot-autoload.php';
 
 ## (!) Don't add something on lines below

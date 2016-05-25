@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $this      \Poirot\View\Interpreter\IsoRenderer
+ * @var $this      \Poirot\View\ViewModel\RendererPhp
  * @var $exception \Exception
  */
 ?>
