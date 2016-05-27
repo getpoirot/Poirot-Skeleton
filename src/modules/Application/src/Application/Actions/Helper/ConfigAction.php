@@ -2,7 +2,7 @@
 namespace Application\Actions\Helper;
 
 use Poirot\AaResponder\AbstractAResponder;
-use Poirot\Application\AbstractSapi;
+use Poirot\Application\aSapi;
 use Poirot\Application\Sapi\Module\ModuleActionsContainer;
 use Poirot\Container\Interfaces\iContainer;
 use Poirot\Container\Interfaces\Respec\iCServiceAware;
@@ -35,7 +35,7 @@ class ConfigAction extends AbstractAResponder
     protected function _getConfig()
     {
         if (!$this->config) {
-            /** @var AbstractSapi $sapi */
+            /** @var aSapi $sapi */
             $sapi = $this->services->from('/')->get('sapi');
             $this->config = $sapi->config();
         }

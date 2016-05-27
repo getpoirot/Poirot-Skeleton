@@ -7,7 +7,7 @@ use Application\Actions\ApplicationActionsBuilder;
 use Application\HttpSapi\ViewModelRenderer;
 use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
-use Poirot\Application\AbstractSapi;
+use Poirot\Application\aSapi;
 use Poirot\Application\Sapi\Module\ModuleActionsContainer;
 use Poirot\Container\Container;
 use Poirot\Container\Service\InstanceService;
@@ -31,7 +31,7 @@ class Module implements iSapiModule
      *
      * priority: 1000
      *
-     * @param iApplication|AbstractSapi $app Application Instance
+     * @param iApplication|aSapi $app Application Instance
      *
      * @throws \Exception
      * @return void
@@ -42,7 +42,7 @@ class Module implements iSapiModule
         if (!getenv('HTTP_MOD_REWRITE'))
             throw new \RuntimeException('It seems that you don\'t have "MOD_REWRITE" enabled on the server.');
 
-        if (!$app instanceof \Poirot\Application\AbstractSapi)
+        if (!$app instanceof \Poirot\Application\aSapi)
             throw new \Exception('This module is not compatible with application.');
     }
 
@@ -131,7 +131,7 @@ class Module implements iSapiModule
      * resolveToServices(iHRouter $router = null, $sapi = null, $other = null)
      * [/code]
      *
-     * @param AbstractSapi                        $sapi
+     * @param aSapi                        $sapi
      * @param RChainStack                         $router
      * @param AggregateLoader                     $viewModelResolver
      * @param Sapi\Server\Http\ViewRenderStrategy $viewRenderStrategy
