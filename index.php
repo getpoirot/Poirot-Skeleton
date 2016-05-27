@@ -26,5 +26,6 @@ namespace Poirot
     P\Std\ErrorStack::handleException(function ($error) { printException($error); die; });
 
     # start application:
-    IoC()->get('sapi')->run();
+    $application = IoC()->get('sapi');
+    $application->run();
 }

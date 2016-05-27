@@ -18,8 +18,8 @@ return array(
             'sapi' =>
             // Application Sapi Service Factory
                 array(
-                    ':class'  => 'Poirot\Application\SapiService',
-                    #':class'  => \Poirot\Application\SapiService::class ,
+                    ':class'  => 'Poirot\Application\ServiceSapiApplication',
+                    #':class'  => \Poirot\Application\ServiceSapiApplication::class ,
                     'setting' => 'sapi.setting'
                     // config can be (string) as registered service
                     // or \Traversable|array instance
@@ -27,9 +27,11 @@ return array(
             'sapi.setting' =>
             // Implement of \Traversable|array, defined as service so it can be
             // replaced with other to load config from DB in exp.
+            // exp. load maintain modules if system is on maintain
+            //      or load specific modules for domain name, etc..
                 array(
-                    ':class'  => 'Poirot\Application\ServiceConfigSapiDefault',
-                    #':class'  => \Poirot\Application\ServiceConfigSapiDefault::class,
+                    ':class'  => 'Poirot\Application\ServiceSapiConfigDefault',
+                    #':class'  => \Poirot\Application\ServiceSapiConfigDefault::class,
                     'setting' => \Poirot\Config\load(PT_DIR_CONFIG.'/sapi_default'),
                 ),
         ),

@@ -10,7 +10,7 @@
 
 return array(
     /**
-     * @see \Poirot\Application\Sapi\SapiAppBuilder::build
+     * @see BuildS
      */
 
     'modules' =>
@@ -30,10 +30,6 @@ return array(
             # 'Application' => ['dir_map' => APP_DIR_APPLICATION.'/modules'],
         ),
     'module_manager' =>
-        /**
-         * build module manager:
-         * @see \Poirot\Application\Sapi\SapiAppBuilder::build
-         */
         array(
             # options setter
             'options' => array(
@@ -49,7 +45,7 @@ return array(
                 ),
             ),
             'events' => array(
-                /** @see Poirot\Events\EventBuilder */
+                /** @see \Poirot\Events\Event\BuildEvent */
                 #'listeners' => [
                    // ...
                 #],

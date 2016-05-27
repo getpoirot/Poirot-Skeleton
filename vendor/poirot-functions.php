@@ -31,11 +31,11 @@ namespace Poirot
     /**
      * Print Exception Object Error Page
      *
-     * @param \Exception $e
+     * @param \Exception|\Throwable $e
      *
-     * @throws \Exception cant render exception
+     * @throws \Throwable
      */
-    function printException(\Exception $e) {
+    function printException($e) {
         if (ob_get_level())
             ## clean output buffer, display just error page
             ob_end_clean();
