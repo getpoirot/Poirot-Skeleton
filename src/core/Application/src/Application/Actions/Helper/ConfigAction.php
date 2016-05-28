@@ -3,7 +3,7 @@ namespace Application\Actions\Helper;
 
 use Poirot\AaResponder\AbstractAResponder;
 use Poirot\Application\aSapi;
-use Poirot\Application\Sapi\Module\ModuleActionsContainer;
+use Poirot\Application\Sapi\Module\ContainerModuleActions;
 use Poirot\Container\Interfaces\iContainer;
 use Poirot\Container\Interfaces\Respec\iCServiceAware;
 use Poirot\Core\Config;
@@ -13,7 +13,7 @@ use Poirot\Core\Config;
 class ConfigAction extends AbstractAResponder
     implements iCServiceAware ## inject service container
 {
-    /** @var ModuleActionsContainer */
+    /** @var ContainerModuleActions */
     protected $services;
     /** @var  Config */
     protected $config;

@@ -8,23 +8,20 @@ use Application\HttpSapi\ViewModelRenderer;
 use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
 use Poirot\Application\aSapi;
-use Poirot\Application\Sapi\Module\ModuleActionsContainer;
-use Poirot\Container\Container;
-use Poirot\Container\Service\InstanceService;
-use Poirot\Core\Interfaces\EntityInterface;
-use Poirot\Core\Interfaces\iDataSetConveyor;
-use Poirot\Loader\AggregateLoader;
-use Poirot\Loader\Autoloader\AggregateAutoloader;
-use Poirot\Loader\PathStackResolver;
-use Poirot\Router\Http\RChainStack;
+use Poirot\Application\Sapi\Module\ContainerModuleActions;
+use Poirot\Ioc\Container;
+use Poirot\Loader\Autoloader\LoaderAutoloadAggregate;
+use Poirot\Loader\LoaderNamespaceStack;
+use Poirot\Router\RouterStack;
+use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 class Module implements iSapiModule
-    , Sapi\Module\Feature\InitializeSapiFeature
-    , Sapi\Module\Feature\AutoloadFeature
-    , Sapi\Module\Feature\ServiceContainerFeature
-    , Sapi\Module\Feature\ActionProviderFeature
-    , Sapi\Module\Feature\PostLoadModulesServicesFeature
-    , Sapi\Module\Feature\ConfigFeature
+    , Sapi\Module\Feature\FeatureModuleInitSapi
+    , Sapi\Module\Feature\FeatureModuleAutoload
+    , Sapi\Module\Feature\FeatureModuleInitServices
+    , Sapi\Module\Feature\FeatureModuleNestActions
+    , Sapi\Module\Feature\FeatureModuleOnPostLoadModulesInitServices
+    , Sapi\Module\Feature\FeatureModuleMergeConfig
 {
     /**
      * Init Module Against Application
@@ -36,7 +33,7 @@ class Module implements iSapiModule
      * @throws \Exception
      * @return void
      */
-    function Initialize(iApplication $app)
+    function initialize(iApplication $app)
     {
         // init requirements
         if (!getenv('HTTP_MOD_REWRITE'))
@@ -51,13 +48,13 @@ class Module implements iSapiModule
      *
      * priority: 999
      *
-     * @param AggregateAutoloader $autoloader
+     * @param LoaderAutoloadAggregate $autoloader
      *
      * @return void
      */
-    function withAutoload(AggregateAutoloader $autoloader)
+    function initAutoload(LoaderAutoloadAggregate $autoloader)
     {
-        $autoloader->loader('NamespaceAutoloader')
+        $autoloader->by('NamespaceAutoloader')
             ->setStack(__NAMESPACE__, __DIR__);
     }
 
@@ -70,11 +67,11 @@ class Module implements iSapiModule
      * - you may return an array or iDataSetConveyor
      *   that would be merge with config current data
      *
-     * @param EntityInterface $config
+     * @param iDataEntity $config
      *
-     * @return array|iDataSetConveyor
+     * @return array|\Traversable
      */
-    function withConfig(EntityInterface $config)
+    function initConfig(iDataEntity $config)
     {
         return include __DIR__.'/../../config/module.conf.php';
     }
@@ -94,11 +91,11 @@ class Module implements iSapiModule
      *
      * @return array|void Container Builder Config
      */
-    function withServiceContainer(Container $services)
+    function initServices(Container $services)
     {
         ## replace default renderer with Application renderer including stuffs
         if ($services->has('ViewModelRenderer'))
-            $services->set(new InstanceService('ViewModelRenderer', new ViewModelRenderer));
+            $services->set(new Container\Service\ServiceInstance('ViewModelRenderer', new ViewModelRenderer));
     }
 
     /**
@@ -109,11 +106,11 @@ class Module implements iSapiModule
      *
      * - return Array used to Build ModuleActionsContainer
      *
-     * @return array|ModuleActionsContainer
+     * @return array|ContainerModuleActions
      */
     function getActions()
     {
-        $moduleActions  = new ModuleActionsContainer(
+        $moduleActions  = new ContainerModuleActions(
             new ApplicationActionsBuilder
         );
 
@@ -138,7 +135,7 @@ class Module implements iSapiModule
      *
      * @throws \Exception
      */
-    function onModulesLoadedWithServices(
+    function initServicesWhenModulesLoaded(
         $sapi = null
         , $router = null
         , $viewModelResolver = null
@@ -153,10 +150,10 @@ class Module implements iSapiModule
         );
 
         // Register Module Default View Scripts Path To View Resolver -------------------------------\
-        $viewModelResolver->attach(new PathStackResolver([
-            'site/home' => [__DIR__.'/../../view/site/home'],
-            'partial'   => [__DIR__.'/../../view/partial'],
-        ]));
+        $viewModelResolver->attach(new LoaderNamespaceStack(array(
+            'site/home' => array(__DIR__.'/../../view/site/home'),
+            'partial'   => array(__DIR__.'/../../view/partial'),
+        )));
 
         # Register Routes:
         $this->__withHttpRouter($router);
@@ -165,31 +162,31 @@ class Module implements iSapiModule
     /**
      * Setup Http Stack Router
      *
-     * @param RChainStack $router
+     * @param RouterStack $router
      *
      * @return void
      */
-    protected function __withHttpRouter(RChainStack $router)
+    protected function __withHttpRouter(RouterStack $router)
     {
-        $router->addRoutes([
-            'home'  => [
+        $router->addRoutes(array(
+            'home'  => array(
                 'route'    => 'segment',
                 ## 'override' => true, ## default is true
-                'options' => [
+                'options' => array(
                     'criteria'    => '/',
                     'exact_match' => true,
-                ],
-                'params'  => [
+                ),
+                'params'  => array(
                     ## use last action result or merged params
                     ## default is params
                     # '_use_' => 'params',
-                    '_then_' => [
+                    '_then_' => array(
                         ## chain actions
                         '/module/application.action/HomeInfo',
                         '/module/application.action/RenderContent',
-                    ],
-                ],
-            ],
-        ]);
+                    ),
+                ),
+            ),
+        ));
     }
 }

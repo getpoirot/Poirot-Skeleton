@@ -41,7 +41,7 @@ return array(
 
                 'modules_dir' => array(
                     # default modules directory
-                    PT_DIR_SOURCE.'/modules',
+                    PT_DIR_CORE,
                 ),
             ),
             'events' => array(

@@ -16,7 +16,7 @@ define('PT_DIR_THEME_DEFAULT', PT_DIR_WWW.'/theme' );
 # it can be changed to any other folder like APP_DIR_WWW.'/../app-folder'
 define('PT_DIR_VENDOR',       PT_DIR_WWW.'/vendor');
 define('PT_DIR_SOURCE',       PT_DIR_WWW.'/src');
-define('PT_DIR_MODULES',             PT_DIR_SOURCE.'/modules');
+define('PT_DIR_CORE',                PT_DIR_SOURCE.'/core');
 define('PT_DIR_CONFIG',              PT_DIR_SOURCE.'/config');
 define('PT_DIR_TEMP',                PT_DIR_SOURCE.'/tmp');
 

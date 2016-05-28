@@ -2,7 +2,7 @@
 namespace Application\Actions\Helper;
 
 use Poirot\AaResponder\AbstractAResponder;
-use Poirot\Application\Sapi\Module\ModuleActionsContainer;
+use Poirot\Application\Sapi\Module\ContainerModuleActions;
 use Poirot\Container\Interfaces\iContainer;
 use Poirot\Container\Interfaces\Respec\iCServiceAware;
 use Poirot\Router\Http\HAbstractChainRouter;
@@ -14,7 +14,7 @@ class UrlAction extends AbstractAResponder
     protected $_router;
     /** @var HAbstractChainRouter */
     protected $_routeMatch;
-    /** @var ModuleActionsContainer */
+    /** @var ContainerModuleActions */
     protected $_sContainer;
 
     protected $_c__lastInvokedRouter;
@@ -121,7 +121,7 @@ class UrlAction extends AbstractAResponder
     /**
      * Set Service Container
      *
-     * @param ModuleActionsContainer|iContainer $container
+     * @param ContainerModuleActions|iContainer $container
      */
     function setServiceContainer(iContainer $container)
     {
