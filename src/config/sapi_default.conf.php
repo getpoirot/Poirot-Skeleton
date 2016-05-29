@@ -2,15 +2,12 @@
 /**
  * Default Sapi Application Options
  *
- * - pass to Application as SetterBuilder
- *   @see \Poirot\Application\Sapi::__construct
- *
  * - merged config will set as service with (app.config) name
  */
 
 return array(
     /**
-     * @see BuildS
+     * @see BuildSapi
      */
 
     'modules' =>
