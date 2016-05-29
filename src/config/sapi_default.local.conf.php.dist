@@ -24,10 +24,6 @@ return [
 
             # instance direct load module
             ## 'Application' => new Module()
-
-            # instance module loading with module manager options
-            #                   module manager option .....................
-            # 'Application' => ['dir_map' => APP_DIR_APPLICATION.'/modules'],
         ],
 
     // extra options

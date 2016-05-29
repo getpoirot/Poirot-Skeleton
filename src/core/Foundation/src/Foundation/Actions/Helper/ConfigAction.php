@@ -1,12 +1,9 @@
 <?php
-namespace Application\Actions\Helper;
+namespace Module\Foundation\Actions\Helper;
 
 use Poirot\AaResponder\AbstractAResponder;
 use Poirot\Application\aSapi;
 use Poirot\Application\Sapi\Module\ContainerModuleActions;
-use Poirot\Container\Interfaces\iContainer;
-use Poirot\Container\Interfaces\Respec\iCServiceAware;
-use Poirot\Core\Config;
 
 // TODO maybe restricted conf key needed, exp. db or passwords
 

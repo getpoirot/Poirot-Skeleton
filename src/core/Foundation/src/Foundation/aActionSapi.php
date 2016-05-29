@@ -1,17 +1,18 @@
 <?php
-namespace Application;
+namespace Module\Foundation;
 
 use Poirot\AaResponder\AbstractAResponder;
-use Poirot\Container\Interfaces\Respec\iCServiceAware;
-use Poirot\Container\Interfaces\Respec\iCServiceProvider;
-use Poirot\Container\Plugins\PluginsInvokable;
 
-abstract class AbstractSapiAction extends AbstractAResponder
-    implements iCServiceAware
-    , iCServiceProvider
+use Poirot\Ioc\Interfaces\Respec\iServicesAware;
+use Poirot\Ioc\Interfaces\Respec\iServicesProvider;
+
+abstract class aActionSapi
+    extends AbstractAResponder
+    implements iServicesAware
+    , iServicesProvider
 {
     // Access registered modules actions
-    use ActionComplexTrait;
+    use tActionComplex;
 
     /**
      * Call to neighbors module actions in container

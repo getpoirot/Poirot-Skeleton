@@ -1,11 +1,7 @@
 <?php
-namespace Application;
+namespace Module\Foundation;
 
-use Poirot\Container\Container;
-use Poirot\Container\Interfaces\iContainer;
-use Poirot\Container\Plugins\PluginsInvokable;
-
-trait ActionComplexTrait
+trait tActionComplex
 {
     /** Default namespace storing default application actions */
     public static $APP_ACTIONS_DEFAULT = '/module/application';

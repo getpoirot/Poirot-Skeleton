@@ -1,5 +1,5 @@
 <?php
-namespace Application\Actions\Helper;
+namespace Module\Foundation\Actions\Helper;
 
 use Poirot\AaResponder\AbstractAResponder;
 use Poirot\Application\Sapi\Module\ContainerModuleActions;

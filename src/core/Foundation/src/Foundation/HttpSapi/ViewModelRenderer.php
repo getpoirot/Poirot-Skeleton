@@ -1,7 +1,7 @@
 <?php
-namespace Application\HttpSapi;
+namespace Module\Foundation\HttpSapi;
 
-use Application\ActionComplexTrait;
+use Application\tActionComplex;
 use Poirot\Container\Interfaces\Respec\iCServiceAware;
 use Poirot\Container\Interfaces\Respec\iCServiceProvider;
 use Poirot\View\Interpreter\IsoRenderer;
@@ -20,7 +20,7 @@ class ViewModelRenderer extends IsoRenderer
     implements iCServiceAware
     , iCServiceProvider
 {
-    use ActionComplexTrait;
+    use tActionComplex;
 
     /** @var bool  */
     protected static $isInitialized = false;

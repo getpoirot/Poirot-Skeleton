@@ -1,17 +1,16 @@
 <?php
-namespace Application\Actions;
+namespace Module\Foundation\Actions;
 
-use Poirot\Container\ContainerBuilder;
+use Poirot\Ioc\Container\BuildContainer;
 
-class ApplicationActionsBuilder extends ContainerBuilder
+class BuildContainerActionOfFoundationModule
+    extends BuildContainer
 {
-    protected $interfaces =
-        [
+    protected $interfaces 
+        = array();
 
-        ];
-
-    protected $services =
-        [
+    /*protected $services
+        = array(
             ## Helpers
             'view'   => 'Application\Actions\Helper\ViewService',
             'config' => 'Application\Actions\Helper\ConfigAction',
@@ -28,5 +27,5 @@ class ApplicationActionsBuilder extends ContainerBuilder
             # Data Actions
             'HomeInfo'      => 'Application\Actions\HomeInfo',
             'RenderContent' => 'Application\Actions\RenderContent',
-        ];
+        );*/
 }

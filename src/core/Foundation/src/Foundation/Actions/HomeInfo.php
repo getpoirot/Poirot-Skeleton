@@ -1,12 +1,10 @@
 <?php
-namespace Application\Actions;
+namespace Module\Foundation\Actions;
 
-use Application\AbstractSapiAction;
-use Poirot\Stream\Context\Http\HttpContext;
+use Module\Foundation\aActionSapi;
 use Poirot\Stream\Streamable;
-use Poirot\Stream\WrapperClient;
 
-class HomeInfo extends AbstractSapiAction
+class HomeInfo extends aActionSapi
 {
     const REPO_URL = 'https://api.github.com/orgs/phpoirot/events';
 

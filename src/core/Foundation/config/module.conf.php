@@ -1,29 +1,29 @@
 <?php
 $themesFolder = basename(PT_DIR_THEME_DEFAULT);
 
-return [
+return array(
     // Path Helper Action Options
-    'path_statics' => [
-        'paths' => [
+    'path_statics' => array(
+        'paths' => array(
             'app-assets' => "\$basePath/{$themesFolder}/www",
-        ],
-    ],
+        ),
+    ),
 
     // Asset Manager Module Config (for enabled AssetManager module)
-    'asset_manager' => [
-        'Poirot\Loader\AggregateLoader' => [
-            'attach' => [
-                100 => new \Poirot\Loader\PathStackResolver([$themesFolder => [PT_DIR_THEME_DEFAULT]]),
-            ]
-        ]
-    ],
+    'asset_manager' => array(
+        'Poirot\Loader\AggregateLoader' => array(
+            'attach' => array(
+                100 => new \Poirot\Loader\LoaderNamespaceStack(array($themesFolder => array(PT_DIR_THEME_DEFAULT))),
+            )
+        )
+    ),
 
     // View Renderer Options
-    'view_renderer' => [
+    'view_renderer' => array(
         'default_layout'   => 'default',
 
         /** @see onErrorListener::__invoke */
-        'error_view_template' => [
+        'error_view_template' => array(
             ## full name of class exception
 
             ## use null on second index cause view template render as final layout
@@ -31,8 +31,8 @@ return [
             // 'Specific\Error\Exception' => ['error/spec', 'override_layout_name_here']
 
             ## here (blank) is defined as default layout for all error pages
-            'Exception' => ['error/error', 'blank'],
+            'Exception' => array('error/error', 'blank'),
             'Poirot\Application\Exception\RouteNotMatchException' => 'error/404',
-        ],
-    ],
-];
+        ),
+    ),
+);

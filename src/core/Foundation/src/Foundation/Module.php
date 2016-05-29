@@ -1,52 +1,57 @@
 <?php
-namespace Application;
+namespace Module\Foundation;
 
-use Poirot\Application\Sapi;
-
-use Application\Actions\ApplicationActionsBuilder;
-use Application\HttpSapi\ViewModelRenderer;
 use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
 use Poirot\Application\aSapi;
+use Poirot\Application\Sapi;
 use Poirot\Application\Sapi\Module\ContainerModuleActions;
+
 use Poirot\Ioc\Container;
+
 use Poirot\Loader\Autoloader\LoaderAutoloadAggregate;
+use Poirot\Loader\Autoloader\LoaderAutoloadNamespace;
 use Poirot\Loader\LoaderNamespaceStack;
+
 use Poirot\Router\RouterStack;
+
 use Poirot\Std\Interfaces\Struct\iDataEntity;
+
+use Module\Foundation\Actions\BuildContainerActionOfFoundationModule;
+use Module\Foundation\HttpSapi\ViewModelRenderer;
 
 class Module implements iSapiModule
     , Sapi\Module\Feature\FeatureModuleInitSapi
     , Sapi\Module\Feature\FeatureModuleAutoload
     , Sapi\Module\Feature\FeatureModuleInitServices
     , Sapi\Module\Feature\FeatureModuleNestActions
-    , Sapi\Module\Feature\FeatureModuleOnPostLoadModulesInitServices
+    , Sapi\Module\Feature\FeatureOnPostLoadModulesGrabServices
     , Sapi\Module\Feature\FeatureModuleMergeConfig
 {
     /**
      * Init Module Against Application
      *
-     * priority: 1000
+     * priority: 1000 A
      *
-     * @param iApplication|aSapi $app Application Instance
+     * @param iApplication|aSapi $sapi Application Instance
      *
      * @throws \Exception
      * @return void
      */
-    function initialize(iApplication $app)
+    function initialize($sapi)
     {
         // init requirements
         if (!getenv('HTTP_MOD_REWRITE'))
             throw new \RuntimeException('It seems that you don\'t have "MOD_REWRITE" enabled on the server.');
 
-        if (!$app instanceof \Poirot\Application\aSapi)
-            throw new \Exception('This module is not compatible with application.');
+        if (!$sapi instanceof \Poirot\Application\aSapi)
+            throw new \Exception('This module is not compatible with this sapi application.');
     }
 
     /**
      * Register class autoload on Autoload
      *
-     * priority: 999
+     * priority: 1000 B
      *
      * @param LoaderAutoloadAggregate $autoloader
      *
@@ -54,17 +59,19 @@ class Module implements iSapiModule
      */
     function initAutoload(LoaderAutoloadAggregate $autoloader)
     {
-        $autoloader->by('NamespaceAutoloader')
-            ->setStack(__NAMESPACE__, __DIR__);
+        #$nameSpaceLoader = \Poirot\Loader\Autoloader\LoaderAutoloadNamespace::class;
+        $nameSpaceLoader = 'Poirot\Loader\Autoloader\LoaderAutoloadNamespace';
+        /** @var LoaderAutoloadNamespace $nameSpaceLoader */
+        $nameSpaceLoader = $autoloader->by($nameSpaceLoader);
+        $nameSpaceLoader->addResource(__NAMESPACE__, __DIR__);
     }
 
     /**
      * Register config key/value
-     * @see InitModuleListener
      *
-     * priority: 800
+     * priority: 1000 D
      *
-     * - you may return an array or iDataSetConveyor
+     * - you may return an array or Traversable
      *   that would be merge with config current data
      *
      * @param iDataEntity $config
@@ -78,9 +85,8 @@ class Module implements iSapiModule
 
     /**
      * Build Service Container
-     * @see onAttainModuleBuildServicesListener
      *
-     * priority: 700
+     * priority: 1000 X
      *
      * - register services
      * - define aliases
@@ -100,9 +106,8 @@ class Module implements iSapiModule
 
     /**
      * Get Action Services
-     * @see onAttainModuleActionsListener
      *
-     * priority 400
+     * priority not that serious
      *
      * - return Array used to Build ModuleActionsContainer
      *
@@ -111,7 +116,7 @@ class Module implements iSapiModule
     function getActions()
     {
         $moduleActions  = new ContainerModuleActions(
-            new ApplicationActionsBuilder
+            new BuildContainerActionOfFoundationModule
         );
 
         return $moduleActions;

@@ -1,7 +1,6 @@
 <?php
-namespace Application\Actions;
-
-use Application\AbstractSapiAction;
+namespace Module\Foundation\Actions;
+use Module\Foundation\aActionSapi;
 
 /**
  * With Poirot\Application\Sapi\Server\Http\ViewRenderStrategy
@@ -11,7 +10,7 @@ use Application\AbstractSapiAction;
  * this will render site/home template from viewRenderer
  */
 
-class RenderContent extends AbstractSapiAction
+class RenderContent extends aActionSapi
 {
     function exec()
     {
