@@ -31,12 +31,13 @@ class Module implements iSapiModule
     /**
      * Init Module Against Application
      *
+     * - determine sapi server, cli or http
+     *
      * priority: 1000 A
      *
      * @param iApplication|aSapi $sapi Application Instance
      *
      * @throws \Exception
-     * @return void
      */
     function initialize($sapi)
     {
