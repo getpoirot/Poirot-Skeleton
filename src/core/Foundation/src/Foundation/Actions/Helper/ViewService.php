@@ -1,9 +1,10 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Poirot\Container\Service\AbstractService;
+use Poirot\Ioc\Container\Service\aServiceContainer;
 
-class ViewService extends AbstractService
+class ViewService 
+    extends aServiceContainer
 {
     /**
      * @var string Service Name
@@ -15,7 +16,7 @@ class ViewService extends AbstractService
      *
      * @return mixed
      */
-    function createService()
+    function newService()
     {
         $rootSrv   = $this->services()->from('/');
         $viewModel = $rootSrv->fresh('viewModel');
@@ -26,4 +27,3 @@ class ViewService extends AbstractService
         return $view;
     }
 }
- 

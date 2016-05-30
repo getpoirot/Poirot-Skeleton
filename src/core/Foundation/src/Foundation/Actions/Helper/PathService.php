@@ -1,13 +1,17 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Poirot\Container\Service\AbstractService;
-use Poirot\Core\Config;
-use Poirot\Http\Interfaces\Message\iHttpRequest;
-use Poirot\Http\Plugins\Request\PhpServer;
+use Poirot\Http\HttpMessage\Request\Plugin\PhpServer;
+use Poirot\Http\HttpRequest;
+use Poirot\Http\Interfaces\iHttpRequest;
+use Poirot\Ioc\Container\Service\aServiceContainer;
+use Poirot\Std\Struct\DataEntity;
 
-class PathService extends AbstractService
+class PathService
+    extends aServiceContainer
 {
+    const CONF_KEY = 'path_statics';
+    
     /**
      * @var string Service Name
      */
@@ -18,11 +22,11 @@ class PathService extends AbstractService
      *
      * @return mixed
      */
-    function createService()
+    function newService()
     {
-        /** @var Config $config */
+        /** @var DataEntity $config */
         $config = $this->services()->from('/')->get('sapi')->config();
-        $config = $config->get('path_statics', []);
+        $config = $config->get(self::CONF_KEY, array());
 
         $pathAction = new PathAction($config);
 
@@ -31,38 +35,30 @@ class PathService extends AbstractService
             $self = $this;
             ## server url
             $pathAction->params()->set('serverUrl', function() use ($self) {
-                return $self->__getServerUrl();
+                return $self->_getServerUrl();
             });
             ## base path
             $pathAction->params()->set('basePath', function() use ($self) {
-                return $self->__getBasePath();
+                return $self->_getBasePath();
             });
         }
 
         return $pathAction;
     }
-
-    protected function __getServerUrl()
+    
+    protected function _getServerUrl()
     {
-        /** @var \Poirot\Http\Message\HttpRequest $request */
-        $request = $this->services()->from('/')->get('Request');
-        $uri     = $request->getUri();
-
-        $server  = '';
-        (!$scheme = $uri->getScheme()) ?: $server .= $scheme.'://';
-        (!$host   = $uri->getHost())   ?: $server .= $host;
-        (!$port   = $uri->getPort())   ?: $server .= ':'.$port;
-
+        // TODO
+        
+        $server = 'http://localhost:8080';
         return $server;
     }
 
-    protected function __getBasePath()
+    protected function _getBasePath()
     {
-        /** @var \Poirot\Http\Message\HttpRequest $request */
-        $request = $this->services()->from('/')->get('Request');
-
-        $phpServer = new PhpServer(['message_object' => $request]);
-        return $phpServer->getBasePath();
+        /** @var HttpRequest $request */
+        $request  = $this->services()->from('/')->get('Request');
+        $basePath = PhpServer::_($request)->getBasePath();
+        return $basePath;
     }
 }
- 

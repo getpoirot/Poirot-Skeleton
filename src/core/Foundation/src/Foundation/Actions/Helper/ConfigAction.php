@@ -1,35 +1,38 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Poirot\AaResponder\AbstractAResponder;
+use Module\Foundation\Actions\aAction;
 use Poirot\Application\aSapi;
-use Poirot\Application\Sapi\Module\ContainerModuleActions;
+use Poirot\Std\Struct\DataEntity;
 
-// TODO maybe restricted conf key needed, exp. db or passwords
 
-class ConfigAction extends AbstractAResponder
-    implements iCServiceAware ## inject service container
+class ConfigAction 
+    extends aAction
 {
-    /** @var ContainerModuleActions */
-    protected $services;
-    /** @var  Config */
+    /** @var  DataEntity */
     protected $config;
 
     /**
      * Invoke Config
      *
-     * @return $this
+     * @param null $confKey
+     * 
+     * @return DataEntity|mixed
+     * @throws \Exception
      */
-    function exec($confKey = null)
+    function __invoke($confKey = null)
     {
-        $config = $this->_getConfig();
+        $config = $this->_attainSapiConfig();
         if ($confKey !== null)
             $config = $config->get($confKey);
 
         return $config;
     }
 
-    protected function _getConfig()
+    
+    // ..
+    
+    protected function _attainSapiConfig()
     {
         if (!$this->config) {
             /** @var aSapi $sapi */
@@ -38,15 +41,5 @@ class ConfigAction extends AbstractAResponder
         }
 
         return $this->config;
-    }
-
-    /**
-     * Set Service Container
-     *
-     * @param iContainer $container
-     */
-    function setServiceContainer(iContainer $container)
-    {
-        $this->services = $container;
     }
 }

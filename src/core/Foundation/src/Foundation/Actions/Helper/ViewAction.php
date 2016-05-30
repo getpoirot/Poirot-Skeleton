@@ -1,11 +1,9 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Poirot\AaResponder\AbstractAResponder;
-use Poirot\Core\Interfaces\iDataSetConveyor;
-use Poirot\View\Interfaces\iPermutationViewModel;
+use Module\Foundation\Actions\aAction;
 use Poirot\View\Interfaces\iViewModel;
-use Poirot\View\PermutationViewModel;
+use Poirot\View\ViewModelTemplate;
 
 /*
  * Render View Templates
@@ -15,20 +13,21 @@ use Poirot\View\PermutationViewModel;
  * $this->action()->view()->setTemplate('template')->render()
  */
 
-class ViewAction extends AbstractAResponder
+class ViewAction 
+    extends aAction
 {
-    /** @var PermutationViewModel */
+    /** @var ViewModelTemplate */
     protected $viewModel;
 
     /**
      * View Model Renderer Instance
      *
-     * @param string|null            $template
-     * @param array|iDataSetConveyor $variables
+     * @param string|null        $template
+     * @param array|\Traversable $variables
      *
-     * @return iViewModel|PermutationViewModel|string
+     * @return iViewModel|ViewModelTemplate|string
      */
-    function exec($template = null, $variables = null)
+    function __invoke($template = null, $variables = null)
     {
         #! view must be immutable
         $viewModel = clone $this->viewModel;
@@ -37,7 +36,7 @@ class ViewAction extends AbstractAResponder
             $viewModel->setTemplate($template);
 
         if ($variables)
-            $viewModel->variables()->from($variables);
+            $viewModel->variables()->import($variables);
 
         #! view helper action is immutable
         return new self(['view_model' => $viewModel]);
@@ -61,7 +60,7 @@ class ViewAction extends AbstractAResponder
             $rendered = $this->render();
         } catch (\Exception $e) {
             ## avoid exception error on __toString, display exception within html body
-            $rendered = $this->__renderException($e);
+            $rendered = $this->_renderException($e);
         }
 
         return $rendered;
@@ -83,18 +82,17 @@ class ViewAction extends AbstractAResponder
     /**
      * Set View Model
      *
-     * @param iPermutationViewModel $viewModel
+     * @param iViewModel $viewModel
      *
      * @return $this
      */
-    function setViewModel(iPermutationViewModel $viewModel)
+    function setViewModel(iViewModel $viewModel)
     {
         $this->viewModel = $viewModel;
-
         return $this;
     }
 
-    protected function __renderException($e)
+    protected function _renderException($e)
     {
         $eClass = get_class($e);
         return <<<HTML

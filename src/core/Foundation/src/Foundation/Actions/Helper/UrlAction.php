@@ -1,20 +1,17 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Poirot\AaResponder\AbstractAResponder;
-use Poirot\Application\Sapi\Module\ContainerModuleActions;
-use Poirot\Container\Interfaces\iContainer;
-use Poirot\Container\Interfaces\Respec\iCServiceAware;
-use Poirot\Router\Http\HAbstractChainRouter;
+use Module\Foundation\Actions\aAction;
+use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
 
-class UrlAction extends AbstractAResponder
-    implements iCServiceAware
+class UrlAction 
+    extends aAction
 {
     /** @var HAbstractChainRouter */
     protected $_router;
     /** @var HAbstractChainRouter */
     protected $_routeMatch;
-    /** @var ContainerModuleActions */
+    /** @var ContainerForFeatureActions */
     protected $_sContainer;
 
     protected $_c__lastInvokedRouter;
@@ -26,7 +23,7 @@ class UrlAction extends AbstractAResponder
      *
      * @return mixed
      */
-    function exec($routeName = null, $params = [])
+    function doInvoke($routeName = null, $params = array())
     {
         if ($this->_router === null )
             throw new \RuntimeException('No RouteStackInterface instance provided');
@@ -113,19 +110,6 @@ class UrlAction extends AbstractAResponder
         $this->_routeMatch = $routeMatch;
 
         return $this;
-    }
-
-
-    // ...
-
-    /**
-     * Set Service Container
-     *
-     * @param ContainerModuleActions|iContainer $container
-     */
-    function setServiceContainer(iContainer $container)
-    {
-        $this->_sContainer = $container;
     }
 }
  

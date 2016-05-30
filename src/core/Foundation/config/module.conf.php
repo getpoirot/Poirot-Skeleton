@@ -1,9 +1,11 @@
 <?php
+use Module\Foundation\Actions\Helper\PathService;
+
 $themesFolder = basename(PT_DIR_THEME_DEFAULT);
 
 return array(
     // Path Helper Action Options
-    'path_statics' => array(
+    PathService::CONF_KEY => array(
         'paths' => array(
             'app-assets' => "\$basePath/{$themesFolder}/www",
         ),

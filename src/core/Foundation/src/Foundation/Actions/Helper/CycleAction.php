@@ -1,7 +1,7 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Poirot\AaResponder\AbstractAResponder;
+use Module\Foundation\Actions\aAction;
 
 /*
 <div class="row">
@@ -18,11 +18,12 @@ use Poirot\AaResponder\AbstractAResponder;
 </div>
  */
 
-class CycleAction extends AbstractAResponder
+class CycleAction 
+    extends aAction
 {
-    protected static $_cycle_actions = [
+    protected static $_cycle_actions = array(
         # $action_unique_identifier =>
-    ];
+    );
 
     protected $action;
     protected $steps;
@@ -43,12 +44,12 @@ class CycleAction extends AbstractAResponder
      *
      * @return CycleAction Clone this
      */
-    function exec($action = null, $steps = 1, $reset = true)
+    function __invoke($action = null, $steps = 1, $reset = true)
     {
-        $this->__registerCycleAction($action, $steps);
+        $this->_registerCycleAction($action, $steps);
 
         /** @var CycleAction $currentCycle */
-        $currentCycle = self::$_cycle_actions[$this->__getCycleIdentifier()];
+        $currentCycle = self::$_cycle_actions[$this->_getCycleIdentifier()];
 
         ## always store last cycle step number and reset on invoke if necessary
         if ($reset && $currentCycle->getCounter() >= max($currentCycle->steps))
@@ -142,21 +143,21 @@ class CycleAction extends AbstractAResponder
         return $this;
     }
 
-    protected function __registerCycleAction($action, $steps)
+    protected function _registerCycleAction($action, $steps)
     {
         if (!is_callable($action) && !is_string($action))
             throw new \InvalidArgumentException(sprintf(
                 'Action must be string or callable function (%s) given.'
-                , \Poirot\Core\flatten($action)
+                , \Poirot\Std\flatten($action)
             ));
 
         if (is_int($steps))
-            $steps = [$steps];
+            $steps = array($steps);
 
         if (!is_array($steps))
             throw new \InvalidArgumentException(sprintf(
                 'Unknow cycle steps provided. given (%s)'
-                , \Poirot\Core\flatten($steps)
+                , \Poirot\Std\flatten($steps)
             ));
 
         // ...
@@ -169,19 +170,17 @@ class CycleAction extends AbstractAResponder
         $this->steps       = $steps;
         $this->steps_reset = $steps;
 
-        if (!isset(self::$_cycle_actions[$this->__getCycleIdentifier()]))
-            self::$_cycle_actions[$this->__getCycleIdentifier()] = clone $this;
+        if (!isset(self::$_cycle_actions[$this->_getCycleIdentifier()]))
+            self::$_cycle_actions[$this->_getCycleIdentifier()] = clone $this;
     }
 
     /**
      * Generate unique identifier for cycle call
-     *
      * @return string
      */
-    protected function __getCycleIdentifier()
+    protected function _getCycleIdentifier()
     {
-        $identifier = md5(\Poirot\Core\flatten($this->action));
-
+        $identifier = md5(\Poirot\Std\flatten($this->action));
         return $identifier;
     }
 }

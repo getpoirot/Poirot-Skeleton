@@ -9,23 +9,23 @@ class BuildContainerActionOfFoundationModule
     protected $interfaces 
         = array();
 
-    /*protected $services
+    protected $services
         = array(
             ## Helpers
-            'view'   => 'Application\Actions\Helper\ViewService',
-            'config' => 'Application\Actions\Helper\ConfigAction',
+            'view'   => 'Module\Foundation\Actions\Helper\ViewService',
+            'config' => 'Module\Foundation\Actions\Helper\ConfigAction',
 
-            'url'    => 'Application\Actions\Helper\UrlService',
-            'path'   => 'Application\Actions\Helper\PathService',
+            'url'    => 'Module\Foundation\Actions\Helper\UrlService',
+            'path'   => 'Module\Foundation\Actions\Helper\PathService',
 
-            'cycle'  => 'Application\Actions\Helper\CycleAction',
+            'cycle'  => 'Module\Foundation\Actions\Helper\CycleAction',
 
             # Html Tag Helpers
-            'htmlScript' => 'Application\Actions\Helper\HtmlScriptAction',
-            'htmlLink'   => 'Application\Actions\Helper\HtmlLinkAction',
+            'htmlScript' => 'Module\Foundation\Actions\Helper\HtmlScriptAction',
+            'htmlLink'   => 'Module\Foundation\Actions\Helper\HtmlLinkAction',
 
             # Data Actions
-            'HomeInfo'      => 'Application\Actions\HomeInfo',
-            'RenderContent' => 'Application\Actions\RenderContent',
-        );*/
+            'HomeInfo'      => 'Module\Foundation\Actions\HomeInfo',
+            'RenderContent' => 'Module\Foundation\Actions\RenderContent',
+        );
 }

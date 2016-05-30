@@ -1,19 +1,20 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Poirot\AaResponder\AbstractAResponder;
+use Module\Foundation\Actions\aAction;
 
 // TODO Script/Link Both Extend Something Like ObjectCollection, Reduce Code Clone
 
-class HtmlScriptAction extends AbstractAResponder
+class HtmlScriptAction 
+    extends aAction
 {
     /** @var string Current Script Section */
     protected $_currSection;
 
     /** @var array Attached Scripts */
-    protected $scripts = [
+    protected $scripts = array(
         // 'section' => [],
-    ];
+    );
 
     /**
      * Flag whether to automatically escape output, must also be
@@ -35,13 +36,13 @@ class HtmlScriptAction extends AbstractAResponder
      *
      * @var array
      */
-    protected $optionalAttributes = [
+    protected $optionalAttributes = array(
         'charset',
         'crossorigin',
         'defer',
         'language',
         'src',
-    ];
+    );
 
     /**
      * Invoke HtmlScript
@@ -50,10 +51,9 @@ class HtmlScriptAction extends AbstractAResponder
      *
      * @return $this
      */
-    function exec($section = 'inline')
+    function __invoke($section = 'inline')
     {
         $this->_currSection = (string) $section;
-
         return $this;
     }
 
@@ -67,7 +67,7 @@ class HtmlScriptAction extends AbstractAResponder
      *
      * @return $this
      */
-    function attachFile($src, $attrs = [], $type = 'text/javascript', $offset = null)
+    function attachFile($src, $attrs = array(), $type = 'text/javascript', $offset = null)
     {
         if (is_int($attrs))
             $offset = $attrs;
@@ -77,12 +77,12 @@ class HtmlScriptAction extends AbstractAResponder
             unset($attrs['type']);
         }
 
-        $item = [
+        $item = array(
             "type"       => $type,
-            "attributes" => array_merge(["src" => (string) $src], $attrs)
-        ];
+            "attributes" => array_merge(array("src" => (string) $src), $attrs)
+        );
 
-        $this->__insertScriptStr($this->__itemToString($item), $offset);
+        $this->_insertScriptStr($this->_itemToString($item), $offset);
 
         return $this;
     }
@@ -97,20 +97,20 @@ class HtmlScriptAction extends AbstractAResponder
      *
      * @return $this
      */
-    function attachScript($script, $attrs = [], $type = 'text/javascript', $offset = null)
+    function attachScript($script, $attrs = array(), $type = 'text/javascript', $offset = null)
     {
         if (isset($attrs['type'])) {
             $type = $attrs['type'];
             unset($attrs['type']);
         }
 
-        $item = [
+        $item = array(
             "source"     => (string) $script,
             "type"       => $type,
             "attributes" => $attrs
-        ];
+        );
 
-        $this->__insertScriptStr($this->__itemToString($item), $offset);
+        $this->_insertScriptStr($this->_itemToString($item), $offset);
 
         return $this;
     }
@@ -146,7 +146,7 @@ class HtmlScriptAction extends AbstractAResponder
     {
         $scripts = (isset($this->scripts[$this->_currSection]))
             ? $this->scripts[$this->_currSection]
-            : [];
+            : array();
 
         return implode('\r\n', $scripts);
     }
@@ -157,25 +157,25 @@ class HtmlScriptAction extends AbstractAResponder
      * @param string  $scrStr
      * @param int     $offset
      */
-    protected function __insertScriptStr($scrStr, $offset = null)
+    protected function _insertScriptStr($scrStr, $offset = null)
     {
         if ($this->hasAttached($scrStr))
             return;
 
 
         if (!array_key_exists($this->_currSection, $this->scripts))
-            $this->scripts[$this->_currSection] = [];
+            $this->scripts[$this->_currSection] = array();
 
-        $this->__insertIntoPosArray($this->scripts[$this->_currSection], $scrStr, $offset);
+        $this->_insertIntoPosArray($this->scripts[$this->_currSection], $scrStr, $offset);
     }
 
-    protected function __insertIntoPosArray(&$array, $element, $offset)
+    protected function _insertIntoPosArray(&$array, $element, $offset)
     {
         // [1, 2, x, 4, 5, 6] ---> before [1, 2], after [4, 5, 6]
         $beforeOffsetPart = array_slice($array, 0, $offset);
         $afterOffsetPart  = array_slice($array, $offset);
         # insert element in offset
-        $beforeOffsetPart = $beforeOffsetPart + [$offset => $element];
+        $beforeOffsetPart = $beforeOffsetPart + array($offset => $element);
         # glue them back
         $array = array_merge($beforeOffsetPart , $afterOffsetPart);
         arsort($array);
@@ -191,7 +191,7 @@ class HtmlScriptAction extends AbstractAResponder
      *
      * @return string
      */
-    protected function __itemToString(array $item, $indent = '', $escapeStart = '', $escapeEnd = '')
+    protected function _itemToString(array $item, $indent = '', $escapeStart = '', $escapeEnd = '')
     {
         $item = (object) $item;
 
@@ -199,7 +199,7 @@ class HtmlScriptAction extends AbstractAResponder
         if (!empty($item->attributes)) {
             foreach ($item->attributes as $key => $value) {
                 if ((!$this->_isArbitraryAttributesAllowed() && !in_array($key, $this->optionalAttributes))
-                    || in_array($key, ['conditional', 'noescape'])
+                    || in_array($key, array('conditional', 'noescape'))
                 )
                     continue;
 

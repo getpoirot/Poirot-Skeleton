@@ -1,24 +1,29 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Poirot\AaResponder\AbstractAResponder;
+use Module\Foundation\Actions\aAction;
+use Poirot\Std\Struct\DataEntity;
 
-class PathAction extends AbstractAResponder
+class PathAction 
+    extends aAction
 {
     /** @var array key value of paths name and uri */
-    protected $paths = [
+    protected $paths = array(
         ## name => '$var/uri/to/path'
-    ];
+    );
 
     /** @var array Path names Restricted from override */
-    protected $__restricted = [
+    protected $__restricted = array(
         # 'path-name' => true
-    ];
+    );
 
     /** @var string Last invoked path name */
     protected $__lastInvokedPath;
     /** @var string Last invoked uri */
     protected $__lastInvokedUri;
+    
+    /** @var DataEntity */
+    protected $params;
 
     /**
      * @inheritdoc
@@ -33,7 +38,7 @@ class PathAction extends AbstractAResponder
      *
      * @return mixed
      */
-    function exec()
+    function __invoke()
     {
         $funcArgs = func_get_args();
 
@@ -59,7 +64,7 @@ class PathAction extends AbstractAResponder
         array_unshift($funcArgs, $uri); ### we want uri as first argument
         ## assemble($uri, ..arguments)
         $assembledUri = call_user_func_array(
-            [$this, '_assemble']
+            array($this, '_assemble')
             , $funcArgs
         );
 
@@ -102,7 +107,7 @@ class PathAction extends AbstractAResponder
      * @throws \Exception
      * @return mixed
      */
-    protected function _assemble($uri, array $vars = [])
+    protected function _assemble($uri, array $vars = array())
     {
         if (!empty($vars) && array_values($vars) == $vars)
             throw new \Exception('Variable Arrays Must Be Associated.');
@@ -117,7 +122,7 @@ class PathAction extends AbstractAResponder
             // we don't have any variable in uri
             return $uri;
 
-        $vars = array_merge($this->params()->toArray(), $vars);
+        $vars = array_merge(\Poirot\Std\cast($this->params())->toArray(), $vars);
 
         // correct order of variables
         // 'path' => 'ValuablePath' TO 0 => 'ValuablePath'
@@ -175,12 +180,12 @@ class PathAction extends AbstractAResponder
      */
     function setPath($name, $uri, $isRestricted = false)
     {
-        if ($this->hasPath($name) && $this->__isRestricted($name))
+        if ($this->hasPath($name) && $this->_isRestricted($name))
             throw new \Exception(
                 sprintf('Path with name (%s) already exists and not allow override it.', $name)
             );
 
-        $n = $this->__normalizeName($name);
+        $n = $this->_normalizeName($name);
         $this->paths[$n] = (string) $uri;
         (!$isRestricted) ?: $this->__restricted[$n] = true;
 
@@ -192,9 +197,9 @@ class PathAction extends AbstractAResponder
          * @param $name
          * @return bool
          */
-        protected function __isRestricted($name)
+        protected function _isRestricted($name)
         {
-            $name = $this->__normalizeName($name);
+            $name = $this->_normalizeName($name);
             return isset($this->__restricted[$name]);
         }
 
@@ -211,7 +216,7 @@ class PathAction extends AbstractAResponder
         if (!$this->hasPath($name))
             throw new \Exception(sprintf('Path with name (%s) not found.', $name));
 
-        $n = $this->__normalizeName($name);
+        $n = $this->_normalizeName($name);
         return $this->paths[$n];
     }
 
@@ -224,7 +229,7 @@ class PathAction extends AbstractAResponder
      */
     function hasPath($name)
     {
-        $n = $this->__normalizeName($name);
+        $n = $this->_normalizeName($name);
         return isset($this->paths[$n]);
     }
 
@@ -237,6 +242,14 @@ class PathAction extends AbstractAResponder
     {
         return $this->paths;
     }
+    
+    function params()
+    {
+        if (!$this->params)
+            $this->params = new DataEntity;
+        
+        return $this->params;
+    }
 
     // ...
 
@@ -247,7 +260,7 @@ class PathAction extends AbstractAResponder
      *
      * @return string
      */
-    protected function __normalizeName($name)
+    protected function _normalizeName($name)
     {
         return strtolower((string) $name);
     }

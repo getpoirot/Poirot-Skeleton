@@ -1,22 +1,26 @@
 <?php
 namespace Module\Foundation\HttpSapi;
+use Poirot\Ioc\Interfaces\iContainer;
+use Poirot\Ioc\Interfaces\Respec\iServicesAware;
+use Poirot\Ioc\Interfaces\Respec\iServicesProvider;
+use Poirot\Std\Struct\DataEntity;
+use Poirot\View\ViewModel\RendererPhp;
 
 /**
- * @method \Poirot\Core\Config                          config($key = null)
- * @method \Application\Actions\Helper\ViewAction       view($template = null, $variables = null)
- * @method \Application\Actions\Helper\UrlAction        url($routeName = null, $params = [])
- * @method \Application\Actions\Helper\PathAction       path($arg = null)
- * @method \Application\Actions\Helper\CycleAction      cycle($action = null, $steps = 1, $reset = true)
- * @method \Application\Actions\Helper\HtmlLinkAction   htmlLink($section = 'inline')
- * @method \Application\Actions\Helper\HtmlScriptAction htmlScript($section = 'inline')
+ * @method DataEntity                                          config($key = null)
+ * @method \Module\Foundation\Actions\Helper\ViewAction       view($template = null, $variables = null)
+ * @method \Module\Foundation\Actions\Helper\UrlAction        url($routeName = null, $params = [])
+ * @method \Module\Foundation\Actions\Helper\PathAction       path($arg = null)
+ * @method \Module\Foundation\Actions\Helper\CycleAction      cycle($action = null, $steps = 1, $reset = true)
+ * @method \Module\Foundation\Actions\Helper\HtmlLinkAction   htmlLink($section = 'inline')
+ * @method \Module\Foundation\Actions\Helper\HtmlScriptAction htmlScript($section = 'inline')
  */
-class ViewModelRenderer extends IsoRenderer
+class ViewModelRenderer
+    extends RendererPhp
     // services injected and accessible
-    implements iCServiceAware
-    , iCServiceProvider
+    implements iServicesAware
+    , iServicesProvider
 {
-    use tActionComplex;
-
     /** @var bool  */
     protected static $isInitialized = false;
 
@@ -52,7 +56,7 @@ class ViewModelRenderer extends IsoRenderer
             return parent::__call($method, $args);
 
         $invokableActions = $this->action();
-        return call_user_func_array([$invokableActions, $method], $args);
+        return call_user_func_array(array($invokableActions, $method), $args);
     }
 
     protected function __alertError()
@@ -75,5 +79,25 @@ class ViewModelRenderer extends IsoRenderer
 
             echo "<script type=\"text/javascript\">alert('{$message}')</script>";
         }
+    }
+
+    /**
+     * Set Service Container
+     *
+     * @param iContainer $container
+     */
+    function setServices(iContainer $container)
+    {
+        // TODO: Implement setServices() method.
+    }
+
+    /**
+     * Services Container
+     *
+     * @return iContainer
+     */
+    function services()
+    {
+        // TODO: Implement services() method.
     }
 }

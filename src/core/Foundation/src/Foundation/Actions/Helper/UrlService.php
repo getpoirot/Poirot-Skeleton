@@ -1,9 +1,10 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Poirot\Container\Service\AbstractService;
+use Poirot\Ioc\Container\Service\aServiceContainer;
 
-class UrlService extends AbstractService
+class UrlService 
+    extends aServiceContainer
 {
     /**
      * @var string Service Name
@@ -15,7 +16,7 @@ class UrlService extends AbstractService
      *
      * @return mixed
      */
-    function createService()
+    function newService()
     {
         $rootSrv = $this->services()->from('/');
 

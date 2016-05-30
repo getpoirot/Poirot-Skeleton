@@ -1,23 +1,24 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Poirot\AaResponder\AbstractAResponder;
+use Module\Foundation\Actions\aAction;
 
 // TODO Script/Link Both Extend Something Like ObjectCollection, Reduce Code Clone
 
-class HtmlLinkAction extends AbstractAResponder
+class HtmlLinkAction 
+    extends aAction
 {
     /**
      * the link is inserted in the head section.
      */
-    protected $links = [];
+    protected $links = array();
 
     /**
      * Allowed attributes
      *
      * @var string[]
      */
-    protected $itemKeys = [
+    protected $itemKeys = array(
         'charset',
         'href',
         'hreflang',
@@ -30,7 +31,7 @@ class HtmlLinkAction extends AbstractAResponder
         'title',
         'extras',
         'itemprop'
-    ];
+    );
 
     /**
      * Flag whether to automatically escape output, must also be
@@ -45,7 +46,7 @@ class HtmlLinkAction extends AbstractAResponder
      *
      * @return $this
      */
-    function exec()
+    function __invoke($_ = null)
     {
         return $this;
     }
@@ -60,7 +61,7 @@ class HtmlLinkAction extends AbstractAResponder
      *
      * @return $this
      */
-    function attachFile($href, $attrs = [], $rel = 'stylesheet', $offset = null)
+    function attachFile($href, $attrs = array(), $rel = 'stylesheet', $offset = null)
     {
         if (is_int($attrs))
             $offset = $attrs;
@@ -70,13 +71,13 @@ class HtmlLinkAction extends AbstractAResponder
             unset($attrs['type']);
         }
 
-        $item = [
+        $item = array(
             'rel'  => $rel,
             'href' => $href,
-        ];
+        );
         $item = array_merge($item, $attrs);
 
-        $this->__insertScriptStr($this->__itemToString($item), $offset);
+        $this->_insertScriptStr($this->_itemToString($item), $offset);
 
         return $this;
     }
@@ -118,21 +119,21 @@ class HtmlLinkAction extends AbstractAResponder
      * @param string  $scrStr
      * @param int     $offset
      */
-    protected function __insertScriptStr($scrStr, $offset = null)
+    protected function _insertScriptStr($scrStr, $offset = null)
     {
         if ($this->hasAttached($scrStr))
             return;
 
-        $this->__insertIntoPosArray($this->links, $scrStr, $offset);
+        $this->_insertIntoPosArray($this->links, $scrStr, $offset);
     }
 
-    protected function __insertIntoPosArray(&$array, $element, $offset)
+    protected function _insertIntoPosArray(&$array, $element, $offset)
     {
         // [1, 2, x, 4, 5, 6] ---> before [1, 2], after [4, 5, 6]
         $beforeOffsetPart = array_slice($array, 0, $offset);
         $afterOffsetPart  = array_slice($array, $offset);
         # insert element in offset
-        $beforeOffsetPart = $beforeOffsetPart + [$offset => $element];
+        $beforeOffsetPart = $beforeOffsetPart + array($offset => $element);
         # glue them back
         $array = array_merge($beforeOffsetPart , $afterOffsetPart);
         arsort($array);
@@ -145,7 +146,7 @@ class HtmlLinkAction extends AbstractAResponder
      *
      * @return string
      */
-    protected function __itemToString(array $item)
+    protected function _itemToString(array $item)
     {
         $attributes = $item;
         $link       = '<link';

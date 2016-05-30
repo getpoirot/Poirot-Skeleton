@@ -5,7 +5,7 @@ use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
 use Poirot\Application\aSapi;
 use Poirot\Application\Sapi;
-use Poirot\Application\Sapi\Module\ContainerModuleActions;
+use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
 
 use Poirot\Ioc\Container;
 
@@ -19,7 +19,6 @@ use Poirot\Router\RouterStack;
 use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 use Module\Foundation\Actions\BuildContainerActionOfFoundationModule;
-use Module\Foundation\HttpSapi\ViewModelRenderer;
 
 class Module implements iSapiModule
     , Sapi\Module\Feature\FeatureModuleInitSapi
@@ -112,11 +111,11 @@ class Module implements iSapiModule
      *
      * - return Array used to Build ModuleActionsContainer
      *
-     * @return array|\Traversable|ContainerModuleActions
+     * @return array|\Traversable|ContainerForFeatureActions
      */
     function getActions()
     {
-        $moduleActions  = new ContainerModuleActions(
+        $moduleActions  = new ContainerForFeatureActions(
             new BuildContainerActionOfFoundationModule
         );
 
