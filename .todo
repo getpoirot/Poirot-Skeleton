@@ -1,4 +1,25 @@
 ++
+#actions, #capped_callable
+
+We need wrapper around capped collection that the type of services
+is callable.
+with this wrapper we ease the execution of registered services;
+the code below demonstrate it
+
+[code:]
+    $container = $this->services()->from('/modules/foundation');
+    $wrapped   = new ContainerCallable($container);
+    $result    = $wrapper->config('extra_config');
+[code]
+
+[code:]
+    $callable = $this->services()->get('/modules/foundation/config');
+    $result   = call_user_func($callable, 'extra_config')
+[code]
+
+++ ---------------------------------------------------------------------------------
+
+++
 #throw, #exception, #error
 
 Be careful on every line inside classes that you used another class methods and
@@ -19,4 +40,4 @@ try{
 }
 [code]
 
-++
+++ ---------------------------------------------------------------------------------
