@@ -157,7 +157,7 @@ class Module implements iSapiModule
         )));
 
         # Register Routes:
-        $this->__withHttpRouter($router);
+        $this->_setupRouter($router);
     }
 
     /**
@@ -167,7 +167,7 @@ class Module implements iSapiModule
      *
      * @return void
      */
-    protected function __withHttpRouter(RouterStack $router)
+    protected function _setupRouter(RouterStack $router)
     {
         $router->addRoutes(array(
             'home'  => array(
