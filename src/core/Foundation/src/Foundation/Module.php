@@ -11,6 +11,7 @@ use Poirot\Ioc\Container;
 
 use Poirot\Loader\Autoloader\LoaderAutoloadAggregate;
 use Poirot\Loader\Autoloader\LoaderAutoloadNamespace;
+use Poirot\Loader\Interfaces\iLoaderAutoload;
 use Poirot\Loader\LoaderNamespaceStack;
 
 use Poirot\Router\RouterStack;
@@ -43,7 +44,7 @@ class Module implements iSapiModule
     {
         // init requirements
         if (!getenv('HTTP_MOD_REWRITE'))
-            throw new \RuntimeException('It seems that you don\'t have "MOD_REWRITE" enabled on the server.');
+            throw new \RuntimeException('It seems that you don`t have "MOD_REWRITE" enabled on the server.');
 
         if (!$sapi instanceof \Poirot\Application\aSapi)
             throw new \Exception('This module is not compatible with this sapi application.');
@@ -54,16 +55,16 @@ class Module implements iSapiModule
      *
      * priority: 1000 B
      *
-     * @param LoaderAutoloadAggregate $autoloader
+     * @param LoaderAutoloadAggregate $baseAutoloader
      *
-     * @return void
+     * @return iLoaderAutoload|array|\Traversable|void
      */
-    function initAutoload(LoaderAutoloadAggregate $autoloader)
+    function initAutoload(LoaderAutoloadAggregate $baseAutoloader)
     {
         #$nameSpaceLoader = \Poirot\Loader\Autoloader\LoaderAutoloadNamespace::class;
         $nameSpaceLoader = 'Poirot\Loader\Autoloader\LoaderAutoloadNamespace';
         /** @var LoaderAutoloadNamespace $nameSpaceLoader */
-        $nameSpaceLoader = $autoloader->by($nameSpaceLoader);
+        $nameSpaceLoader = $baseAutoloader->by($nameSpaceLoader);
         $nameSpaceLoader->addResource(__NAMESPACE__, __DIR__);
     }
 
@@ -100,9 +101,8 @@ class Module implements iSapiModule
      */
     function initServices(Container $services)
     {
-        ## replace default renderer with Application renderer including stuffs
-        if ($services->has('ViewModelRenderer'))
-            $services->set(new Container\Service\ServiceInstance('ViewModelRenderer', new ViewModelRenderer));
+        // replace default renderer with Application renderer including stuffs
+        // ..
     }
 
     /**
@@ -112,7 +112,7 @@ class Module implements iSapiModule
      *
      * - return Array used to Build ModuleActionsContainer
      *
-     * @return array|ContainerModuleActions
+     * @return array|\Traversable|ContainerModuleActions
      */
     function getActions()
     {
@@ -124,30 +124,26 @@ class Module implements iSapiModule
     }
 
     /**
-     * Resolve to service with name and type
+     * Resolve to service with name
+     *
+     * - each argument represent requested service by registered name
+     *   if service not available default argument value remains
+     * - "services" as argument will retrieve services container itself.
      *
      * ! after all modules loaded
      *
-     * - arguments must has default values
-     *
-     * [code]
-     * resolveToServices(iHRouter $router = null, $sapi = null, $other = null)
-     * [/code]
-     *
-     * @param aSapi                        $sapi
-     * @param RChainStack                         $router
-     * @param AggregateLoader                     $viewModelResolver
-     * @param Sapi\Server\Http\ViewRenderStrategy $viewRenderStrategy
-     *
-     * @throws \Exception
+     * @param null $services service names must have default value
      */
-    function initServicesWhenModulesLoaded(
+    function resolveRegisteredServices(
         $sapi = null
         , $router = null
         , $viewModelResolver = null
         , $viewRenderStrategy = null
         , $AssetManager = null
     ) {
+
+        return;
+
         $config = $sapi->config();
 
         // Set Default Template Name From Config ----------------------------------------------------\

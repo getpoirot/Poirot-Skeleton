@@ -1,11 +1,6 @@
 <?php
 namespace Module\Foundation\HttpSapi;
 
-use Application\tActionComplex;
-use Poirot\Container\Interfaces\Respec\iCServiceAware;
-use Poirot\Container\Interfaces\Respec\iCServiceProvider;
-use Poirot\View\Interpreter\IsoRenderer;
-
 /**
  * @method \Poirot\Core\Config                          config($key = null)
  * @method \Application\Actions\Helper\ViewAction       view($template = null, $variables = null)
