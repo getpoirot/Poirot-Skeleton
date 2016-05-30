@@ -19,16 +19,17 @@
 
 ### Change Application enviorment cause load various Config
 # php server default config is default
-# SetEnv POIROT_ENV_MODE default
-SetEnv POIROT_ENV_MODE development
+# SetEnv PT_ENVIRONMENT default
+SetEnv PT_ENVIRONMENT development
+SetEnv PT_DEBUG True
 
 ### Application requirement , dont change below !!
 
 DirectoryIndex index.php
 
 <IfModule mod_rewrite.c>
-	SetEnv HTTP_MOD_REWRITE On
-	RewriteEngine On
+    SetEnv HTTP_MOD_REWRITE On
+    RewriteEngine On
     # The following rule tells Apache that if the requested filename
     # exists, simply serve it.
     RewriteCond %{REQUEST_FILENAME} -s [OR]

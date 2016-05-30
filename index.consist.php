@@ -8,7 +8,8 @@
 // Define Consts:
 define('PT_TIME_REQUEST_MICRO', microtime(true));
 
-define('PT_DEBUG', ($debug = getenv('PT_DEBUG')) ? $debug : true);
+$debug = getenv('PT_DEBUG');
+define('PT_DEBUG', ($debug && filter_var($debug, FILTER_VALIDATE_BOOLEAN)) ? $debug : false);
 
 define('PT_DIR_WWW'          , dirname(__FILE__) );
 define('PT_DIR_THEME_DEFAULT', PT_DIR_WWW.'/theme' );
