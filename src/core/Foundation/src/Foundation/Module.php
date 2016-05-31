@@ -7,11 +7,15 @@ use Poirot\Application\aSapi;
 use Poirot\Application\Sapi;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
 
+use Poirot\Application\Sapi\Server\Http\ListenersRenderCorrelatedEvent;
+use Poirot\Application\SapiCli;
+use Poirot\Application\SapiHttp;
 use Poirot\Ioc\Container;
 
 use Poirot\Loader\Autoloader\LoaderAutoloadAggregate;
 use Poirot\Loader\Autoloader\LoaderAutoloadNamespace;
 use Poirot\Loader\Interfaces\iLoaderAutoload;
+use Poirot\Loader\LoaderAggregate;
 use Poirot\Loader\LoaderNamespaceStack;
 
 use Poirot\Router\RouterStack;
@@ -28,6 +32,9 @@ class Module implements iSapiModule
     , Sapi\Module\Feature\FeatureOnPostLoadModulesGrabServices
     , Sapi\Module\Feature\FeatureModuleMergeConfig
 {
+    /** @var SapiHttp|SapiCli */
+    protected $sapi;
+
     /**
      * Init Module Against Application
      *
@@ -47,6 +54,8 @@ class Module implements iSapiModule
 
         if (!$sapi instanceof \Poirot\Application\aSapi)
             throw new \Exception('This module is not compatible with this sapi application.');
+
+        $this->sapi = $sapi;
     }
 
     /**
@@ -131,33 +140,40 @@ class Module implements iSapiModule
      *
      * ! after all modules loaded
      *
-     * @param null $services service names must have default value
+     * @param aSapi $sapi
+     * @param null $router
+     * @param LoaderAggregate $viewModelResolver
+     * @param ListenersRenderCorrelatedEvent $viewRenderStrategy
+     *
+     * @internal param null $services service names must have default value
      */
     function resolveRegisteredServices(
         $sapi = null
         , $router = null
         , $viewModelResolver = null
         , $viewRenderStrategy = null
-        , $AssetManager = null
     ) {
+        if ($this->sapi instanceof SapiHttp) {
+            // This is Http Sapi Application
 
-        return;
+            # Load View Render Strategy Options: -----\
+            /** @var iDataEntity $config */
+            $config = $sapi->config();
+            if ($config = $config->get('view_renderer'))
+                if (is_array($config) && isset($config['default_layout']))
+                    $viewRenderStrategy->setDefaultLayout(
+                        $config['default_layout']
+                    );
 
-        $config = $sapi->config();
+            # Attach Module Scripts To View Resolver:
+            $viewModelResolver->attach(new LoaderNamespaceStack(array(
+                'site/home' => array(__DIR__.'/../../view/site/home'),
+                'partial'   => array(__DIR__.'/../../view/partial'),
+            )));
 
-        // Set Default Template Name From Config ----------------------------------------------------\
-        ($viewRenderStrategy !== null) ?: $viewRenderStrategy->setDefaultLayout(
-            $config->get('view_renderer')['default_layout']
-        );
-
-        // Register Module Default View Scripts Path To View Resolver -------------------------------\
-        $viewModelResolver->attach(new LoaderNamespaceStack(array(
-            'site/home' => array(__DIR__.'/../../view/site/home'),
-            'partial'   => array(__DIR__.'/../../view/partial'),
-        )));
-
-        # Register Routes:
-        $this->_setupRouter($router);
+            # Register Routes:
+            $this->_setupRouter($router);
+        }
     }
 
     /**
