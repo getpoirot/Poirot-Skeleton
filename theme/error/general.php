@@ -91,7 +91,7 @@
             </dd>
         </dl>
 
-        <?php if ($exception->getPrevious()){ $exception = $exception->getPrevious(); ?>
+        <?php while ($exception = $exception->getPrevious()){ ?>
         <div class="highlight">
             <h3><?php echo get_class($exception); ?></h3>
             <dl>
