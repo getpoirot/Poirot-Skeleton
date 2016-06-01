@@ -1,5 +1,5 @@
 <?php
-/** @var \Application\HttpSapi\ViewModelRenderer $this */
+/** @var \Module\Foundation\HttpSapi\ViewModelRenderer $this */
 $_f__ = function () use (&$events) {
     if (!$events)
         ## events not exists

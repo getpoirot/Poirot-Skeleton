@@ -3,7 +3,6 @@ namespace Module\Foundation\Actions\Helper;
 
 use Poirot\Http\HttpMessage\Request\Plugin\PhpServer;
 use Poirot\Http\HttpRequest;
-use Poirot\Http\Interfaces\iHttpRequest;
 use Poirot\Ioc\Container\Service\aServiceContainer;
 use Poirot\Std\Struct\DataEntity;
 
@@ -31,17 +30,15 @@ class PathService
         $pathAction = new PathAction($config);
 
         # register default paths and variables
-        if ($this->services()->from('/')->get('request') instanceof iHttpRequest) {
-            $self = $this;
-            ## server url
-            $pathAction->params()->set('serverUrl', function() use ($self) {
-                return $self->_getServerUrl();
-            });
-            ## base path
-            $pathAction->params()->set('basePath', function() use ($self) {
-                return $self->_getBasePath();
-            });
-        }
+        $self = $this;
+        ## server url
+        $pathAction->params()->set('serverUrl', function() use ($self) {
+            return $self->_getServerUrl();
+        });
+        ## base path
+        $pathAction->params()->set('basePath', function() use ($self) {
+            return $self->_getBasePath();
+        });
 
         return $pathAction;
     }

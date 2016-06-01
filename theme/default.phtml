@@ -1,11 +1,11 @@
 <?php
-/** @var \Application\HttpSapi\ViewModelRenderer $this */
+/** @var \Module\Foundation\HttpSapi\ViewModelRenderer $this */
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <?php echo $this->capture('inc.header.phtml') ?>
-</head><!--/head-->
+</head>
 <body>
 <header class="navbar navbar-inverse navbar-fixed-top wet-asphalt" role="banner">
     <div class="container">
@@ -16,7 +16,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?php echo $this->url('site/home') ?>">
+            <a class="navbar-brand" href="<?php echo $this->url('main/home') ?>">
 <!--                <img src="--><?php //echo $this->path('app-assets') ?><!--/images/logo.png" alt="logo">-->
                 <h4>Application Platform</h4>
             </a>

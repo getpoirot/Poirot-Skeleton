@@ -22,7 +22,7 @@ class UrlService
 
         $router  = $rootSrv->get('router');
         /** @see onRouteMatchListener */
-        $matched = $rootSrv->get('route.match');
+        $matched = $rootSrv->get('router.match');
 
         $rAction = (new UrlAction)
             ->setRouter($router)

@@ -1,6 +1,7 @@
 <?php
 namespace Module\Foundation;
 
+use Module\Foundation\HttpSapi\ViewModelRenderer;
 use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
 use Poirot\Application\aSapi;
@@ -18,7 +19,8 @@ use Poirot\Loader\Interfaces\iLoaderAutoload;
 use Poirot\Loader\LoaderAggregate;
 use Poirot\Loader\LoaderNamespaceStack;
 
-use Poirot\Router\RouterStack;
+use Poirot\Router\BuildRouterStack;
+use Poirot\Router\Interfaces\iRouterStack;
 
 use Poirot\Std\Interfaces\Struct\iDataEntity;
 
@@ -110,7 +112,11 @@ class Module implements iSapiModule
     function initServices(Container $services)
     {
         // replace default renderer with Application renderer including stuffs
-        // ..
+        if ($this->sapi instanceof SapiHttp) {
+            $this->sapi->services()->set(
+                new Container\Service\ServiceInstance('ViewModelRenderer', new ViewModelRenderer())
+            );
+        }
     }
 
     /**
@@ -140,9 +146,9 @@ class Module implements iSapiModule
      *
      * ! after all modules loaded
      *
-     * @param aSapi $sapi
-     * @param null $router
-     * @param LoaderAggregate $viewModelResolver
+     * @param aSapi                          $sapi
+     * @param iRouterStack                   $router
+     * @param LoaderAggregate                $viewModelResolver
      * @param ListenersRenderCorrelatedEvent $viewRenderStrategy
      *
      * @internal param null $services service names must have default value
@@ -172,38 +178,37 @@ class Module implements iSapiModule
             )));
 
             # Register Routes:
-            $this->_setupRouter($router);
+            $this->_setupHttpRouter($router);
         }
     }
 
     /**
      * Setup Http Stack Router
      *
-     * @param RouterStack $router
+     * @param iRouterStack $router
      *
      * @return void
      */
-    protected function _setupRouter(RouterStack $router)
+    protected function _setupHttpRouter(iRouterStack $router)
     {
-        $router->addRoutes(array(
+        $buildRoute = new BuildRouterStack();
+        $buildRoute->setRoutes(array(
             'home'  => array(
-                'route'    => 'segment',
-                ## 'override' => true, ## default is true
+                'route'    => 'RouteSegment',
+                ## 'allow_override' => true, ## default is true
                 'options' => array(
                     'criteria'    => '/',
-                    'exact_match' => true,
+                    'match_whole' => true,
                 ),
                 'params'  => array(
-                    ## use last action result or merged params
-                    ## default is params
-                    # '_use_' => 'params',
-                    '_then_' => array(
-                        ## chain actions
-                        '/module/application.action/HomeInfo',
-                        '/module/application.action/RenderContent',
+                    'actions' => array(
+                        ## chain callable action
+                        function() {return array();}
                     ),
                 ),
             ),
         ));
+        
+        $buildRoute->build($router);
     }
 }

@@ -1,5 +1,7 @@
 <?php
 namespace Module\Foundation\HttpSapi;
+
+use Poirot\Ioc\Container;
 use Poirot\Ioc\Interfaces\iContainer;
 use Poirot\Ioc\Interfaces\Respec\iServicesAware;
 use Poirot\Ioc\Interfaces\Respec\iServicesProvider;
@@ -7,7 +9,7 @@ use Poirot\Std\Struct\DataEntity;
 use Poirot\View\ViewModel\RendererPhp;
 
 /**
- * @method DataEntity                                          config($key = null)
+ * @method DataEntity                                         config($key = null)
  * @method \Module\Foundation\Actions\Helper\ViewAction       view($template = null, $variables = null)
  * @method \Module\Foundation\Actions\Helper\UrlAction        url($routeName = null, $params = [])
  * @method \Module\Foundation\Actions\Helper\PathAction       path($arg = null)
@@ -21,25 +23,9 @@ class ViewModelRenderer
     implements iServicesAware
     , iServicesProvider
 {
-    /** @var bool  */
-    protected static $isInitialized = false;
+    /** @var Container */
+    protected $sc;
 
-    /**
-     * Construct
-     *
-     */
-    function __construct()
-    {
-        if (!static::$isInitialized) {
-            ## Avoid display white screen on fatal errors on render
-            $self = $this;
-            register_shutdown_function(function () use ($self) {
-                $self->__alertError();
-            });
-
-            static::$isInitialized = true;
-        }
-    }
 
     /**
      * Proxy Call to default Action`s container
@@ -55,49 +41,50 @@ class ViewModelRenderer
         if ($this->hasMethod($method))
             return parent::__call($method, $args);
 
-        $invokableActions = $this->action();
-        return call_user_func_array(array($invokableActions, $method), $args);
+        $foundationActions = $this->action();
+        if ($foundationActions->has($method))
+            $method = $foundationActions->get($method);
+
+        return call_user_func_array($method, $args);
     }
 
-    protected function __alertError()
+    /**
+     * Proxy Call to Action`s container
+     * exp. $this->action('foundation')->url(..)
+     *
+     * @param string $module
+     *
+     * @return mixed
+     */
+    function action($module = 'foundation')
     {
-        $errfile = "unknown file";
-        $errstr  = "shutdown";
-        $errno   = E_CORE_ERROR;
-        $errline = 0;
-
-        $error = error_get_last();
-
-        if( $error !== NULL) {
-            $errno   = $error["type"];
-            $errfile = $error["file"];
-            $errline = $error["line"];
-            $errstr  = $error["message"];
-
-            $message = "( ! )  ". $errstr.' '.$errfile.' line:'.$errline;
-            $message = implode(" '+ '", explode("\n", addslashes($message)));
-
-            echo "<script type=\"text/javascript\">alert('{$message}')</script>";
-        }
+        $foundationActions = $this->services()->from('/modules/'.$module);
+        return $foundationActions;
     }
+
+    
+    // Implement Services Aware:
 
     /**
      * Set Service Container
      *
      * @param iContainer $container
+     *
+     * @return $this
      */
     function setServices(iContainer $container)
     {
-        // TODO: Implement setServices() method.
+        $this->sc = $container;
+        return $this;
     }
 
     /**
      * Services Container
      *
-     * @return iContainer
+     * @return Container
      */
     function services()
     {
-        // TODO: Implement services() method.
+        return $this->sc;
     }
 }

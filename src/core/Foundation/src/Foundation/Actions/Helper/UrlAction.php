@@ -3,13 +3,15 @@ namespace Module\Foundation\Actions\Helper;
 
 use Module\Foundation\Actions\aAction;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
+use Poirot\Router\Interfaces\iRoute;
+use Poirot\Router\RouterStack;
 
 class UrlAction 
     extends aAction
 {
-    /** @var HAbstractChainRouter */
+    /** @var RouterStack */
     protected $_router;
-    /** @var HAbstractChainRouter */
+    /** @var iRoute */
     protected $_routeMatch;
     /** @var ContainerForFeatureActions */
     protected $_sContainer;
@@ -23,7 +25,7 @@ class UrlAction
      *
      * @return mixed
      */
-    function doInvoke($routeName = null, $params = array())
+    function __invoke($routeName = null, $params = array())
     {
         if ($this->_router === null )
             throw new \RuntimeException('No RouteStackInterface instance provided');
@@ -40,7 +42,7 @@ class UrlAction
                 , ($routeName === null) ? 'MatchedRoute' : $routeName
             ));
 
-        $this->_c__lastInvokedRouter = [$router, $params];
+        $this->_c__lastInvokedRouter = array($router, $params);
 
         return $this;
     }
@@ -56,14 +58,13 @@ class UrlAction
 
     /**
      * Attain Route Match
-     * @return HAbstractChainRouter
+     * @return iRoute
      */
     function getMatchedRoute()
     {
         if ($this->_routeMatch)
             return $this->_routeMatch;
 
-        /** @var \Poirot\Http\Message\HttpRequest $request */
         // TODO fresh because route (RSegment) manipulate meta DataFiled and must be reset
         $request = $this->_sContainer->from('/')->fresh('request');
         $router  = $this->_router;
@@ -94,7 +95,6 @@ class UrlAction
     function setRouter($router)
     {
         $this->_router = $router;
-
         return $this;
     }
 
@@ -108,7 +108,6 @@ class UrlAction
     function setRouteMatch($routeMatch)
     {
         $this->_routeMatch = $routeMatch;
-
         return $this;
     }
 }

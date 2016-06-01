@@ -26,6 +26,5 @@ class BuildContainerActionOfFoundationModule
 
             # Data Actions
             'HomeInfo'      => 'Module\Foundation\Actions\HomeInfo',
-            'RenderContent' => 'Module\Foundation\Actions\RenderContent',
         );
 }

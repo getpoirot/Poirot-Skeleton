@@ -2,10 +2,11 @@
 namespace Module\Foundation\Actions\Helper;
 
 use Module\Foundation\Actions\aAction;
+use Poirot\Std\ConfigurableSetter;
 use Poirot\Std\Struct\DataEntity;
 
 class PathAction 
-    extends aAction
+    extends ConfigurableSetter
 {
     /** @var array key value of paths name and uri */
     protected $paths = array(
@@ -75,6 +76,100 @@ class PathAction
 
         return $this;
     }
+
+    /**
+     * Set key/value pair of paths and Uri
+     *
+     * @param array $paths
+     *
+     * @throws \Exception
+     * @return $this
+     */
+    function setPaths(array $paths)
+    {
+        if (!empty($paths) && array_values($paths) == $paths)
+            throw new \Exception('Paths Must Be Associated Array.');
+
+        foreach ($paths as $name => $uri)
+            $this->setPath($name, $uri);
+
+        return $this;
+    }
+
+    /**
+     * Set path uri alias
+     *
+     * @param string $name
+     * @param string $uri
+     * @param bool   $isRestricted
+     *
+     * @throws \Exception
+     * @return $this
+     */
+    function setPath($name, $uri, $isRestricted = false)
+    {
+        if ($this->hasPath($name) && $this->_isRestricted($name))
+            throw new \Exception(
+                sprintf('Path with name (%s) already exists and not allow override it.', $name)
+            );
+
+        $n = $this->_normalizeName($name);
+        $this->paths[$n] = (string) $uri;
+        (!$isRestricted) ?: $this->__restricted[$n] = true;
+
+        return $this;
+    }
+
+    /**
+     * Get pathName uri
+     *
+     * @param string $name
+     *
+     * @return mixed
+     * @throws \Exception
+     */
+    function getPath($name)
+    {
+        if (!$this->hasPath($name))
+            throw new \Exception(sprintf('Path with name (%s) not found.', $name));
+
+        $n = $this->_normalizeName($name);
+        return $this->paths[$n];
+    }
+
+    /**
+     * Determine that pathname is exists?
+     *
+     * @param $name
+     *
+     * @return bool
+     */
+    function hasPath($name)
+    {
+        $n = $this->_normalizeName($name);
+        return isset($this->paths[$n]);
+    }
+
+    /**
+     * Get All Registered Paths
+     *
+     * @return array
+     */
+    function getPaths()
+    {
+        return $this->paths;
+    }
+
+    function params()
+    {
+        if (!$this->params)
+            $this->params = new DataEntity;
+        
+        return $this->params;
+    }
+
+
+    // ...
 
     /**
      * Get Last Invoked Uri
@@ -149,109 +244,15 @@ class PathAction
     }
 
     /**
-     * Set key/value pair of paths and Uri
-     *
-     * @param array $paths
-     *
-     * @throws \Exception
-     * @return $this
-     */
-    function setPaths(array $paths)
-    {
-        if (!empty($paths) && array_values($paths) == $paths)
-            throw new \Exception('Paths Must Be Associated Array.');
-
-        foreach ($paths as $name => $uri) {
-            $this->setPath($name, $uri);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Set path uri alias
-     *
-     * @param string $name
-     * @param string $uri
-     * @param bool   $isRestricted
-     *
-     * @throws \Exception
-     * @return $this
-     */
-    function setPath($name, $uri, $isRestricted = false)
-    {
-        if ($this->hasPath($name) && $this->_isRestricted($name))
-            throw new \Exception(
-                sprintf('Path with name (%s) already exists and not allow override it.', $name)
-            );
-
-        $n = $this->_normalizeName($name);
-        $this->paths[$n] = (string) $uri;
-        (!$isRestricted) ?: $this->__restricted[$n] = true;
-
-        return $this;
-    }
-
-        /**
-         * Check that given path name is restricted from override
-         * @param $name
-         * @return bool
-         */
-        protected function _isRestricted($name)
-        {
-            $name = $this->_normalizeName($name);
-            return isset($this->__restricted[$name]);
-        }
-
-    /**
-     * Get pathName uri
-     *
-     * @param string $name
-     *
-     * @return mixed
-     * @throws \Exception
-     */
-    function getPath($name)
-    {
-        if (!$this->hasPath($name))
-            throw new \Exception(sprintf('Path with name (%s) not found.', $name));
-
-        $n = $this->_normalizeName($name);
-        return $this->paths[$n];
-    }
-
-    /**
-     * Determine that pathname is exists?
-     *
+     * Check that given path name is restricted from override
      * @param $name
-     *
      * @return bool
      */
-    function hasPath($name)
+    protected function _isRestricted($name)
     {
-        $n = $this->_normalizeName($name);
-        return isset($this->paths[$n]);
+        $name = $this->_normalizeName($name);
+        return isset($this->__restricted[$name]);
     }
-
-    /**
-     * Get All Registered Paths
-     *
-     * @return array
-     */
-    function getPaths()
-    {
-        return $this->paths;
-    }
-    
-    function params()
-    {
-        if (!$this->params)
-            $this->params = new DataEntity;
-        
-        return $this->params;
-    }
-
-    // ...
 
     /**
      * Normalize names
