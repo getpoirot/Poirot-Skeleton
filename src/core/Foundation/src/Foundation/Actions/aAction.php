@@ -24,8 +24,7 @@ abstract class aAction
      */
     function __call($method, $args)
     {
-        // forward proxy call to invokablePlugins instantiate
-        kd($this->services);
+        // TODO forward proxy call to invokablePlugins instantiate
     }
     
     

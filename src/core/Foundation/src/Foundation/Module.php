@@ -173,7 +173,7 @@ class Module implements iSapiModule
 
             # Attach Module Scripts To View Resolver:
             $viewModelResolver->attach(new LoaderNamespaceStack(array(
-                'site/home' => array(__DIR__.'/../../view/site/home'),
+                'main/home' => array(__DIR__ . '/../../view/main/home'),
                 'partial'   => array(__DIR__.'/../../view/partial'),
             )));
 
@@ -203,7 +203,7 @@ class Module implements iSapiModule
                 'params'  => array(
                     'actions' => array(
                         ## chain callable action
-                        function() {return array();}
+                        function() { return array(); }
                     ),
                 ),
             ),
