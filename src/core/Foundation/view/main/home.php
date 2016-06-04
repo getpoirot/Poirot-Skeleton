@@ -1,4 +1,5 @@
 <?php
+
 /** @var \Module\Foundation\HttpSapi\ViewModelRenderer $this */
 $_f__ = function () use (&$events) {
     if (!$events)
@@ -41,3 +42,7 @@ $_f__->__invoke();
 ## render partial section feature from view script belong to application module
 ## @see section-features.phtml
 $section_features = $this->action()->view('partial/section-features');
+
+return array(
+    'section_features' => $section_features
+); // variables to merge with absolute view variables

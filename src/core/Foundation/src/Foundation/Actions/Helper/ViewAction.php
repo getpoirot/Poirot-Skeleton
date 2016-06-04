@@ -14,7 +14,6 @@ use Poirot\View\ViewModelTemplate;
  */
 
 class ViewAction 
-    extends aAction
 {
     /** @var ViewModelTemplate */
     protected $viewModel;
@@ -39,7 +38,9 @@ class ViewAction
             $viewModel->variables()->import($variables);
 
         #! view helper action is immutable
-        return new self(['view_model' => $viewModel]);
+        $self = new self;
+        $self->setViewModel($viewModel);
+        return $self;
     }
 
     /**
@@ -76,7 +77,7 @@ class ViewAction
      */
     function __call($method, $arguments)
     {
-        return call_user_func_array([$this->viewModel, $method], $arguments);
+        return call_user_func_array(array($this->viewModel, $method), $arguments);
     }
 
     /**

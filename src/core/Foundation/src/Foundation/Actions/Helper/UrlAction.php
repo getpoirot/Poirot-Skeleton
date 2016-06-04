@@ -76,7 +76,7 @@ class UrlAction
     function __toString()
     {
         try {
-            $return = $this->uri()->toString();
+            $return = (string) $this->uri();
         } catch (\Exception $e)
         {
             $return = $e->getMessage();

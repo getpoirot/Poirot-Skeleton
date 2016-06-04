@@ -25,7 +25,8 @@ class ViewModelRenderer
 {
     /** @var Container */
     protected $sc;
-
+    /** @var string last module action container to invoke actions from */
+    protected $lastActionContainer = 'foundation';
 
     /**
      * Proxy Call to default Action`s container
@@ -33,15 +34,19 @@ class ViewModelRenderer
      * exp. $this->action('application')->url(..)
      *
      * @param $method
-     * @param $args
+     * @param array $args
+     *
      * @return mixed
+     * @throws \Exception
      */
     function __call($method, array $args)
     {
         if ($this->hasMethod($method))
             return parent::__call($method, $args);
 
-        $foundationActions = $this->action();
+        if (false === $foundationActions = $this->services()->from('/modules/'.$this->lastActionContainer))
+            throw new \Exception(sprintf('Nested Action Container (%s) not exists.', $this->lastActionContainer));
+
         if ($foundationActions->has($method))
             $method = $foundationActions->get($method);
 
@@ -58,8 +63,8 @@ class ViewModelRenderer
      */
     function action($module = 'foundation')
     {
-        $foundationActions = $this->services()->from('/modules/'.$module);
-        return $foundationActions;
+        $this->lastActionContainer = $module;
+        return $this;
     }
 
     
@@ -87,4 +92,26 @@ class ViewModelRenderer
     {
         return $this->sc;
     }
+
+
+    // ..
+
+    protected function __alertError()
+    {
+        $errfile = "unknown file";
+        $errstr  = "shutdown";
+        $errno   = E_CORE_ERROR;
+        $errline = 0;
+        $error = error_get_last();
+        if( $error !== NULL) {
+            $errno   = $error["type"];
+            $errfile = $error["file"];
+            $errline = $error["line"];
+            $errstr  = $error["message"];
+            $message = "( ! )  ". $errstr.' '.$errfile.' line:'.$errline;
+            $message = implode(" '+ '", explode("\n", addslashes($message)));
+            echo "<script type=\"text/javascript\">alert('{$message}')</script>";
+        }
+    }
+
 }

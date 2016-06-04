@@ -13,11 +13,11 @@ use Poirot\Application\SapiCli;
 use Poirot\Application\SapiHttp;
 use Poirot\Ioc\Container;
 
+use Poirot\Ioc\Container\BuildContainer;
 use Poirot\Loader\Autoloader\LoaderAutoloadAggregate;
 use Poirot\Loader\Autoloader\LoaderAutoloadNamespace;
 use Poirot\Loader\Interfaces\iLoaderAutoload;
 use Poirot\Loader\LoaderAggregate;
-use Poirot\Loader\LoaderNamespaceStack;
 
 use Poirot\Router\BuildRouterStack;
 use Poirot\Router\Interfaces\iRouterStack;
@@ -111,7 +111,7 @@ class Module implements iSapiModule
      */
     function initServices(Container $services)
     {
-        // replace default renderer with Application renderer including stuffs
+        // replace default renderer with Foundation Renderer including stuffs
         if ($this->sapi instanceof SapiHttp) {
             $this->sapi->services()->set(
                 new Container\Service\ServiceInstance('ViewModelRenderer', new ViewModelRenderer())
@@ -126,15 +126,11 @@ class Module implements iSapiModule
      *
      * - return Array used to Build ModuleActionsContainer
      *
-     * @return array|\Traversable|ContainerForFeatureActions
+     * @return array|\Traversable|BuildContainer|ContainerForFeatureActions
      */
     function getActions()
     {
-        $moduleActions  = new ContainerForFeatureActions(
-            new BuildContainerActionOfFoundationModule
-        );
-
-        return $moduleActions;
+        return new BuildContainerActionOfFoundationModule;
     }
 
     /**
@@ -172,10 +168,11 @@ class Module implements iSapiModule
                     );
 
             # Attach Module Scripts To View Resolver:
-            $viewModelResolver->attach(new LoaderNamespaceStack(array(
-                'main/home' => array(__DIR__ . '/../../view/main/home'),
-                'partial'   => array(__DIR__.'/../../view/partial'),
-            )));
+            $viewModelResolver->by('Poirot\Loader\LoaderNamespaceStack')
+                ->with(array(
+                    'main/home' => __DIR__. '/../../view/main/home',
+                    'partial'   => __DIR__.'/../../view/partial',
+                ));
 
             # Register Routes:
             $this->_setupHttpRouter($router);
@@ -203,7 +200,8 @@ class Module implements iSapiModule
                 'params'  => array(
                     'actions' => array(
                         ## chain callable action
-                        function() { return array(); }
+                        // '/Modules/Foundation/HomeInfo',
+                        function() { return array(); },
                     ),
                 ),
             ),
