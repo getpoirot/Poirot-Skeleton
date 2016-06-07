@@ -24,12 +24,10 @@ class UrlService
         /** @see onRouteMatchListener */
         $matched = $rootSrv->get('router.match');
 
-        $rAction = (new UrlAction)
-            ->setRouter($router)
-            ->setRouteMatch($matched)
-        ;
+        $rAction = new UrlAction;
+        $rAction->setRouter($router)
+            ->setRouteMatch($matched);
 
         return $rAction;
     }
 }
- 
