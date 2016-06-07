@@ -24,7 +24,7 @@ return array(
     'view_renderer' => array(
         'default_layout'   => 'default',
 
-        /** @see onErrorListener::__invoke */
+        /** @see ListenerError */
         'error_view_template' => array(
             ## full name of class exception
 
@@ -34,7 +34,7 @@ return array(
 
             ## here (blank) is defined as default layout for all error pages
             'Exception' => array('error/error', 'blank'),
-            'Poirot\Application\Exception\RouteNotMatchException' => 'error/404',
+            'Poirot\Application\Exception\exRouteNotMatch' => 'error/404',
         ),
     ),
 );
