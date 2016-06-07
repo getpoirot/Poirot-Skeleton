@@ -26,6 +26,8 @@ use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 use Module\Foundation\Actions\BuildContainerActionOfFoundationModule;
 
+// TODO Facade IoC Static Implementation to retrieve services and modules actions/services easily
+
 class Module implements iSapiModule
     , Sapi\Module\Feature\FeatureModuleInitSapi
     , Sapi\Module\Feature\FeatureModuleAutoload
@@ -126,7 +128,7 @@ class Module implements iSapiModule
      *
      * - return Array used to Build ModuleActionsContainer
      *
-     * @return array|\Traversable|BuildContainer|ContainerForFeatureActions
+     * @return array|ContainerForFeatureActions|BuildContainer|\Traversable
      */
     function getActions()
     {
@@ -200,7 +202,7 @@ class Module implements iSapiModule
                 'params'  => array(
                     'actions' => array(
                         ## chain callable action
-                        // '/Modules/Foundation/HomeInfo',
+                        // '/Modules/Foundation/Action/HomeInfo',
                         function() { return array(); },
                     ),
                 ),
