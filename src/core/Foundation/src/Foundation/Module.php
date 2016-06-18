@@ -8,6 +8,7 @@ use Poirot\Application\aSapi;
 use Poirot\Application\Sapi;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
 
+use Poirot\Application\Sapi\Server\Http\ListenerDispatch;
 use Poirot\Application\Sapi\Server\Http\ListenersRenderCorrelatedEvent;
 use Poirot\Application\SapiCli;
 use Poirot\Application\SapiHttp;
@@ -19,6 +20,7 @@ use Poirot\Loader\Autoloader\LoaderAutoloadNamespace;
 use Poirot\Loader\Interfaces\iLoaderAutoload;
 use Poirot\Loader\LoaderAggregate;
 
+use Poirot\Loader\LoaderNamespaceStack;
 use Poirot\Router\BuildRouterStack;
 use Poirot\Router\Interfaces\iRouterStack;
 
@@ -170,8 +172,9 @@ class Module implements iSapiModule
                     );
 
             # Attach Module Scripts To View Resolver:
-            $viewModelResolver->by('Poirot\Loader\LoaderNamespaceStack')
-                ->with(array(
+            /** @var LoaderNamespaceStack $resolver */
+            $resolver = $viewModelResolver->by('Poirot\Loader\LoaderNamespaceStack');
+            $resolver->with(array(
                     'main/home' => __DIR__. '/../../view/main/home',
                     'partial'   => __DIR__.'/../../view/partial',
                 ));
@@ -200,11 +203,7 @@ class Module implements iSapiModule
                     'match_whole' => true,
                 ),
                 'params'  => array(
-                    'actions' => array(
-                        ## chain callable action
-                        // '/Modules/Foundation/Action/HomeInfo',
-                        function() { return array(); },
-                    ),
+                    ListenerDispatch::CONF_KEY => function() { return array(); },
                 ),
             ),
         ));
