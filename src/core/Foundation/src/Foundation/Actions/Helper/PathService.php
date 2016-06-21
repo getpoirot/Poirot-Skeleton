@@ -9,7 +9,7 @@ use Poirot\Std\Struct\DataEntity;
 class PathService
     extends aServiceContainer
 {
-    const CONF_KEY = 'path_statics';
+    const CONF_KEY = 'module.foundation.path-service';
     
     /**
      * @var string Service Name

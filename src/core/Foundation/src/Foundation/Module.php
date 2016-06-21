@@ -9,7 +9,7 @@ use Poirot\Application\Sapi;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
 
 use Poirot\Application\Sapi\Server\Http\ListenerDispatch;
-use Poirot\Application\Sapi\Server\Http\ListenersRenderCorrelatedEvent;
+use Poirot\Application\Sapi\Server\Http\ListenersRenderDefaultStrategy;
 use Poirot\Application\SapiCli;
 use Poirot\Application\SapiHttp;
 use Poirot\Ioc\Container;
@@ -149,7 +149,7 @@ class Module implements iSapiModule
      * @param aSapi                          $sapi
      * @param iRouterStack                   $router
      * @param LoaderAggregate                $viewModelResolver
-     * @param ListenersRenderCorrelatedEvent $viewRenderStrategy
+     * @param ListenersRenderDefaultStrategy $viewRenderStrategy
      *
      * @internal param null $services service names must have default value
      */
@@ -161,17 +161,22 @@ class Module implements iSapiModule
     ) {
         if ($this->sapi instanceof SapiHttp) {
             // This is Http Sapi Application
-
+            
             # Load View Render Strategy Options: -----\
-            /** @var iDataEntity $config */
-            $config = $sapi->config();
-            if ($config = $config->get('view_renderer'))
-                if (is_array($config) && isset($config['default_layout']))
-                    $viewRenderStrategy->setDefaultLayout(
-                        $config['default_layout']
-                    );
+            // TODO Configuration Initialize Move Within Class Object Itself
+            if (method_exists($viewRenderStrategy, 'setDefaultLayout')) {
+                /** @var iDataEntity $config */
+                $config = $sapi->config();
+                if ($config = $config->get('view_renderer'))
+                    if (is_array($config) && isset($config['default_layout']))
+                        $viewRenderStrategy->setDefaultLayout(
+                            $config['default_layout']
+                        );
+            }
+            
 
             # Attach Module Scripts To View Resolver:
+            // TODO Define ViewModelResolver within ViewModel or better!! all view services may not have resolver
             /** @var LoaderNamespaceStack $resolver */
             $resolver = $viewModelResolver->by('Poirot\Loader\LoaderNamespaceStack');
             $resolver->with(array(
