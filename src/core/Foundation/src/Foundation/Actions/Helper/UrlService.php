@@ -18,11 +18,11 @@ class UrlService
      */
     function newService()
     {
-        $rootSrv = $this->services()->from('/');
+        $services = $this->services();
 
-        $router  = $rootSrv->get('router');
+        $router  = $services->get('/router');
         /** @see onRouteMatchListener */
-        $matched = $rootSrv->get('router.match');
+        $matched = $services->get('/router.match');
 
         $rAction = new UrlAction;
         $rAction->setRouter($router)

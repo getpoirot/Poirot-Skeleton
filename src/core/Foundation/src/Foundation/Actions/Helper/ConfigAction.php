@@ -36,7 +36,8 @@ class ConfigAction
     {
         if (!$this->config) {
             /** @var aSapi $sapi */
-            $sapi = $this->services->from('/')->get('sapi');
+            $services = $this->services; 
+            $sapi     = $services->get('/sapi');
             $this->config = $sapi->config();
         }
 

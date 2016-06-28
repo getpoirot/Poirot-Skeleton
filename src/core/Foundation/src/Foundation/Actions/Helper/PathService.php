@@ -24,7 +24,8 @@ class PathService
     function newService()
     {
         /** @var DataEntity $config */
-        $config = $this->services()->from('/')->get('sapi')->config();
+        $services = $this->services();
+        $config = $services->get('/sapi')->config();
         $config = $config->get(self::CONF_KEY, array());
 
         $pathAction = new PathAction($config);
@@ -54,7 +55,8 @@ class PathService
     protected function _getBasePath()
     {
         /** @var HttpRequest $request */
-        $request  = $this->services()->from('/')->get('Request');
+        $services = $this->services();
+        $request  = $services->get('/Request');
         $basePath = PhpServer::_($request)->getBasePath();
         return $basePath;
     }

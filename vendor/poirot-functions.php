@@ -7,6 +7,8 @@ namespace Poirot
     /**
      * IoC Container Gateway
      *
+     * // TODO implement namespace based service resolver for root container
+     * 
      * @return Container
      */
     function IoC() {
