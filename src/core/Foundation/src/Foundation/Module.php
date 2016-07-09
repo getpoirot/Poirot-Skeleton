@@ -28,11 +28,6 @@ use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 use Module\Foundation\Actions\BuildContainerActionOfFoundationModule;
 
-// TODO Facade IoC Static Implementation to retrieve services and modules actions/services easily
-// TODO Implement Facade to retrieve/register services; it can used namespace to retrieve related services
-   // exp. Modules\Directory\Services\IoCFacade::Repository()::Directory();
-   //      $directory = $services->get('/modules/directory/services/repository/directory');
-
 class Module implements iSapiModule
     , Sapi\Module\Feature\FeatureModuleInitSapi
     , Sapi\Module\Feature\FeatureModuleAutoload

@@ -44,7 +44,7 @@ class ViewModelRenderer
         if ($this->hasMethod($method))
             return parent::__call($method, $args);
 
-        if (false === $foundationActions = $this->services()->from('/modules/'.$this->lastActionContainer.'/action'))
+        if (false === $foundationActions = $this->services()->from('/module/'.$this->lastActionContainer.'/actions'))
             throw new \Exception(sprintf('Nested Action Container (%s) not exists.', $this->lastActionContainer));
 
         if ($foundationActions->has($method))

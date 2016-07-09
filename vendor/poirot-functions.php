@@ -1,4 +1,43 @@
 <?php
+namespace
+{
+    use Poirot\Ioc\Container;
+
+    /**
+     * Class IOC
+     *
+     * Helper To Ease Access To Ioc Services by extend this:
+     *   - on static call use extend class namespace to achieve nested container
+     *     and retrieve service from that container.
+     *
+     *   $directory = \Module\Categories\Services\Repository\IOC::categories();
+     *   $r = $directory->getTree($directory->findByID('red'));
+     */
+    class IOC
+    {
+        static function __callStatic($name, $arguments)
+        {
+            $class     = get_class(new static);
+            $namespace = substr($class, 0, strrpos($class, '\\'));
+            $nested    = str_replace('\\', Container::SEPARATOR, $namespace);
+            $container = self::_ioc()->from($nested);
+
+            if ($arguments)
+                $service = $container->get($name, $arguments);
+            else 
+                $service = $container->get($name);
+            
+            return $service;
+        }
+
+        /** @return Container */
+        protected static function _ioc()
+        {
+            return \Poirot\IoC();
+        }
+    }
+}
+
 namespace Poirot
 {
     use Poirot\Ioc\Container;
