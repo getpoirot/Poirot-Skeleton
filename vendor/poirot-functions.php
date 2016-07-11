@@ -22,6 +22,9 @@ namespace
             $nested    = str_replace('\\', Container::SEPARATOR, $namespace);
             $container = self::_ioc()->from($nested);
 
+            if (!$container)
+                throw new \Exception(sprintf('Nested Container (%s) not included.', $nested));
+
             if ($arguments)
                 $service = $container->get($name, $arguments);
             else 
