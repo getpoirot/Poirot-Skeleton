@@ -30,6 +30,9 @@ DirectoryIndex index.php
 <IfModule mod_rewrite.c>
     SetEnv HTTP_MOD_REWRITE On
     RewriteEngine On
+    ## FIX Missing Authorization Request Header
+    RewriteCond %{HTTP:Authorization} ^(.*)
+    RewriteRule .* - [e=HTTP_AUTHORIZATION:%1]
     # The following rule tells Apache that if the requested filename
     # exists, simply serve it.
     RewriteCond %{REQUEST_FILENAME} -s [OR]
