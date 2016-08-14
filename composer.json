@@ -21,25 +21,30 @@
         "poirot/std": "dev-devel"
         , "poirot/loader": "dev-devel"
         , "poirot/application": "dev-devel"
-        , "poirot/action-responder": "dev-devel"
         , "poirot/logger": "dev-devel"
             , "poirot/router": "dev-devel"
             , "poirot/events": "dev-devel"
             , "poirot/http": "dev-devel"
                 , "poirot/pathuri": "dev-devel"
-                , "poirot/stream": "dev-devel"
             , "poirot/ioc": "dev-devel"
             , "poirot/view": "dev-devel"
             , "poirot/psr7-http": "dev-devel"
+
+            , "poirot/google-places-client": "dev-devel"
+              , "poirot/api-client": "dev-devel"
+              , "poirot/connection": "dev-devel"
+              , "poirot/stream": "dev-devel"
+
+            , "poirot/authsystem": "dev-devel"
+              , "poirot/storage": "dev-devel"
     }
     ,"require-dev": {
-       "oodle/krumo": "^0.5.0"
+       "mmucklo/krumo": "^0.5.0"
     }
     ,"repositories": [
        { "type": "git" ,"url": "https://github.com/phPoirot/Std.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Loader.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Application.git" }
-      ,{ "type": "git" ,"url": "https://github.com/phPoirot/AaResponder.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Logger.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/IoC.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Stream.git" }
@@ -49,5 +54,12 @@
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Events.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Router.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/psr7.git" }
+
+      ,{ "type": "git" ,"url": "https://github.com/phPoirot/GooglePlacesClient.git" }
+      ,{ "type": "git" ,"url": "https://github.com/phPoirot/ApiClient.git" }
+      ,{ "type": "git" ,"url": "https://github.com/phPoirot/Connection.git" }
+
+      ,{ "type": "git" ,"url": "https://github.com/phPoirot/AuthSystem.git" }
+      ,{ "type": "git" ,"url": "https://github.com/phPoirot/Storage.git" }
     ]
 }
