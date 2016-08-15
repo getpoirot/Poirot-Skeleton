@@ -5,7 +5,7 @@ use Module\Foundation\HttpSapi\ViewModelRenderer;
 use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
 use Poirot\Application\aSapi;
-use Poirot\Application\Sapi;
+use Poirot\Application\Interfaces\Sapi;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
 
 use Poirot\Application\Sapi\Server\Http\ListenerDispatch;
@@ -29,12 +29,12 @@ use Poirot\Std\Interfaces\Struct\iDataEntity;
 use Module\Foundation\Actions\BuildContainerActionOfFoundationModule;
 
 class Module implements iSapiModule
-    , Sapi\Module\Feature\FeatureModuleInitSapi
-    , Sapi\Module\Feature\FeatureModuleAutoload
-    , Sapi\Module\Feature\FeatureModuleInitServices
-    , Sapi\Module\Feature\FeatureModuleNestActions
-    , Sapi\Module\Feature\FeatureOnPostLoadModulesGrabServices
-    , Sapi\Module\Feature\FeatureModuleMergeConfig
+    , Sapi\Module\Feature\iFeatureModuleInitSapi
+    , Sapi\Module\Feature\iFeatureModuleAutoload
+    , Sapi\Module\Feature\iFeatureModuleInitServices
+    , Sapi\Module\Feature\iFeatureModuleNestActions
+    , Sapi\Module\Feature\iFeatureOnPostLoadModulesGrabServices
+    , Sapi\Module\Feature\iFeatureModuleMergeConfig
 {
     /** @var SapiHttp|SapiCli */
     protected $sapi;
