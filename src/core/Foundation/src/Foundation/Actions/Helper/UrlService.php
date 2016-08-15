@@ -21,12 +21,15 @@ class UrlService
         $services = $this->services();
 
         $router  = $services->get('/router');
-        /** @see onRouteMatchListener */
-        $matched = $services->get('/router.match');
 
         $rAction = new UrlAction;
-        $rAction->setRouter($router)
-            ->setRouteMatch($matched);
+        $rAction->setRouter($router);
+
+        if ($services->has('/router.match')) {
+            /** @see onRouteMatchListener */
+            $matched = $services->get('/router.match');
+            $rAction->setRouteMatch($matched);
+        }
 
         return $rAction;
     }
