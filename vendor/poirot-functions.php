@@ -98,6 +98,8 @@ namespace Poirot
 
 namespace Poirot\Config
 {
+
+    use Poirot\Ioc\Container;
     use Poirot\Std\ErrorStack;
     use Poirot\Std\Type\StdArray;
 
@@ -147,6 +149,102 @@ namespace Poirot\Config
 
             ErrorStack::handleDone();
             ErrorStack::handleDone();
+        }
+
+        return $config;
+    }
+
+    /**
+     * Instantiate Initialized From Config Data.
+     *
+     * if services(ioc) not given using default Poirot\ioc() then:
+     *   - make object instance from definition data structure
+     *   - inject dependencies
+     *   - initialize services
+     *
+     * @param array|\Traversable $config
+     * @param null|Container     $services
+     *
+     * @return array Config replaced with initialized services
+     */
+    function instanceInitialized($config, $services = null)
+    {
+        /*
+        'identifier' => array(
+            // [X] This will convert into Identifier instance [ 'identifier' => ObjectInstance ]
+            '_class_'   => [
+                '\Poirot\AuthSystem\Authenticate\Identifier\IdentifierHttpBasicAuth',
+                'options' => array(
+                    #O# adapter => iIdentityCredentialRepo | (array) options of CredentialRepo
+                    'credential_adapter' => array(
+                        // [X] This will convert into instance [ 'credential_adapter' => ObjectInstance ]
+                        '_class_'   => [
+                            '\Poirot\AuthSystem\Authenticate\RepoIdentityCredential\IdentityCredentialDigestFile',
+                            'options' => array(
+                                'pwd_file_path' => __DIR__.'/../data/users.pws',
+                            ),
+                        ],
+                    )
+                ),
+            ],
+        ),
+        */
+        
+        if ($config instanceof \Traversable)
+            $config = \Poirot\Std\cast($config)->toArray();
+
+        if (!is_array($config))
+            throw new \InvalidArgumentException(sprintf(
+                'Config must be Array Or Traversable; given: (%s).'
+                , \Poirot\Std\flatten($config)
+            ));
+
+        if ($services === null)
+            // using default container to initialize instances
+            $services = \Poirot\IoC();
+
+        if (!$services instanceof Container)
+            throw new \InvalidArgumentException(sprintf(
+                'Services must instance of Container; given: (%s).'
+                , \Poirot\Std\flatten($services)
+            ));
+        
+        
+        $services = clone $services;
+
+        foreach ($config as $key => $value)
+        {
+            if ($key === '_class_')
+            {
+                // instance object from _class_ config definition
+                // 'key' => [ '_class_' => '\ClassName' | ['\ClassName', 'options' => $options] ]
+
+                if (is_string($value))
+                    $value = array($value);
+
+                // Maybe Options Contains Must Initialized Definition
+                $value = instanceInitialized($value, $services);
+
+                $service_name = uniqid();
+                $class        = array_shift($value);
+                $inService    = new Container\Service\ServiceInstance();
+                $inService->setName($service_name);
+                $inService->setService($class);
+                $inService->optsData()->import($value);
+
+                $services->set($inService);
+                $initialized = $services->get($service_name);
+                unset($config[$key]);
+                if (empty($config))
+                    // only definition structure and will convert to instance only
+                    $config = $initialized;
+                else
+                    array_unshift($config, $initialized);
+            }
+            elseif (is_array($value)) 
+            {
+                $config[$key] = instanceInitialized($value, $services);
+            }
         }
 
         return $config;
