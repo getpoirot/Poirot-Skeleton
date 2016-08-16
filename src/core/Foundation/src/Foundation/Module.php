@@ -1,32 +1,32 @@
 <?php
 namespace Module\Foundation;
 
-use Module\Foundation\HttpSapi\ViewModelRenderer;
 use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
 use Poirot\Application\aSapi;
 use Poirot\Application\Interfaces\Sapi;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
-
 use Poirot\Application\Sapi\Server\Http\ListenerDispatch;
-use Poirot\Application\Sapi\Server\Http\ListenersRenderDefaultStrategy;
 use Poirot\Application\SapiCli;
 use Poirot\Application\SapiHttp;
-use Poirot\Ioc\Container;
 
+use Poirot\Ioc\Container;
 use Poirot\Ioc\Container\BuildContainer;
+
 use Poirot\Loader\Autoloader\LoaderAutoloadAggregate;
 use Poirot\Loader\Autoloader\LoaderAutoloadNamespace;
 use Poirot\Loader\Interfaces\iLoaderAutoload;
 use Poirot\Loader\LoaderAggregate;
-
 use Poirot\Loader\LoaderNamespaceStack;
+
 use Poirot\Router\BuildRouterStack;
 use Poirot\Router\Interfaces\iRouterStack;
 
 use Poirot\Std\Interfaces\Struct\iDataEntity;
 
 use Module\Foundation\Actions\BuildContainerActionOfFoundationModule;
+use Module\Foundation\HttpSapi\ViewModelRenderer;
+
 
 class Module implements iSapiModule
     , Sapi\Module\Feature\iFeatureModuleInitSapi
@@ -76,7 +76,7 @@ class Module implements iSapiModule
         #$nameSpaceLoader = \Poirot\Loader\Autoloader\LoaderAutoloadNamespace::class;
         $nameSpaceLoader = 'Poirot\Loader\Autoloader\LoaderAutoloadNamespace';
         /** @var LoaderAutoloadNamespace $nameSpaceLoader */
-        $nameSpaceLoader = $baseAutoloader->by($nameSpaceLoader);
+        $nameSpaceLoader = $baseAutoloader->loader($nameSpaceLoader);
         $nameSpaceLoader->addResource(__NAMESPACE__, __DIR__);
     }
 
@@ -147,7 +147,6 @@ class Module implements iSapiModule
      * @param aSapi                          $sapi
      * @param iRouterStack                   $router
      * @param LoaderAggregate                $viewModelResolver
-     * @param ListenersRenderDefaultStrategy $viewRenderStrategy
      *
      * @internal param null $services service names must have default value
      */
@@ -155,28 +154,17 @@ class Module implements iSapiModule
         $sapi = null
         , $router = null
         , $viewModelResolver = null
-        , $viewRenderStrategy = null
     ) {
-        if ($this->sapi instanceof SapiHttp) {
+        if ($this->sapi instanceof SapiHttp) 
+        {
             // This is Http Sapi Application
-            
-            # Load View Render Strategy Options: -----\
-            // TODO Configuration Initialize Move Within Class Object Itself
-            if (method_exists($viewRenderStrategy, 'setDefaultLayout')) {
-                /** @var iDataEntity $config */
-                $config = $sapi->config();
-                if ($config = $config->get('view_renderer'))
-                    if (is_array($config) && isset($config['default_layout']))
-                        $viewRenderStrategy->setDefaultLayout(
-                            $config['default_layout']
-                        );
-            }
-            
 
             # Attach Module Scripts To View Resolver:
+            
             // TODO Define ViewModelResolver within ViewModel or better!! all view services may not have resolver
+            // But We May Need Template Rendering Even In API Calls
             /** @var LoaderNamespaceStack $resolver */
-            $resolver = $viewModelResolver->by('Poirot\Loader\LoaderNamespaceStack');
+            $resolver = $viewModelResolver->loader('Poirot\Loader\LoaderNamespaceStack');
             $resolver->with(array(
                     'main/home' => __DIR__. '/../../view/main/home',
                     'partial'   => __DIR__.'/../../view/partial',
