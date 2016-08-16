@@ -1,18 +1,18 @@
 <?php
-use Module\Foundation\Actions\Helper\PathService;
-
 $themesFolder = basename(PT_DIR_THEME_DEFAULT);
 
 return array(
     // Path Helper Action Options
-    PathService::CONF_KEY => array(
+    \Module\Foundation\Actions\Helper\PathService::CONF_KEY
+    => array(
         'paths' => array(
             'app-assets' => "\$basePath/{$themesFolder}/www",
         ),
     ),
 
     // Asset Manager Module Config (for enabled AssetManager module)
-    'asset_manager' => array(
+    'asset_manager'
+    => array(
         'Poirot\Loader\AggregateLoader' => array(
             'attach' => array(
                 100 => new \Poirot\Loader\LoaderNamespaceStack(array($themesFolder => array(PT_DIR_THEME_DEFAULT))),
@@ -21,11 +21,11 @@ return array(
     ),
 
     // View Renderer Options
-    'view_renderer' => array(
+    \Poirot\Application\Sapi\Server\Http\ViewRenderStrategy\ListenersRenderDefaultStrategy::CONF_KEY
+    => array(
         'default_layout'   => 'default',
 
-        /** @see ListenerError */
-        'error_view_template' => array(
+        \Poirot\Application\Sapi\Server\Http\ViewRenderStrategy\DefaultStrategy\ListenerError::CONF_KEY => array(
             ## full name of class exception
 
             ## use null on second index cause view template render as final layout
