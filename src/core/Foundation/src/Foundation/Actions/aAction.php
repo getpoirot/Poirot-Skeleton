@@ -13,8 +13,11 @@ abstract class aAction
 {
     /** @var ContainerForFeatureActions */
     protected $services;
+
     
-    
+    abstract function __invoke();
+
+
     /**
      * Call to neighbors module actions in container
      *
