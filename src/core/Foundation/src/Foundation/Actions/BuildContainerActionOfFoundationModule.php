@@ -6,9 +6,6 @@ use Poirot\Ioc\Container\BuildContainer;
 class BuildContainerActionOfFoundationModule
     extends BuildContainer
 {
-    protected $interfaces 
-        = array();
-
     protected $services
         = array(
             ## Helpers
