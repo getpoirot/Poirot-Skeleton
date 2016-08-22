@@ -98,7 +98,8 @@ namespace Poirot
 
 namespace Poirot\Config
 {
-
+    const INIT_INS = '_class_';
+    
     use Poirot\Ioc\Container;
     use Poirot\Std\ErrorStack;
     use Poirot\Std\Type\StdArray;
@@ -172,13 +173,13 @@ namespace Poirot\Config
         /*
         'identifier' => array(
             // [X] This will convert into Identifier instance [ 'identifier' => ObjectInstance ]
-            '_class_'   => [
+            \Poirot\Config\INIT_INS   => [
                 '\Poirot\AuthSystem\Authenticate\Identifier\IdentifierHttpBasicAuth',
                 'options' => array(
                     #O# adapter => iIdentityCredentialRepo | (array) options of CredentialRepo
                     'credential_adapter' => array(
                         // [X] This will convert into instance [ 'credential_adapter' => ObjectInstance ]
-                        '_class_'   => [
+                        \Poirot\Config\INIT_INS   => [
                             '\Poirot\AuthSystem\Authenticate\RepoIdentityCredential\IdentityCredentialDigestFile',
                             'options' => array(
                                 'pwd_file_path' => __DIR__.'/../data/users.pws',
@@ -209,15 +210,15 @@ namespace Poirot\Config
                 , \Poirot\Std\flatten($services)
             ));
         
-        
+
         $services = clone $services;
 
         foreach ($config as $key => $value)
         {
-            if ($key === '_class_')
+            if ($key === \Poirot\Config\INIT_INS)
             {
                 // instance object from _class_ config definition
-                // 'key' => [ '_class_' => '\ClassName' | ['\ClassName', 'options' => $options] ]
+                // 'key' => [ \Poirot\Config\INIT_INS => '\ClassName' | ['\ClassName', 'options' => $options] ]
 
                 if (is_string($value))
                     $value = array($value);
