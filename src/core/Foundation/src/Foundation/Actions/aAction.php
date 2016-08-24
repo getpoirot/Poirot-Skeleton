@@ -71,9 +71,10 @@ abstract class aAction
      *
      * @throws \Exception
      */
-    function GetModuleServices()
+    function ModuleServices($moduleName = null)
     {
-        $moduleName = $this->_getModuleName();
+        if ($moduleName === null)
+            $moduleName = $this->_getModuleName();
         
         $s = $this->services()->from("/module/{$moduleName}/services");
         return $s;

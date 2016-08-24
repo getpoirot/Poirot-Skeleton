@@ -167,6 +167,7 @@ namespace Poirot\Config
      * @param null|Container     $services
      *
      * @return array Config replaced with initialized services
+     * @throws \Exception
      */
     function instanceInitialized($config, $services = null)
     {
@@ -219,19 +220,22 @@ namespace Poirot\Config
             {
                 // instance object from _class_ config definition
                 // 'key' => [ \Poirot\Config\INIT_INS => '\ClassName' | ['\ClassName', 'options' => $options] ]
-
-                if (is_string($value))
+                if (is_array($value))
+                    // Maybe Options Contains Must Initialized Definition
+                    $value = instanceInitialized($value, $services);
+                elseif (is_string($value))
                     $value = array($value);
-
-                // Maybe Options Contains Must Initialized Definition
-                $value = instanceInitialized($value, $services);
+                else
+                    throw new \Exception(sprintf(
+                        'Invalid instanceInitialized Config (%s).', \Poirot\Std\flatten($value)
+                    ));
 
                 $service_name = uniqid();
                 $class        = array_shift($value);
                 $inService    = new Container\Service\ServiceInstance();
                 $inService->setName($service_name);
                 $inService->setService($class);
-                $inService->optsData()->import($value);
+                $inService->with($value);
 
                 $services->set($inService);
                 $initialized = $services->get($service_name);
