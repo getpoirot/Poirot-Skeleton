@@ -156,6 +156,8 @@ namespace Poirot\Config
     }
 
     /**
+     * // TODO move to ioc package bind into builder
+     * 
      * Instantiate Initialized From Config Data.
      *
      * if services(ioc) not given using default Poirot\ioc() then:
