@@ -35,17 +35,35 @@ abstract class aAction
      */
     function __call($method, $args)
     {
+        try {
+            $callable = $this->__get($method);
+            if (is_callable($callable))
+                return call_user_func_array($callable, $args);
+        } catch (\Exception $e) {
+            
+        }
+        
+        trigger_error('Call to undefined method '.__CLASS__.'::'.$method.'()', E_USER_ERROR);
+    }
+
+    /**
+     * @param $name
+     * @return callable|mixed
+     * 
+     * @throws \Exception
+     */
+    function __get($name)
+    {
         # Nested Neighbor Actions
-        if ($this->services()->has($method)) {
+        if ($this->services()->has($name)) {
             // nested actions
-            $callable = $this->services()->get($method);
-            return call_user_func_array($callable, $args);
+            return $this->services()->get($name);
         }
 
         # Retrieve Nested Services
-        if ( substr($method, 0, strlen('Get')) === 'Get' && substr($method, -(strlen('Service'))) === 'Service' ) {
+        if ( substr($name, 0, strlen('Get')) === 'Get' && substr($name, -(strlen('Service'))) === 'Service' ) {
             // Attain Module Nested Service
-            $service    = substr($method, strlen('Get'), strlen($method)-strlen('Service')-strlen('Get') );
+            $service    = substr($name, strlen('Get'), strlen($name)-strlen('Service')-strlen('Get') );
             $moduleName = $this->_getModuleName();
             try {
                 $s = $this->services()->from("/module/{$moduleName}/services");
@@ -57,9 +75,8 @@ abstract class aAction
                 ), 0, $e);
             }
         }
-
-
-        trigger_error('Call to undefined method '.__CLASS__.'::'.$method.'()', E_USER_ERROR);
+        
+        throw new \Exception(sprintf('(%s) Not found as any action or service.'));
     }
 
     /**
