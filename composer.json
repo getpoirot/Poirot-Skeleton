@@ -30,12 +30,10 @@
             , "poirot/view": "dev-devel"
             , "poirot/psr7-http": "dev-devel"
 
-            , "poirot/google-places-client": "dev-devel"
               , "poirot/api-client": "dev-devel"
               , "poirot/connection": "dev-devel"
               , "poirot/stream": "dev-devel"
 
-            , "poirot/authsystem": "dev-devel"
               , "poirot/storage": "dev-devel"
     }
     ,"require-dev": {
