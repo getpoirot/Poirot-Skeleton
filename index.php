@@ -29,4 +29,6 @@ namespace Poirot
     /** @var P\Application\SapiHttp|P\Application\SapiCli $application */
     $application = IoC()->get('sapi');
     $application->run();
+
+    die;
 }
