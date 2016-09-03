@@ -19,7 +19,8 @@ define('PT_DIR_VENDOR',       PT_DIR_WWW.'/vendor');
 define('PT_DIR_SOURCE',       PT_DIR_WWW.'/src');
 define('PT_DIR_CORE',                PT_DIR_SOURCE.'/core');
 define('PT_DIR_CONFIG',              PT_DIR_SOURCE.'/config');
-define('PT_DIR_TEMP',                PT_DIR_SOURCE.'/tmp');
+define('PT_DIR_DATA',                PT_DIR_SOURCE.'/data');
+define('PT_DIR_TMP',                    PT_DIR_DATA.'/tmp');
 
 // Setup autoLoading:
 if (file_exists(PT_DIR_VENDOR.'/autoload.php'))

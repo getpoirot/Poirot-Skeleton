@@ -11,10 +11,10 @@ nbproject
 
 composer.lock
 
-tmp/
-!src/tmp
-src/tmp/**
-!src/tmp/readme.txt
+src/data/
+!src/data
+src/data/**
+!src/data/readme.txt
 
 # Local configuration files #
 src/config/*.local.**

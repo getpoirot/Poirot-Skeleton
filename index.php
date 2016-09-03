@@ -15,10 +15,12 @@ namespace Poirot
 
 
     // Set environment settings:
+    $dotEnv = __DIR__.'/.env.php';
+    $overrideEnvironment = (is_readable($dotEnv)) ? include_once $dotEnv : array();
     P\Std\Environment\FactoryEnvironment::of(function() {
         $default = ($env_mode = getenv('PT_ENVIRONMENT'))        ? $env_mode : 'default';
         return     (defined('PT_DEBUG') && constant('PT_DEBUG')) ? 'dev'     : $default;
-    })->apply();
+    })->apply($overrideEnvironment);
 
 
     // Run the application:
