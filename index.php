@@ -12,16 +12,7 @@ namespace Poirot
 
     # change cwd to the application root by default
     chdir(__DIR__);
-
-
-    // Set environment settings:
-    $dotEnv = __DIR__.'/.env.php';
-    $overrideEnvironment = (is_readable($dotEnv)) ? include_once $dotEnv : array();
-    P\Std\Environment\FactoryEnvironment::of(function() {
-        $default = ($env_mode = getenv('PT_ENVIRONMENT'))        ? $env_mode : 'default';
-        return     (defined('PT_DEBUG') && constant('PT_DEBUG')) ? 'dev'     : $default;
-    })->apply($overrideEnvironment);
-
+    
 
     // Run the application:
     P\Std\ErrorStack::handleError(E_ERROR|E_RECOVERABLE_ERROR|E_USER_ERROR, function($error) { throw $error; });
