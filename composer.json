@@ -26,11 +26,6 @@
     ,"require-dev": {
        "mmucklo/krumo": "^0.5.0"
     }
-    , "autoload"  : {
-        "files": [
-            "index.php"
-        ]
-    }
     ,"repositories": [
        { "type": "git" ,"url": "https://github.com/phPoirot/Std.git" }
       ,{ "type": "git" ,"url": "https://github.com/phPoirot/Loader.git" }
