@@ -1,13 +1,15 @@
 <?php
 /* poirot-autoload.php @default poirot autoload */
 
-
 // Autoload Default Poirot Libraries:
 use Poirot\Loader\Autoloader\LoaderAutoloadClassMap;
 use Poirot\Loader\Autoloader\LoaderAutoloadNamespace;
 
 // TODO using compiled cache autoload
-require_once __DIR__ . '/poirot/loader/' . '/Poirot/Loader/Autoloader/LoaderAutoloadAggregate.php';
+
+if (!class_exists('\Poirot\Loader\Autoloader\LoaderAutoloadAggregate'))
+    // Used as base skeleton; it may also installed as composer package so the required packages is available.
+    require_once PT_DIR_VENDOR . '/poirot/loader/' . '/Poirot/Loader/Autoloader/LoaderAutoloadAggregate.php';
 
 $namespaces = __DIR__.'/poirot-autoload-namespaces.php';
 $classmap   = __DIR__.'/poirot-autoload-classmap.php';
