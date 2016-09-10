@@ -223,7 +223,7 @@ namespace Poirot\Config
                 // instance object from _class_ config definition
                 // 'key' => [ \Poirot\Config\INIT_INS => '\ClassName' | ['\ClassName', 'options' => $options] ]
                 if (is_array($value))
-                    // Maybe Options Contains Must Initialized Definition
+                    // Maybe Options Contains Initialized Definition
                     $value = instanceInitialized($value, $services);
                 elseif (is_string($value))
                     $value = array($value);
@@ -232,8 +232,10 @@ namespace Poirot\Config
                         'Invalid instanceInitialized Config (%s).', \Poirot\Std\flatten($value)
                     ));
 
-                $service_name = uniqid();
                 $class        = array_shift($value);
+                // easy to debug track of service if failed; replace separator container "/" with "_" to avoid container service retrieve error
+                $postfix      = '_'.str_replace('/', '_', \Poirot\Std\flatten($class));
+                $service_name = uniqid().$postfix;
                 $inService    = new Container\Service\ServiceInstance();
                 $inService->setName($service_name);
                 $inService->setService($class);
