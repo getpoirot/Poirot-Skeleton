@@ -13,8 +13,14 @@ namespace Poirot
          * Constructor.
          * @param \Exception $e
          */
-        function __construct(\Exception $e)
+        function __construct($e)
         {
+            if (!($e instanceof \Throwable || $e instanceof \Exception) )
+                throw new \InvalidArgumentException(sprintf(
+                    'Invalid Argument (%s) must be an \Exception or \Throwable.'
+                    , get_class($e)
+                ));
+
             $this->e = $e;
         }
 
