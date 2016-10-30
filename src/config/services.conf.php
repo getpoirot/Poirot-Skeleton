@@ -18,7 +18,7 @@ return array(
             'sapi' =>
             // Application Sapi Service Factory
                 array(
-                    ':class'  => 'Poirot\Application\ServiceSapiApplication',
+                    \Poirot\Ioc\Container\BuildContainer::INST => 'Poirot\Application\ServiceSapiApplication',
                     #':class'  => \Poirot\Application\ServiceSapiApplication::class ,
                     'setting' => 'sapi.setting'
                     // config can be (string) as registered service
@@ -30,7 +30,7 @@ return array(
             // exp. load maintain modules if system is on maintain
             //      or load specific modules for domain name, etc..
                 array(
-                    ':class'  => 'Poirot\Application\ServiceSapiConfigDefault',
+                    \Poirot\Ioc\Container\BuildContainer::INST => 'Poirot\Application\ServiceSapiConfigDefault',
                     #':class'  => \Poirot\Application\ServiceSapiConfigDefault::class,
                     'setting' => \Poirot\Config\load(PT_DIR_CONFIG.'/sapi_default'),
                 ),

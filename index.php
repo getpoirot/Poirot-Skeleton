@@ -1,7 +1,6 @@
 <?php
 namespace Poirot
 {
-
     use IOC;
     use Poirot as P;
     use Poirot\Ioc\Container;
