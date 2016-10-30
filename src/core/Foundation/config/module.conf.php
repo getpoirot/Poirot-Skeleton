@@ -10,17 +10,6 @@ return array(
         ),
     ),
 
-    // Asset Manager Module Config (for enabled AssetManager module)
-    // TODO Asset Manager as Separated Module
-    'asset_manager'
-    => array(
-        'Poirot\Loader\AggregateLoader' => array(
-            'attach' => array(
-                100 => new \Poirot\Loader\LoaderNamespaceStack(array($themesFolder => array(PT_DIR_THEME_DEFAULT))),
-            )
-        )
-    ),
-
     // View Renderer Options
     \Poirot\Application\Sapi\Server\Http\ViewRenderStrategy\ListenersRenderDefaultStrategy::CONF_KEY
     => array(
