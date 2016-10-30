@@ -1,6 +1,7 @@
 <?php
 namespace Poirot
 {
+    use IOC;
     use Poirot as P;
     
     (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 )
@@ -20,6 +21,6 @@ namespace Poirot
 
     # start application:
     /** @var P\Application\SapiHttp|P\Application\SapiCli $application */
-    $application = IoC()->get('sapi');
+    $application = IoC::Sapi();
     $application->run();
 }

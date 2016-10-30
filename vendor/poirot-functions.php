@@ -12,6 +12,11 @@ namespace
      *
      *   $directory = \Module\Categories\Services\Repository\IOC::categories();
      *   $r = $directory->getTree($directory->findByID('red'));
+     *
+     *   equal to:
+     *
+     *   $ioc->from('/Module/Categories/Services/Repository')->get('categories');
+     *
      */
     class IOC
     {
@@ -49,8 +54,6 @@ namespace Poirot
     /**
      * IoC Container Gateway
      *
-     * // TODO implement namespace based service resolver for root container
-     * 
      * @return Container
      */
     function IoC() {
