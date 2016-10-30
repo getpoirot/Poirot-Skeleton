@@ -18,7 +18,7 @@ namespace Poirot
 
     // Run the application:
     P\Std\ErrorStack::handleError(E_ERROR|E_RECOVERABLE_ERROR|E_USER_ERROR, function($error) { throw $error; });
-    P\Std\ErrorStack::handleException(function ($error) { P\printException($error); });
+    P\Std\ErrorStack::handleException(function ($error) { echo new DecorateExceptionToHtml($error); });
 
     # start application:
     $config = \Poirot\Config\load(PT_DIR_CONFIG.'/services');

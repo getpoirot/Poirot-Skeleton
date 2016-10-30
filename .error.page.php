@@ -1,5 +1,7 @@
 <?php
 /**
+ * @see DecorateExceptionToHtml
+ *
  * @var $this      \Poirot\View\ViewModel\RendererPhp
  * @var $exception \Exception
  */

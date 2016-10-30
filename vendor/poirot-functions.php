@@ -3,6 +3,64 @@ namespace Poirot
 {
     use Poirot\View\ViewModel\RendererPhp;
 
+
+    class DecorateExceptionToHtml
+    {
+        /** @var \Exception */
+        protected $e;
+
+        /**
+         * Constructor.
+         * @param \Exception $e
+         */
+        function __construct(\Exception $e)
+        {
+            $this->e = $e;
+        }
+
+        function __toString()
+        {
+            $e = $this->e;
+
+            if (ob_get_level())
+                ## clean output buffer, display just error page
+                ob_end_clean();
+
+            try {
+                return $this->toHtml();
+            } catch(\Exception $ve) {
+                ## throw exception if can't render template
+                return sprintf(
+                    'Error While Rendering Exception Into HTML!!! (%s)'
+                    , $e->getMessage()
+                );
+            }
+        }
+
+        /**
+         * Print Exception Object Error Page
+         *
+         * @return string
+         * @throws \Throwable
+         */
+        function toHtml()
+        {
+            $e = $this->e;
+
+            try {
+                $renderer = new RendererPhp();
+                return $renderer->capture(
+                    __DIR__ . '/../.error.page.php'
+                    , array('exception' => $e)
+                );
+            } catch(\Exception $ve) {
+                ## throw exception if can't render template
+                throw $e;
+            }
+        }
+    }
+
+
     /**
      * Is Sapi Command Line?
      *
@@ -11,29 +69,6 @@ namespace Poirot
     function isCommandLine()
     {
         return ( strpos(php_sapi_name(), 'cli') === 0 );
-    }
-
-    /**
-     * Print Exception Object Error Page
-     *
-     * @param \Exception|\Throwable $e
-     *
-     * @throws \Throwable
-     */
-    function printException($e) {
-        if (ob_get_level())
-            ## clean output buffer, display just error page
-            ob_end_clean();
-        try {
-            $renderer = new RendererPhp();
-            echo $renderer->capture(
-                PT_DIR_THEME_DEFAULT.'/error/general.php'
-                , array('exception' => $e)
-            );
-        } catch(\Exception $ve) {
-            ## throw exception if can't render template
-            throw $e;
-        }
     }
 }
 
