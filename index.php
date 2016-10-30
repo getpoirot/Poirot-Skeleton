@@ -1,9 +1,11 @@
 <?php
 namespace Poirot
 {
+
     use IOC;
     use Poirot as P;
-    
+    use Poirot\Ioc\Container;
+
     (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 )
     and exit('Needs at least PHP5.3; your current php version is ' . phpversion() . '.');
 
@@ -20,7 +22,11 @@ namespace Poirot
     P\Std\ErrorStack::handleException(function ($error) { P\printException($error); });
 
     # start application:
+    $config = \Poirot\Config\load(PT_DIR_CONFIG.'/services');
+    $IoC    = new Container(new Container\BuildContainer($config));
+    IOC::GiveIoC($IoC);
+
     /** @var P\Application\SapiHttp|P\Application\SapiCli $application */
-    $application = IoC::Sapi();
+    $application = IOC::Sapi();
     $application->run();
 }
