@@ -11,6 +11,7 @@ return array(
     ),
 
     // Asset Manager Module Config (for enabled AssetManager module)
+    // TODO Asset Manager as Separated Module
     'asset_manager'
     => array(
         'Poirot\Loader\AggregateLoader' => array(
