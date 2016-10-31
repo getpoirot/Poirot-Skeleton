@@ -115,6 +115,7 @@ namespace Poirot\Config
                 ob_end_clean();
                 throw new \RuntimeException(
                     sprintf('Error while loading config: %s', $filePath)
+                    , 0
                     , $e
                 );
             });

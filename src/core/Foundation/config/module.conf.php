@@ -1,5 +1,6 @@
 <?php
-$themesFolder = basename(PT_DIR_THEME_DEFAULT);
+// TODO by this considered that themes always exists within www that seems ok when not using asset-manager
+$themesFolder = trim(str_replace(PT_DIR_WWW, '', PT_DIR_THEME_DEFAULT), '/');
 
 return array(
     // Path Helper Action Options
