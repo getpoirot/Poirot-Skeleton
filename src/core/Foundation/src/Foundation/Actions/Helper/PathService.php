@@ -1,6 +1,7 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
+use Poirot\Application\Sapi\Server\Http\BuildHttpSapiServices;
 use Poirot\Http\HttpMessage\Request\Plugin\PhpServer;
 use Poirot\Http\HttpRequest;
 use Poirot\Ioc\Container\Service\aServiceContainer;
@@ -56,7 +57,7 @@ class PathService
     {
         /** @var HttpRequest $request */
         $services = $this->services();
-        $request  = $services->get('/Request');
+        $request  = $services->get('/'.BuildHttpSapiServices::SERVICE_NAME_REQUEST);
         $basePath = PhpServer::_($request)->getBasePath();
         return $basePath;
     }

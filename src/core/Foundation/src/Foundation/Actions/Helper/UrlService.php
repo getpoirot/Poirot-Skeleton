@@ -1,6 +1,7 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
+use Poirot\Application\Sapi\Server\Http\BuildHttpSapiServices;
 use Poirot\Ioc\Container\Service\aServiceContainer;
 
 class UrlService 
@@ -20,14 +21,15 @@ class UrlService
     {
         $services = $this->services();
 
-        $router  = $services->get('/router');
+        $router  = $services->from('/')->get(BuildHttpSapiServices::SERVICE_NAME_ROUTER);
 
         $rAction = new UrlAction;
         $rAction->setRouter($router);
 
         if ($services->has('/router.match')) {
             /** @see onRouteMatchListener */
-            $matched = $services->get('/router.match');
+            // TODO its poirot foundation feature where "router.match is set?!!"
+            $matched = $services->from('/')->get('router.match');
             $rAction->setRouteMatch($matched);
         }
 

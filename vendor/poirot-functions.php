@@ -94,23 +94,28 @@ namespace Poirot\Config
      *   load all files with extension
      *   ".local.conf.php" and ".conf.php"
      *
-     * @param string $dirOrFile file or dir path
+     * - then fallback into default config dir (PT_DIR_CONFIG)
+     *   with basename(path) and merge loaded data
+     *
+     * @param string $path file or dir path
      *
      * @return StdArray
      */
-    function load($dirOrFile)
+    function load($path)
     {
         $config = new StdArray();
         
-        $globPattern = $dirOrFile;
-        if (is_dir($dirOrFile)) {
+        $globPattern = $path;
+        if (is_dir($path)) {
             $globPattern = str_replace('\\', '/', $globPattern); // normalize path separator
             $globPattern = rtrim($globPattern, '/').'/*';
         }
-        if (!is_file($dirOrFile))
+
+        if (!is_file($path))
+            // did not given exactly name of file
             $globPattern .= '.{,local.}conf.php';
 
-        foreach (glob($globPattern, GLOB_BRACE) as $filePath) {
+        foreach ( glob($globPattern, GLOB_BRACE) as $filePath ) {
             ErrorStack::handleException(function ($e) use ($filePath) {
                 ob_end_clean();
                 throw new \RuntimeException(
@@ -123,13 +128,26 @@ namespace Poirot\Config
             ErrorStack::handleError(E_ALL, function ($e){ throw $e; });
 
             ob_start();
-            $fConf = include_once $filePath;
-            if (!is_array($fConf)) throw new \RuntimeException('Config file must provide array.');
+            $fConf = include $filePath;
+            if (!is_array($fConf))
+                throw new \RuntimeException(sprintf(
+                    'Config file (%s) must provide array; given (%s).'
+                    , $filePath
+                    , \Poirot\Std\flatten($fConf)
+                ));
+
             $config = $config->withMergeRecursive($fConf);
             ob_get_clean();
 
             ErrorStack::handleDone();
             ErrorStack::handleDone();
+        }
+
+
+        # Looking in Default Config Directory
+        if (dirname($path) !== PT_DIR_CONFIG) {
+            $path = PT_DIR_CONFIG.'/'.ltrim(basename($path), '\\/');
+            $config    = $config->withMergeRecursive(load($path));
         }
 
         return $config;

@@ -6,6 +6,7 @@ use Poirot\Application\Interfaces\Sapi\iSapiModule;
 use Poirot\Application\aSapi;
 use Poirot\Application\Interfaces\Sapi;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
+use Poirot\Application\Sapi\Server\Http\BuildHttpSapiServices;
 use Poirot\Application\Sapi\Server\Http\ListenerDispatch;
 use Poirot\Application\SapiCli;
 use Poirot\Application\SapiHttp;
@@ -115,9 +116,10 @@ class Module implements iSapiModule
     {
         // replace default renderer with Foundation Renderer including stuffs
         if ($this->sapi instanceof SapiHttp) {
-            $this->sapi->services()->set(
-                new Container\Service\ServiceInstance('ViewModelRenderer', new ViewModelRenderer())
-            );
+            $this->sapi->services()->set(new Container\Service\ServiceInstance(
+                BuildHttpSapiServices::SERVICE_NAME_VIEW_MODEL_RENDERER
+                , new ViewModelRenderer
+            ));
         }
     }
 

@@ -3,6 +3,7 @@ namespace Module\Foundation\Actions\Helper;
 
 use Module\Foundation\Actions\aAction;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
+use Poirot\Application\Sapi\Server\Http\BuildHttpSapiServices;
 use Poirot\Router\Interfaces\iRoute;
 use Poirot\Router\RouterStack;
 
@@ -66,7 +67,7 @@ class UrlAction
             return $this->_routeMatch;
 
         // TODO fresh because route (RSegment) manipulate meta DataFiled and must be reset
-        $request = $this->_sContainer->from('/')->fresh('request');
+        $request = $this->_sContainer->from('/')->fresh(BuildHttpSapiServices::SERVICE_NAME_REQUEST);
         $router  = $this->_router;
 
         $this->_routeMatch = $router->match($request);

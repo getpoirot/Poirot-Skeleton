@@ -1,6 +1,7 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
+use Poirot\Application\Sapi\Server\Http\BuildHttpSapiServices;
 use Poirot\Ioc\Container\Service\aServiceContainer;
 
 class ViewService 
@@ -19,7 +20,7 @@ class ViewService
     function newService()
     {
         $rootSrv   = $this->services()->from('/');
-        $viewModel = $rootSrv->fresh('viewModel');
+        $viewModel = $rootSrv->fresh(BuildHttpSapiServices::SERVICE_NAME_VIEW_MODEL);
 
         $view = new ViewAction;
         $view->setViewModel($viewModel);

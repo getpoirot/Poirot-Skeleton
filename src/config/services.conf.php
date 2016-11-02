@@ -7,11 +7,10 @@ return array(
     'implementations' =>
      // services interface implementation contract
         array(
+            // TODO use ::class instead
             'sapi'   => '\Poirot\Application\Interfaces\iApplication',
-            #'sapi'   => \Poirot\Application\Interfaces\iApplication::class,
 
             'config' => '\Poirot\Std\Interfaces\Struct\iDataEntity',
-            #'config' => \Poirot\Std\Interfaces\Struct\iDataEntity::class,
         ),
     'services' =>
         array(
@@ -19,7 +18,6 @@ return array(
             // Application Sapi Service Factory
                 array(
                     \Poirot\Ioc\Container\BuildContainer::INST => 'Poirot\Application\ServiceSapiApplication',
-                    #':class'  => \Poirot\Application\ServiceSapiApplication::class ,
                     'setting' => 'sapi.setting'
                     // config can be (string) as registered service
                     // or \Traversable|array instance
@@ -31,7 +29,6 @@ return array(
             //      or load specific modules for domain name, etc..
                 array(
                     \Poirot\Ioc\Container\BuildContainer::INST => 'Poirot\Application\ServiceSapiConfigDefault',
-                    #':class'  => \Poirot\Application\ServiceSapiConfigDefault::class,
                     'setting' => \Poirot\Config\load(PT_DIR_CONFIG.'/sapi_default'),
                 ),
         ),

@@ -12,11 +12,11 @@ return array(
     ),
 
     // View Renderer Options
-    \Poirot\Application\Sapi\Server\Http\ViewRenderStrategy\ListenersRenderDefaultStrategy::CONF_KEY
+    \Poirot\Application\Sapi\Server\Http\RenderStrategy\ListenersRenderDefaultStrategy::CONF_KEY
     => array(
         'default_layout'   => 'default',
 
-        \Poirot\Application\Sapi\Server\Http\ViewRenderStrategy\DefaultStrategy\ListenerError::CONF_KEY => array(
+        \Poirot\Application\Sapi\Server\Http\RenderStrategy\DefaultStrategy\ListenerError::CONF_KEY => array(
             ## full name of class exception
 
             ## use null on second index cause view template render as final layout
