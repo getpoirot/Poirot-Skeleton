@@ -76,7 +76,7 @@ abstract class aAction
             }
         }
         
-        throw new \Exception(sprintf('(%s) Not found as any action or service.'));
+        throw new \Exception(sprintf('(%s) Not found as any action or service.', $name));
     }
 
     /**

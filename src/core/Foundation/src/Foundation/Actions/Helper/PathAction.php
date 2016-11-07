@@ -37,7 +37,7 @@ class PathAction
      *
      * @param null $arg
      *
-     * @return mixed
+     * @return $this
      */
     function __invoke()
     {
