@@ -13,10 +13,27 @@ abstract class aAction
 {
     /** @var ContainerForFeatureActions */
     protected $services;
+    /** @var string */
+    protected $_currModule;
 
-    
+
     abstract function __invoke();
 
+
+    /**
+     * Switch Another Module Actions
+     *
+     * @param null $moduleName
+     *
+     * @return aAction
+     */
+    function withModule($moduleName = null)
+    {
+        $self = clone $this;
+        $self->_currModule = $moduleName;
+
+        return $self;
+    }
 
     /**
      * Call to neighbors module actions in container
@@ -36,79 +53,44 @@ abstract class aAction
     function __call($method, $args)
     {
         try {
-            $callable = $this->__get($method);
-            if (is_callable($callable))
+            # Nested Neighbor Actions
+            $root   = '/module/'.$this->_getModuleName();
+            $action = $root.'/actions/'.$method;
+            if ($this->services()->has($action)) {
+                $callable = $this->services()->get($action);
                 return call_user_func_array($callable, $args);
-        } catch (\Exception $e) {
-            
-        }
+            }
+        } catch (\Exception $e) { }
         
         trigger_error('Call to undefined method '.__CLASS__.'::'.$method.'()', E_USER_ERROR);
     }
 
     /**
-     * @param $name
-     * @return callable|mixed
-     * 
-     * @throws \Exception
-     */
-    function __get($name)
-    {
-        # Nested Neighbor Actions
-        if ($this->services()->has($name)) {
-            // nested actions
-            return $this->services()->get($name);
-        }
-
-        # Retrieve Nested Services
-        if ( substr($name, 0, strlen('Get')) === 'Get' && substr($name, -(strlen('Service'))) === 'Service' ) {
-            // Attain Module Nested Service
-            $service    = substr($name, strlen('Get'), strlen($name)-strlen('Service')-strlen('Get') );
-            $moduleName = $this->_getModuleName();
-            try {
-                $s = $this->services()->from("/module/{$moduleName}/services");
-                return $s->get($service);
-            } catch (\Exception $e) {
-                throw new \Exception(sprintf(
-                    'Error While Retrieve (%s) Service From Nested Module (%s).'
-                    , $service, $moduleName
-                ), 0, $e);
-            }
-        }
-        
-        throw new \Exception(sprintf('(%s) Not found as any action or service.', $name));
-    }
-
-    /**
-     * 
-     * exp.
-     * GetModuleServices()->get('repository/clients')
-     * 
-     * @return false|Container
+     * Retrieve Service From Module Namespace
      *
-     * @throws \Exception
+     * @return Container
      */
-    function ModuleServices($moduleName = null)
+    function IoC()
     {
-        if ($moduleName === null)
-            $moduleName = $this->_getModuleName();
-        
-        $s = $this->services()->from("/module/{$moduleName}/services");
+        $root = '/module/'.$this->_getModuleName();
+        $s    = $this->services()->from($root);
         return $s;
     }
-    
+
+
     // Implement iCService
 
     /**
      * Get Module Actions Container
      *
-     * - this actions also is member of Module Actions Container
-     *
      * @return ContainerForFeatureActions
      */
     function services()
     {
-        return $this->services;
+        if (!$services = $this->services)
+            throw new \RuntimeException('Services Container Not Set.');
+
+        return $services;
     }
 
     /**
@@ -124,12 +106,15 @@ abstract class aAction
 
     // ..
 
-    function _getModuleName()
+    protected function _getModuleName()
     {
+        if ($this->_currModule)
+            return $this->_currModule;
+
         $path   = $this->services()->getPath();
         $exPath = explode('/', $path);
 
         $moduleName = $exPath[count($exPath)-2];
-        return $moduleName;
+        return $this->_currModule = $moduleName;
     }
 }
