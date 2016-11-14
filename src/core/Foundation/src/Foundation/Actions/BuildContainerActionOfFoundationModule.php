@@ -21,8 +21,6 @@ class BuildContainerActionOfFoundationModule
             'htmlScript' => 'Module\Foundation\Actions\Helper\HtmlScriptAction',
             'htmlLink'   => 'Module\Foundation\Actions\Helper\HtmlLinkAction',
 
-            'parseRequestData' => 'Module\Foundation\Actions\ParseRequestData',
-
             # Data Actions
             'HomeInfo'      => 'Module\Foundation\Actions\HomeInfo',
         );
