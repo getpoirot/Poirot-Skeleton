@@ -60,9 +60,14 @@ abstract class aAction
                 $callable = $this->services()->get($action);
                 return call_user_func_array($callable, $args);
             }
-        } catch (\Exception $e) { }
+        } catch (\Exception $e) {
+            throw $e;
+        }
         
-        trigger_error('Call to undefined method '.__CLASS__.'::'.$method.'()', E_USER_ERROR);
+        trigger_error(
+            sprintf('Call to undefined method from Action: (%s).', $action)
+            , E_USER_ERROR
+        );
     }
 
     /**

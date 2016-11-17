@@ -1,16 +1,13 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Module\Foundation\Actions\aAction;
-
 // TODO Script/Link Both Extend Something Like ObjectCollection, Reduce Code Clone
+// TODO To String Items When Its needed; indeed we can store just arrays of attached script
 
 class HtmlScriptAction 
-    extends aAction
 {
     /** @var string Current Script Section */
     protected $_currSection;
-
     /** @var array Attached Scripts */
     protected $scripts = array(
         // 'section' => [],
@@ -43,6 +40,7 @@ class HtmlScriptAction
         'language',
         'src',
     );
+
 
     /**
      * Invoke HtmlScript
@@ -83,7 +81,6 @@ class HtmlScriptAction
         );
 
         $this->_insertScriptStr($this->_itemToString($item), $offset);
-
         return $this;
     }
 
@@ -111,8 +108,21 @@ class HtmlScriptAction
         );
 
         $this->_insertScriptStr($this->_itemToString($item), $offset);
-
         return $this;
+    }
+
+    /**
+     * Render Attached Scripts
+     *
+     * @return string
+     */
+    function __toString()
+    {
+        $scripts = (isset($this->scripts[$this->_currSection]))
+            ? $this->scripts[$this->_currSection]
+            : array();
+
+        return implode("\r\n", $scripts);
     }
 
     /**
@@ -127,29 +137,20 @@ class HtmlScriptAction
     function hasAttached($scrStr)
     {
         $duplicate = false;
-        foreach(array_keys($this->scripts) as $section) {
-            $duplicate |= $this->_hasAttached__equalSrc($section, $scrStr);
+        foreach($this->scripts as $section) {
+            foreach ($section as $item) {
+                $duplicate |= $item === $scrStr;
 
-            if ($duplicate)
-                break;
+                if ($duplicate)
+                    break;
+            }
         }
 
         return $duplicate;
     }
 
-    /**
-     * Render Attached Scripts
-     *
-     * @return string
-     */
-    function __toString()
-    {
-        $scripts = (isset($this->scripts[$this->_currSection]))
-            ? $this->scripts[$this->_currSection]
-            : array();
 
-        return implode('\r\n', $scripts);
-    }
+    // ..
 
     /**
      * Add Script To List
@@ -162,7 +163,6 @@ class HtmlScriptAction
         if ($this->hasAttached($scrStr))
             return;
 
-
         if (!array_key_exists($this->_currSection, $this->scripts))
             $this->scripts[$this->_currSection] = array();
 
@@ -171,11 +171,19 @@ class HtmlScriptAction
 
     protected function _insertIntoPosArray(&$array, $element, $offset)
     {
+        if ($offset === null)
+            // Append element to scripts at the end.
+            return $array[] = $element;
+
+        if (!is_int($offset))
+            throw new \Exception(sprintf('Invalid Offset Given (%s).', \Poirot\Std\flatten($offset)));
+
         // [1, 2, x, 4, 5, 6] ---> before [1, 2], after [4, 5, 6]
         $beforeOffsetPart = array_slice($array, 0, $offset);
         $afterOffsetPart  = array_slice($array, $offset);
         # insert element in offset
         $beforeOffsetPart = $beforeOffsetPart + array($offset => $element);
+
         # glue them back
         $array = array_merge($beforeOffsetPart , $afterOffsetPart);
         arsort($array);
@@ -257,26 +265,5 @@ class HtmlScriptAction
     protected function _isArbitraryAttributesAllowed()
     {
         return $this->_arbitraryAttributes;
-    }
-
-    /**
-     * Find duplicate scripts in sections by src
-     *
-     * @param $section
-     * @param $scrStr
-     *
-     * @return bool
-     */
-    protected function _hasAttached__equalSrc($section, $scrStr)
-    {
-        foreach ($section as $item) {
-            $pattern = '/src=(["\'])(.*?)\1/';
-
-            if(preg_match($pattern, $item, $matches) >= 0)
-                if (substr_count($scrStr, $matches[2]) > 0)
-                    return true;
-        }
-
-        return false;
     }
 }

@@ -1,12 +1,9 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Module\Foundation\Actions\aAction;
-
 // TODO Script/Link Both Extend Something Like ObjectCollection, Reduce Code Clone
 
 class HtmlLinkAction 
-    extends aAction
 {
     /**
      * the link is inserted in the head section.
