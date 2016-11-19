@@ -7,6 +7,7 @@ use Poirot\Ioc\Interfaces\iContainer;
 use Poirot\Ioc\Interfaces\Respec\iServicesAware;
 use Poirot\Ioc\Interfaces\Respec\iServicesProvider;
 
+
 abstract class aAction
     implements iServicesAware
     , iServicesProvider
@@ -53,13 +54,23 @@ abstract class aAction
     function __call($method, $args)
     {
         try {
-            # Nested Neighbor Actions
+            $callable = null;
+
+            # Nested Neighbor Actions From Module:
             $root   = '/module/'.$this->_getModuleName();
             $action = $root.'/actions/'.$method;
-            if ($this->services()->has($action)) {
+            if ($this->services()->has($action))
                 $callable = $this->services()->get($action);
-                return call_user_func_array($callable, $args);
+
+            # Neighbor Action From Services Path:
+            if (!$callable) {
+                $action = $this->services()->getPath().'/'.$method;
+                if ($this->services()->has($action))
+                    $callable = $this->services()->get($action);
             }
+
+            return call_user_func_array($callable, $args);
+
         } catch (\Exception $e) {
             throw $e;
         }
@@ -82,6 +93,17 @@ abstract class aAction
         return $s;
     }
 
+    /**
+     * Retrieve Facade From Module Namespace
+     *
+     * @return Container
+     */
+    function Facade()
+    {
+        $facade = '/module/'.$this->_getModuleName();
+        $s      = $this->services()->get($facade);
+        return $s;
+    }
 
     // Implement iCService
 
@@ -118,8 +140,10 @@ abstract class aAction
 
         $path   = $this->services()->getPath();
         $exPath = explode('/', $path);
+        if (!$exPath[1] === 'module')
+            throw new \Exception("Module Container Structure is Unknown By Actions. given: ($path).");
 
-        $moduleName = $exPath[count($exPath)-2];
+        $moduleName = $exPath[2];
         return $this->_currModule = $moduleName;
     }
 }
