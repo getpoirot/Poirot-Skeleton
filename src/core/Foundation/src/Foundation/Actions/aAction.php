@@ -69,12 +69,25 @@ abstract class aAction
                     $callable = $this->services()->get($action);
             }
 
-            return call_user_func_array($callable, $args);
+            # From Nested Level One Of Container
+            if (!$callable) {
+                $service = $this->services();
+                foreach ($service->listNested() as $nested) {
+                    $nContainer = $service->from($nested);
+                    if ($nContainer->has($method)) {
+                        $callable = $nContainer->get($method);
+                        break;
+                    }
+                }
+            }
 
         } catch (\Exception $e) {
             throw $e;
         }
-        
+
+        if ($callable)
+            return call_user_func_array($callable, $args);
+
         trigger_error(
             sprintf('Call to undefined method from Action: (%s).', $action)
             , E_USER_ERROR
