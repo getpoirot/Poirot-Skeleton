@@ -168,8 +168,9 @@ class Module implements iSapiModule
             /** @var LoaderNamespaceStack $resolver */
             $resolver = $viewModelResolver->loader('Poirot\Loader\LoaderNamespaceStack');
             $resolver->with(array(
-                    'main/home' => __DIR__. '/../../view/main/home',
-                    'partial'   => __DIR__.'/../../view/partial',
+                    'main/' => __DIR__. '/../../view/main/',
+                    'partial/'   => __DIR__.'/../../view/partial',
+                    'error/'   => __DIR__.'/../../view/error',
                 ));
 
             # Register Routes:
