@@ -4,8 +4,13 @@ namespace Module\Foundation\Actions\Helper;
 use Module\Foundation\Actions\aAction;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
 use Poirot\Application\Sapi\Server\Http\BuildHttpSapiServices;
+use Poirot\Http\Interfaces\iHttpRequest;
+use Poirot\Http\Psr\ServerRequestBridgeInPsr;
 use Poirot\Router\Interfaces\iRoute;
+use Poirot\Router\Interfaces\iRouterStack;
 use Poirot\Router\RouterStack;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\UriInterface;
 
 class UrlAction 
     extends aAction
@@ -22,11 +27,14 @@ class UrlAction
     /**
      * Generates an url given the name of a route
      *
-     * @inheritdoc
+     * @param null|string  $routeName              If not given use current matched route name
+     * @param array        $params                 Route Assemble Params
+     * @param bool         $preserveCurrentRequest Use current request query params?!!
      *
      * @return mixed
+     * @throws \Exception
      */
-    function __invoke($routeName = null, $params = array())
+    function __invoke($routeName = null, $params = array(), $preserveCurrentRequest = false)
     {
         if ($this->_router === null )
             throw new \RuntimeException('No RouteStackInterface instance provided');
@@ -43,18 +51,36 @@ class UrlAction
                 , ($routeName === null) ? 'MatchedRoute' : $routeName
             ));
 
-        $this->_c__lastInvokedRouter = array($router, $params);
+        $this->_c__lastInvokedRouter = array($router, $params, $preserveCurrentRequest);
 
         return $this;
     }
 
+    /**
+     * Assemble Route as URI
+     *
+     * @return UriInterface
+     */
     function uri()
     {
         // TODO using internal cache
         $router = $this->_c__lastInvokedRouter[0];
-        $params = $this->_c__lastInvokedRouter[1];
+        /** @var iRouterStack $router */
+        if ($params = $this->_c__lastInvokedRouter[1])
+            $uri = $router->assemble($params);
+        else
+            $uri = $router->assemble();
 
-        return $router->assemble($params);
+        if ($preserve = $this->_c__lastInvokedRouter[2]) {
+            $request = $this->_getRequest();
+            $request = $request->getRequestTarget();
+            if ($query = parse_url($request, PHP_URL_QUERY))
+                $uri = \Poirot\Psr7\modifyUri($uri, array(
+                    'query' => $query
+                ));
+        }
+
+        return $uri;
     }
 
     /**
@@ -66,11 +92,8 @@ class UrlAction
         if ($this->_routeMatch)
             return $this->_routeMatch;
 
-        // TODO fresh because route (RSegment) manipulate meta DataFiled and must be reset
-        $request = $this->_sContainer->from('/')->fresh(BuildHttpSapiServices::SERVICE_NAME_REQUEST);
-        $router  = $this->_router;
-
-        $this->_routeMatch = $router->match($request);
+        $router            = $this->_router;
+        $this->_routeMatch = $router->match($this->_getRequest());
         return $this->_routeMatch;
     }
 
@@ -111,5 +134,16 @@ class UrlAction
         $this->_routeMatch = $routeMatch;
         return $this;
     }
+
+
+    // ..
+
+    /**
+     * @return RequestInterface
+     */
+    function _getRequest()
+    {
+        $request = $this->services()->from('/')->get(BuildHttpSapiServices::SERVICE_NAME_REQUEST);
+        return new ServerRequestBridgeInPsr($request);
+    }
 }
- 
