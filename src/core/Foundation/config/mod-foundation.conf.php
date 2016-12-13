@@ -1,8 +1,14 @@
 <?php
 // TODO by this considered that themes always exists within www that seems ok when not using asset-manager
+
 $themesFolder = trim(str_replace(PT_DIR_WWW, '', PT_DIR_THEME_DEFAULT), '/');
 
 return array(
+    Poirot\Application\Sapi\Server\Http\Service\ServiceRouter::CONF_KEY
+    => array(
+        'base_url' => null,
+    ),
+
     // Path Helper Action Options
     \Module\Foundation\Actions\Helper\PathService::CONF_KEY
     => array(
