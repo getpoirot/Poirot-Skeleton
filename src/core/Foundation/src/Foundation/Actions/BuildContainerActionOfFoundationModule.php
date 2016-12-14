@@ -9,19 +9,20 @@ class BuildContainerActionOfFoundationModule
     protected $services
         = array(
             ## Helpers
-            'view'   => 'Module\Foundation\Actions\Helper\ViewService',
-            'config' => 'Module\Foundation\Actions\Helper\ConfigAction',
+            'view'         => 'Module\Foundation\Actions\Helper\ViewService',
+            'config'       => 'Module\Foundation\Actions\Helper\ConfigAction',
 
-            'url'    => 'Module\Foundation\Actions\Helper\UrlService',
-            'path'   => 'Module\Foundation\Actions\Helper\PathService',
+            'url'          => 'Module\Foundation\Actions\Helper\UrlService',
+            'path'         => 'Module\Foundation\Actions\Helper\PathService',
 
-            'cycle'  => 'Module\Foundation\Actions\Helper\CycleAction',
+            'flashMessage' => 'Module\Foundation\Actions\Helper\FlashMessageAction',
+            'cycle'        => 'Module\Foundation\Actions\Helper\CycleAction',
 
             # Html Tag Helpers
-            'htmlScript' => 'Module\Foundation\Actions\Helper\HtmlScriptAction',
-            'htmlLink'   => 'Module\Foundation\Actions\Helper\HtmlLinkAction',
+            'htmlScript'   => 'Module\Foundation\Actions\Helper\HtmlScriptAction',
+            'htmlLink'     => 'Module\Foundation\Actions\Helper\HtmlLinkAction',
 
             # Data Actions
-            'HomeInfo'      => 'Module\Foundation\Actions\HomeInfo',
+            'HomeInfo'     => 'Module\Foundation\Actions\HomeInfo',
         );
 }

@@ -9,13 +9,14 @@ use Poirot\Std\Struct\DataEntity;
 use Poirot\View\ViewModel\RendererPhp;
 
 /**
- * @method DataEntity                                         config($key = null)
- * @method \Module\Foundation\Actions\Helper\ViewAction       view($template = null, $variables = null)
- * @method \Module\Foundation\Actions\Helper\UrlAction        url($routeName = null, $params = [], $preserveCurrentRequest = false)
- * @method \Module\Foundation\Actions\Helper\PathAction       path($arg = null)
- * @method \Module\Foundation\Actions\Helper\CycleAction      cycle($action = null, $steps = 1, $reset = true)
- * @method \Module\Foundation\Actions\Helper\HtmlLinkAction   htmlLink($section = 'inline')
- * @method \Module\Foundation\Actions\Helper\HtmlScriptAction htmlScript($section = 'inline')
+ * @method DataEntity                                           config($key = null)
+ * @method \Module\Foundation\Actions\Helper\ViewAction         view($template = null, $variables = null)
+ * @method \Module\Foundation\Actions\Helper\UrlAction          url($routeName = null, $params = [], $preserveCurrentRequest = false)
+ * @method \Module\Foundation\Actions\Helper\PathAction         path($arg = null)
+ * @method \Module\Foundation\Actions\Helper\CycleAction        cycle($action = null, $steps = 1, $reset = true)
+ * @method \Module\Foundation\Actions\Helper\FlashMessageAction flashMessage($messageNamespace = 'default')
+ * @method \Module\Foundation\Actions\Helper\HtmlLinkAction     htmlLink($section = 'inline')
+ * @method \Module\Foundation\Actions\Helper\HtmlScriptAction   htmlScript($section = 'inline')
  */
 class ViewModelRenderer
     extends RendererPhp
