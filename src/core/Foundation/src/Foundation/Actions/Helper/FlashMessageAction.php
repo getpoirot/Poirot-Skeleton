@@ -119,7 +119,7 @@ class FlashMessageAction
             if ($type !== null && $qType != $type)
                 continue;
 
-            $return[$qType][] = $qTypeMessages;
+            $return[$qType] = $qTypeMessages;
             unset($quMess[$qType]);
         }
 
