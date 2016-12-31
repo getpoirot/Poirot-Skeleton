@@ -17,6 +17,7 @@ use Poirot\View\ViewModel\RendererPhp;
  * @method \Module\Foundation\Actions\Helper\FlashMessageAction flashMessage($messageNamespace = 'default')
  * @method \Module\Foundation\Actions\Helper\HtmlLinkAction     htmlLink($section = 'inline')
  * @method \Module\Foundation\Actions\Helper\HtmlScriptAction   htmlScript($section = 'inline')
+ * @method \Module\Foundation\Actions\Helper\HtmlHeadTitle      htmlHeadTitle($title = null)
  */
 class ViewModelRenderer
     extends RendererPhp
