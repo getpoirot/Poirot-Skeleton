@@ -27,6 +27,10 @@ class UrlAction
     /**
      * Generates an url given the name of a route
      *
+     * - if given route name cause to resolve to currently route match,
+     *   the route object has matched parameters from route injected.
+     *
+     *
      * @param null|string  $routeName              If not given use current matched route name
      * @param array        $params                 Route Assemble Params
      * @param bool         $preserveCurrentRequest Use current request query params?!!
@@ -51,8 +55,12 @@ class UrlAction
                 , ($routeName === null) ? 'MatchedRoute' : $routeName
             ));
 
-        $this->_c__lastInvokedRouter = array($router, $params, $preserveCurrentRequest);
+        $router = clone $router;
+        if (!$preserveCurrentRequest)
+            // clean current route injected params
+            $router->params()->clean();
 
+        $this->_c__lastInvokedRouter = array($router, $params, $preserveCurrentRequest);
         return $this;
     }
 
