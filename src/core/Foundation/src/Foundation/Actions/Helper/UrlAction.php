@@ -56,9 +56,8 @@ class UrlAction
             ));
 
         $router = clone $router;
-        if (!$preserveCurrentRequest)
-            // clean current route injected params
-            $router->params()->clean();
+        // TODO now disabled until routes clone params going well
+        // @see aRoute __clone
 
         $this->_c__lastInvokedRouter = array($router, $params, $preserveCurrentRequest);
         return $this;
