@@ -11,6 +11,7 @@ use Poirot\Router\RouterStack;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\UriInterface;
 
+// TODO Ability to generate Absolute URL(server prefixed); http://server/path/to/res
 
 class UrlAction 
     extends aAction
