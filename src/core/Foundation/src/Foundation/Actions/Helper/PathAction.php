@@ -1,9 +1,9 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-use Module\Foundation\Actions\aAction;
 use Poirot\Std\ConfigurableSetter;
 use Poirot\Std\Struct\DataEntity;
+
 
 class PathAction 
     extends ConfigurableSetter
@@ -33,7 +33,7 @@ class PathAction
      * - path('$user/path/uri')
      *
      * - path($uriOrName, ['var' => 'value'])
-     * @see PathAction::_assemble
+     * @see PathAction::assemble
      *
      * @param null $arg
      *
@@ -65,7 +65,7 @@ class PathAction
         array_unshift($funcArgs, $uri); ### we want uri as first argument
         ## assemble($uri, ..arguments)
         $assembledUri = call_user_func_array(
-            array($this, '_assemble')
+            array($this, 'assemble')
             , $funcArgs
         );
 
@@ -76,26 +76,7 @@ class PathAction
 
         return $this;
     }
-
-    /**
-     * Set key/value pair of paths and Uri
-     *
-     * @param array $paths
-     *
-     * @throws \Exception
-     * @return $this
-     */
-    function setPaths(array $paths)
-    {
-        if (!empty($paths) && array_values($paths) == $paths)
-            throw new \Exception('Paths Must Be Associated Array.');
-
-        foreach ($paths as $name => $uri)
-            $this->setPath($name, $uri);
-
-        return $this;
-    }
-
+    
     /**
      * Set path uri alias
      *
@@ -160,7 +141,47 @@ class PathAction
         return $this->paths;
     }
 
-    function params()
+    
+    // Options:
+
+    /**
+     * Set key/value pair of paths and Uri
+     *
+     * @param array $paths
+     *
+     * @throws \Exception
+     * @return $this
+     */
+    function setPaths(array $paths)
+    {
+        if (!empty($paths) && array_values($paths) == $paths)
+            throw new \Exception('Paths Must Be Associated Array.');
+
+        foreach ($paths as $name => $uri)
+            $this->setPath($name, $uri);
+
+        return $this;
+    }
+
+    /**
+     * Set Params Options
+     *
+     * @param array|\Traversable $params
+     * 
+     * @return $this
+     */
+    function setVariables($params)
+    {
+        $this->variables()->import($params);
+        return $this;
+    }
+    
+    /**
+     * Variables Bind With Paths
+     * 
+     * @return DataEntity
+     */
+    function variables()
     {
         if (!$this->params)
             $this->params = new DataEntity;
@@ -202,7 +223,7 @@ class PathAction
      * @throws \Exception
      * @return mixed
      */
-    protected function _assemble($uri, array $vars = array())
+    function assemble($uri, array $vars = array())
     {
         if (!empty($vars) && array_values($vars) == $vars)
             throw new \Exception('Variable Arrays Must Be Associated.');
@@ -217,7 +238,7 @@ class PathAction
             // we don't have any variable in uri
             return $uri;
 
-        $vars = array_merge(\Poirot\Std\cast($this->params())->toArray(), $vars);
+        $vars = array_merge(\Poirot\Std\cast($this->variables())->toArray(), $vars);
 
         // correct order of variables
         // 'path' => 'ValuablePath' TO 0 => 'ValuablePath'
@@ -264,5 +285,41 @@ class PathAction
     protected function _normalizeName($name)
     {
         return strtolower((string) $name);
+    }
+    
+    
+    // ..
+
+    /**
+     * Load Build Options From Given Resource
+     *
+     * - usually it used in cases that we have to support
+     *   more than once configure situation
+     *   [code:]
+     *     Configurable->with(Configurable::withOf(path\to\file.conf))
+     *   [code]
+     *
+     *
+     * @param array|mixed $optionsResource
+     * @param array       $_
+     *        usually pass as argument into ::with if self instanced
+     *
+     * @throws \InvalidArgumentException if resource not supported
+     * @return array
+     */
+    static function parseWith($optionsResource, array $_ = null)
+    {
+        if (!static::isConfigurableWith($optionsResource))
+            throw new \InvalidArgumentException(sprintf(
+                'Invalid Configuration Resource provided; given: (%s).'
+                , \Poirot\Std\flatten($optionsResource)
+            ));
+
+        // ..
+
+        if ($optionsResource instanceof \Traversable)
+            $optionsResource = \Poirot\Std\cast($optionsResource)->toArray(null, true);
+        
+        return $optionsResource;
     }
 }

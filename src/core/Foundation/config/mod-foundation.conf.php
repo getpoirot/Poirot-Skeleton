@@ -6,14 +6,19 @@ $themesFolder = trim(str_replace(PT_DIR_WWW, '', PT_DIR_THEME_DEFAULT), '/');
 return array(
     Poirot\Application\Sapi\Server\Http\Service\ServiceRouter::CONF_KEY
     => array(
-        'base_url' => null,
+        // router stack name; this name will prefixed to route names
+        // exp. main/home
+        'route_name' => 'main',
     ),
 
     // Path Helper Action Options
     \Module\Foundation\Actions\Helper\PathService::CONF_KEY
     => array(
         'paths' => array(
-            'app-assets' => "\$basePath/{$themesFolder}/www",
+            'app-assets' => "\$baseUrl/{$themesFolder}/www",
+        ),
+        'variables' => array(
+            'baseUrl' => ($baseurl = getenv('PT_BASEURL')) ? $baseurl : null,
         ),
     ),
 
