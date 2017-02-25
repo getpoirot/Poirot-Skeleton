@@ -8,7 +8,6 @@ use Poirot\Http\Interfaces\iHttpRequest;
 use Poirot\Ioc\Container\Service\aServiceContainer;
 use Poirot\Std\Struct\DataEntity;
 use Poirot\Std\Type\StdArray;
-use Poirot\Std\Type\StdTravers;
 
 
 class PathService
@@ -76,21 +75,21 @@ class PathService
         $request = $this->__attainHttpRequest();
         // TODO get protocol (http|https)
         $server  = 'http://'.$request->getHost();
-        return $server;
+        return rtrim($server, '/');
     }
 
     protected function _getBasePath()
     {
         $request  = $this->__attainHttpRequest();
         $basePath = PhpServer::_($request)->getBasePath();
-        return $basePath;
+        return rtrim($basePath, '/');
     }
 
     protected function _getBaseUrl()
     {
         $request  = $this->__attainHttpRequest(); 
         $basePath = PhpServer::_($request)->getBaseUrl();
-        return $basePath;
+        return rtrim($basePath, '/');
     }
     
     /** @return iHttpRequest */
