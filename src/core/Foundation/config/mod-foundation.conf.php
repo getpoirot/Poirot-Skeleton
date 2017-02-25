@@ -6,9 +6,15 @@ $themesFolder = trim(str_replace(PT_DIR_WWW, '', PT_DIR_THEME_DEFAULT), '/');
 return array(
     Poirot\Application\Sapi\Server\Http\Service\ServiceRouter::CONF_KEY
     => array(
+        // ( ! ) note: Change Config Of Router In Specific Case That You Aware Of It!!
+        //             may corrupt routing behaviour
+
         // router stack name; this name will prefixed to route names
         // exp. main/home
         'route_name' => 'main',
+        'preparator' => new \Poirot\Ioc\instance(
+            'Module\Foundation\HttpSapi\RouterStack\PreparatorHandleBaseUrl'
+        ),
     ),
 
     // Path Helper Action Options
