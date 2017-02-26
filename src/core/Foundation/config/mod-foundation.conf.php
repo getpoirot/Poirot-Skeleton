@@ -24,7 +24,8 @@ return array(
             'app-assets' => "\$baseUrl/{$themesFolder}/www",
         ),
         'variables' => array(
-            'baseUrl' => ($baseurl = getenv('PT_BASEURL')) ? $baseurl : null,
+            // force base url value; but still detect from within path service
+            # 'baseUrl' => ($baseurl = getenv('PT_BASEURL')) ? $baseurl : null,
         ),
     ),
 

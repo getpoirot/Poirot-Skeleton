@@ -50,8 +50,7 @@ class PathService
         $pathAction->variables()->set(self::PARAM_BASE_URL, function() use ($self) {
             return $self->_getBaseUrl();
         });
-
-
+         
         # build with merged config
         /** @var DataEntity $config */
         $services = $this->services();
@@ -63,6 +62,7 @@ class PathService
             return $val === null; // null values not saved
         }, true);
 
+        // Rewrite Default Variables If Config Set
         $pathAction->with($pathAction::parseWith($config));
         return $pathAction;
     }
@@ -87,8 +87,23 @@ class PathService
 
     protected function _getBaseUrl()
     {
-        $request  = $this->__attainHttpRequest(); 
-        $basePath = PhpServer::_($request)->getBaseUrl();
+        $request  = $this->__attainHttpRequest();
+        if ($request->headers()->has('X-Poirot-Base-Url')) {
+            // Retrieve Base Url From Server Proxy Passed By Header
+            $fromProxy = '';
+            /** @var iHeader $h */
+            foreach ($request->headers()->get('X-Poirot-Base-Url') as $h)
+                $fromProxy .= $h->renderValueLine();
+        } 
+        if (isset($fromProxy)) {
+            $basePath = ($fromProxy == 'no-value') ? '/' : $fromProxy;
+        } elseif (getenv('PT_BASEURL')) {
+            // From Environment Variable
+            $basePath = getenv('PT_BASEURL');
+        } else {
+            $basePath = PhpServer::_($request)->getBaseUrl();
+        }
+
         return rtrim($basePath, '/');
     }
     
