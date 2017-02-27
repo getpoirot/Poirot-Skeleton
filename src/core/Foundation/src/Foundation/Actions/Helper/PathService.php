@@ -4,6 +4,7 @@ namespace Module\Foundation\Actions\Helper;
 use Poirot\Application\Sapi\Server\Http\BuildHttpSapiServices;
 use Poirot\Http\HttpMessage\Request\Plugin\PhpServer;
 use Poirot\Http\HttpRequest;
+use Poirot\Http\Interfaces\iHeader;
 use Poirot\Http\Interfaces\iHttpRequest;
 use Poirot\Ioc\Container\Service\aServiceContainer;
 use Poirot\Std\Struct\DataEntity;
