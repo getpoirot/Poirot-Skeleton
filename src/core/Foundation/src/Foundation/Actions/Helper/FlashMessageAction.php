@@ -1,8 +1,29 @@
 <?php
 namespace Module\Foundation\Actions\Helper;
 
-
 use Poirot\Storage\Gateway\DataStorageSession;
+
+/*
+// Usage in view
+if ($this->flashMessage(RegisterPage::FLASH_MESSAGE_ID)->hasMessages())
+    echo $this->view( 'partial/flashMessage', $this->flashMessage(RegisterPage::FLASH_MESSAGE_ID)->fetchMessages() );
+
+
+// -----------------------------
+// partial/flashMessage template
+// $error, $info, .. are available as defined variables
+// $error [ 'value'=>'', 'type'=>'', 'meta'=> [] ]
+
+$messages = get_defined_vars();
+foreach ($messages as $type => $tMess) {
+    foreach ($tMess as $m) {
+        ?>
+        <script type="text/javascript">
+            toastr["<?php echo $type ?>"]("<?php echo $m['value'] ?>");
+        </script>
+    <?php }
+}
+*/
 
 class FlashMessageAction
 {
@@ -44,6 +65,65 @@ class FlashMessageAction
     }
 
 
+    // Exception:
+
+    /**
+     * Set Exception
+     *
+     * @param \Serializable $object
+     * @param null|array $meta
+     *
+     * @return $this
+     */
+    function addObject(/*\Serializable*/ $object, $type, $meta = null)
+    {
+        $this->_add('objects', $object, $type, $meta);
+        return $this;
+    }
+
+    /**
+     * See if there are any Exception?
+     *
+     * @param null $type
+     * 
+     * @return array|false
+     */
+    function hasObject($type = null)
+    {
+        $messages = $this->_session()->get($this->nameSpaceCurr, array());
+        if (!isset($messages['objects']))
+            return false;
+
+        $messages = $messages['objects'];
+        if ($type !== null) {
+            $type = strtolower($type); // normalize type
+            $messages = ( isset($messages[$type]) ) ? $messages[$type] : false;
+        }
+
+        return ($messages) ? $messages : false;
+    }
+
+    function fetchObjects($type = null)
+    {
+        $return = array();
+        if (false === $exceptions = $this->hasObject($type))
+            $exceptions = array();
+        
+        foreach ($exceptions as $qType => $qTypeMessages) {
+            // Retrieve the messages, then remove them from session
+            if ($type !== null && $qType != $type)
+                continue;
+
+            $return[$qType] = $qTypeMessages;
+            unset($exceptions[$qType]);
+        }
+
+        $this->_session()->set($this->nameSpaceCurr, $exceptions);
+        return $return;
+    }
+
+    // Messages:
+
     /**
      * Add a flash message to the session data
      *
@@ -55,32 +135,8 @@ class FlashMessageAction
      */
     function add($message, $type=self::MESSAGE_TYPE_DEFAULT, array $meta=null)
     {
-        // normalize type
-        $type = strtolower($type);
-
-        $messageQueue = $this->_getMessages();
-        if (!isset($messageQueue[$type]))
-            $messageQueue[$type] = array();
-
-        $messageQueue[$type][] = array(
-            'message' => (string) $message,
-            'type'    => $type,
-            'meta'    => $meta
-        );
-
-        $this->_session()->set($this->nameSpaceCurr, $messageQueue);
+        $this->_add('messages', $message, $type, $meta);
         return $this;
-    }
-
-    /**
-     * See if there are any error messages?
-     *
-     * @return boolean
-     *
-     */
-    function hasErrors()
-    {
-        return $this->hasMessages(self::ERROR);
     }
 
     /**
@@ -93,10 +149,13 @@ class FlashMessageAction
      */
     function hasMessages($type = null)
     {
-        $messages = $this->_session()->get($this->nameSpaceCurr);
-        if ( $type !== null && is_array($messages) ) {
-            // normalize type
-            $type = strtolower($type);
+        $messages = $this->_session()->get($this->nameSpaceCurr, array());
+        if (!isset($messages['messages']))
+            return false;
+
+        $messages = $messages['messages'];
+        if ($type !== null) {
+            $type = strtolower($type); // normalize type
             $messages = ( isset($messages[$type]) ) ? $messages[$type] : false;
         }
 
@@ -183,8 +242,47 @@ class FlashMessageAction
         return $this->add($message, self::ERROR, $meta);
     }
 
+    /**
+     * See if there are any error messages?
+     *
+     * @return boolean
+     *
+     */
+    function hasErrors()
+    {
+        return $this->hasMessages(self::ERROR);
+    }
+
 
     // ..
+
+    /**
+     * Add A Value To Section
+     *
+     * @param string     $section Namespace like "messages", "exception", "just_notify_next_page"
+     * @param mixed      $value   Value stored in session and pass trough pages till receive by target
+     * @param string     $type    Type Categorized Nested for Namespaces; like. "info", "error"
+     * @param null|array $meta    Meta Info; exp. ['color'=>'red']
+     */
+    protected function _add($section, $value, $type, $meta = null)
+    {
+        $type = strtolower($type); // normalize type
+
+        $messageQueue = $this->_session()->get($this->nameSpaceCurr, array());
+        if (!isset($messageQueue[$section]))
+            $messageQueue[$section] = array();
+
+        if (!isset($messageQueue[$section][$type]))
+            $messageQueue[$section][$type] = array();
+
+        $messageQueue[$section][$type][] = array(
+            'value' => $value,
+            'type'  => $type,
+            'meta'  => $meta
+        );
+
+        $this->_session()->set($this->nameSpaceCurr, $messageQueue);
+    }
 
     /**
      * Get Message Queue
