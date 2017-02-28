@@ -14,7 +14,7 @@ use Module\Foundation\Actions\Helper\ViewAction;
  *
  * @method static ViewAction         view($template = null, $variables = null)
  * @method static UrlAction          url($routeName = null, $params = array())
- * @method static PathAction         path($routeName = null, $params = array())
+ * @method static PathAction         path($pathString = null, $variables = array())
  * @method static FlashMessageAction flashMessage($messageNamespace = 'info')
  * @method static HtmlScriptAction   htmlScript($section = 'inline')
  * @method static HtmlLinkAction     htmlLink()
