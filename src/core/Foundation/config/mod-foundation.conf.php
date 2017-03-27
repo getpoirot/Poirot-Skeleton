@@ -15,6 +15,9 @@ return array(
         'preparator' => new \Poirot\Ioc\instance(
             'Module\Foundation\HttpSapi\RouterStack\PreparatorHandleBaseUrl'
         ),
+        'params' => array(
+            // default router params merge with matched route
+        ),
     ),
 
     // Path Helper Action Options
