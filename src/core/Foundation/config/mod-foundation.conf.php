@@ -21,7 +21,7 @@ return array(
     ),
 
     // Path Helper Action Options
-    \Module\Foundation\Actions\Helper\PathService::CONF_KEY
+    \Module\Foundation\Services\PathService::CONF_KEY
     => array(
         'paths' => array(
             'app-assets' => "\$baseUrl/{$themesFolder}/www",

@@ -6,6 +6,11 @@ use Poirot\Ioc\Container\BuildContainer;
 class BuildContainerActionOfFoundationModule
     extends BuildContainer
 {
+    protected $extends
+        = array(
+            'path' => '/module/foundation/services/path'
+        );
+
     protected $services
         = array(
             ## Helpers

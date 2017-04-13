@@ -2,7 +2,7 @@
 namespace Module\Foundation\HttpSapi\RouterStack;
 
 
-use Module\Foundation\Actions\IOC;
+use Module\Foundation\Services\PathService\PathAction;
 use Poirot\Router\Interfaces\RouterStack\iPreparatorRequest;
 use Poirot\Router\RouterStack\StripPrefix;
 use Psr\Http\Message\RequestInterface;
@@ -18,10 +18,12 @@ class PreparatorHandleBaseUrl
 
     /**
      * StripPrefix constructor.
+     *
+     * @param PathAction $path @Ioc /module/foundation/services/
      */
-    function __construct()
+    function __construct(PathAction $path)
     {
-        $baseUrl = IOC::path()->assemble('$baseUrl');
+        $baseUrl = $path->assemble('$baseUrl');
         if ($baseUrl && $baseUrl !== '/' ) {
             $this->baseUrl = $baseUrl;
             parent::__construct($baseUrl);

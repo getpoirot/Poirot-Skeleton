@@ -1,5 +1,5 @@
 <?php
-namespace Module\Foundation\Actions\Helper;
+namespace Module\Foundation\Services\PathService;
 
 use Poirot\Std\ConfigurableSetter;
 use Poirot\Std\Struct\DataEntity;

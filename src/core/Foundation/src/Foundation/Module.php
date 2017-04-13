@@ -1,6 +1,7 @@
 <?php
 namespace Module\Foundation;
 
+use Module\Foundation\Services\PathService;
 use Poirot\Application\Interfaces\iApplication;
 use Poirot\Application\Interfaces\Sapi\iSapiModule;
 use Poirot\Application\aSapi;
@@ -8,7 +9,6 @@ use Poirot\Application\Interfaces\Sapi;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
 use Poirot\Application\Sapi\Server\Http\BuildHttpSapiServices;
 use Poirot\Application\Sapi\Server\Http\ListenerDispatch;
-use Poirot\Application\SapiCli;
 use Poirot\Application\SapiHttp;
 
 use Poirot\Ioc\Container;
@@ -37,7 +37,6 @@ class Module implements iSapiModule
     , Sapi\Module\Feature\iFeatureOnPostLoadModulesGrabServices
     , Sapi\Module\Feature\iFeatureModuleMergeConfig
 {
-    /** @var SapiHttp|SapiCli */
     protected $sapi;
 
     /**
@@ -79,6 +78,8 @@ class Module implements iSapiModule
         /** @var LoaderAutoloadNamespace $nameSpaceLoader */
         $nameSpaceLoader = $baseAutoloader->loader($nameSpaceLoader);
         $nameSpaceLoader->addResource(__NAMESPACE__, __DIR__);
+
+        require __DIR__.'/_ioc-facade.php';
     }
 
     /**
@@ -116,25 +117,14 @@ class Module implements iSapiModule
     {
         // replace default renderer with Foundation Renderer including stuffs
         if ($this->sapi instanceof SapiHttp) {
-            $this->sapi->services()->set(new Container\Service\ServiceInstance(
+            $services->set(new Container\Service\ServiceInstance(
                 BuildHttpSapiServices::SERVICE_NAME_VIEW_MODEL_RENDERER
                 , new ViewModelRenderer
             ));
-        }
-    }
 
-    /**
-     * Get Action Services
-     *
-     * priority not that serious
-     *
-     * - return Array used to Build ModuleActionsContainer
-     *
-     * @return array|ContainerForFeatureActions|BuildContainer|\Traversable
-     */
-    function getActions()
-    {
-        return new BuildContainerActionOfFoundationModule;
+
+            $services->set(new PathService);
+        }
     }
 
     /**
@@ -157,7 +147,7 @@ class Module implements iSapiModule
         , $router = null
         , $viewModelResolver = null
     ) {
-        if ($this->sapi instanceof SapiHttp) 
+        if ($sapi instanceof SapiHttp)
         {
             // This is Http Sapi Application
 
@@ -177,6 +167,23 @@ class Module implements iSapiModule
             $this->_setupHttpRouter($router);
         }
     }
+
+    /**
+     * Get Action Services
+     *
+     * priority: after GrabRegisteredServices
+     *
+     * - return Array used to Build ModuleActionsContainer
+     *
+     * @return array|ContainerForFeatureActions|BuildContainer|\Traversable
+     */
+    function getActions()
+    {
+        return new BuildContainerActionOfFoundationModule;
+    }
+
+
+    // ...
 
     /**
      * Setup Http Stack Router

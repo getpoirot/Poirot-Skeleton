@@ -1,6 +1,7 @@
 <?php
-namespace Module\Foundation\Actions\Helper;
+namespace Module\Foundation\Services;
 
+use Module\Foundation\Services\PathService\PathAction;
 use Poirot\Application\Sapi\Server\Http\BuildHttpSapiServices;
 use Poirot\Http\HttpMessage\Request\Plugin\PhpServer;
 use Poirot\Http\HttpRequest;
@@ -11,6 +12,12 @@ use Poirot\Std\Struct\DataEntity;
 use Poirot\Std\Type\StdArray;
 
 
+/**
+ * Detect Server Url, BasePath, BaseUrl
+ * can retrieved as a service
+ *
+ * PathAction \Module\Foundation\Services\IOC::Path()->assemble('$baseUrl');
+ */
 class PathService
     extends aServiceContainer
 {
@@ -30,7 +37,7 @@ class PathService
     /**
      * Create Service
      *
-     * @return mixed
+     * @return PathAction|callable
      */
     function newService()
     {
@@ -74,8 +81,7 @@ class PathService
     protected function _getServerUrl()
     {
         $request = $this->__attainHttpRequest();
-        // TODO get protocol (http|https)
-        $server  = 'http://'.$request->getHost();
+        $server  = $request->getProtocol().'://'.$request->getHost();
         return rtrim($server, '/');
     }
 
