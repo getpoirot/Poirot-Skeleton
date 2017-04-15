@@ -33,6 +33,7 @@ class Module implements iSapiModule
     , Sapi\Module\Feature\iFeatureModuleInitSapi
     , Sapi\Module\Feature\iFeatureModuleAutoload
     , Sapi\Module\Feature\iFeatureModuleInitServices
+    , Sapi\Module\Feature\iFeatureModuleNestServices
     , Sapi\Module\Feature\iFeatureModuleNestActions
     , Sapi\Module\Feature\iFeatureOnPostLoadModulesGrabServices
     , Sapi\Module\Feature\iFeatureModuleMergeConfig
@@ -121,10 +122,38 @@ class Module implements iSapiModule
                 BuildHttpSapiServices::SERVICE_NAME_VIEW_MODEL_RENDERER
                 , new ViewModelRenderer
             ));
-
-
-            $services->set(new PathService);
         }
+    }
+
+    /**
+     * Get Nested Module Services
+     *
+     * it can be used to manipulate other registered services by modules
+     * with passed Container instance as argument.
+     *
+     * priority not that serious
+     *
+     * @param Container $moduleContainer
+     *
+     * @return null|array|BuildContainer|\Traversable
+     */
+    function getServices(Container $moduleContainer = null)
+    {
+        $moduleContainer->set(new PathService);
+    }
+
+    /**
+     * Get Action Services
+     *
+     * priority: after GrabRegisteredServices
+     *
+     * - return Array used to Build ModuleActionsContainer
+     *
+     * @return array|ContainerForFeatureActions|BuildContainer|\Traversable
+     */
+    function getActions()
+    {
+        return new BuildContainerActionOfFoundationModule;
     }
 
     /**
@@ -167,21 +196,6 @@ class Module implements iSapiModule
             $this->_setupHttpRouter($router);
         }
     }
-
-    /**
-     * Get Action Services
-     *
-     * priority: after GrabRegisteredServices
-     *
-     * - return Array used to Build ModuleActionsContainer
-     *
-     * @return array|ContainerForFeatureActions|BuildContainer|\Traversable
-     */
-    function getActions()
-    {
-        return new BuildContainerActionOfFoundationModule;
-    }
-
 
     // ...
 

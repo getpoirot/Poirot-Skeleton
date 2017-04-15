@@ -18,7 +18,6 @@ class BuildContainerActionOfFoundationModule
             'config'        => 'Module\Foundation\Actions\Helper\ConfigAction',
 
             'url'           => 'Module\Foundation\Actions\Helper\UrlService',
-            'path'          => 'Module\Foundation\Actions\Helper\PathService',
 
             'flashMessage'  => 'Module\Foundation\Actions\Helper\FlashMessageAction',
             'cycle'         => 'Module\Foundation\Actions\Helper\CycleAction',

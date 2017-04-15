@@ -19,7 +19,7 @@ class PreparatorHandleBaseUrl
     /**
      * StripPrefix constructor.
      *
-     * @param PathAction $path @Ioc /module/foundation/services/
+     * @param PathAction $path @IoC /module/foundation/services/
      */
     function __construct(PathAction $path)
     {
