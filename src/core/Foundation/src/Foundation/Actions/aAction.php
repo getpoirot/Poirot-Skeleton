@@ -106,18 +106,6 @@ abstract class aAction
         return $s;
     }
 
-    /**
-     * Retrieve Facade From Module Namespace
-     *
-     * @return Container
-     */
-    function Facade()
-    {
-        $facade = '/module/'.$this->_getModuleName();
-        $s      = $this->services()->get($facade);
-        return $s;
-    }
-
     // Implement iCService
 
     /**
