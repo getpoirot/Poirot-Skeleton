@@ -8,11 +8,12 @@ use Poirot\Ioc\Interfaces\Respec\iServicesProvider;
 use Poirot\Std\Struct\DataEntity;
 use Poirot\View\ViewModel\RendererPhp;
 
+
 /**
  * @method DataEntity                                           config($key = null)
  * @method \Module\Foundation\Actions\Helper\ViewAction         view($template = null, $variables = null)
  * @method \Module\Foundation\Actions\Helper\UrlAction          url($routeName = null, $params = [], $preserveCurrentRequest = false)
- * @method \Module\Foundation\Actions\Helper\PathAction         path($arg = null)
+ * @method \Module\Foundation\Services\PathService\PathAction   path($arg = null)
  * @method \Module\Foundation\Actions\Helper\CycleAction        cycle($action = null, $steps = 1, $reset = true)
  * @method \Module\Foundation\Actions\Helper\FlashMessageAction flashMessage($messageNamespace = 'default')
  * @method \Module\Foundation\Actions\Helper\HtmlLinkAction     htmlLink($section = 'inline')
@@ -47,7 +48,10 @@ class ViewModelRenderer
             return parent::__call($method, $args);
 
         if (false === $foundationActions = $this->services()->from('/module/'.$this->lastActionContainer.'/actions'))
-            throw new \Exception(sprintf('Nested Action Container (%s) not exists.', $this->lastActionContainer));
+            throw new \Exception(sprintf(
+                'Nested Module Action Container (%s) not exists; While Retrieve ::%s method.'
+                , $this->lastActionContainer, $method
+            ));
 
         if ($foundationActions->has($method))
             $method = $foundationActions->get($method);
