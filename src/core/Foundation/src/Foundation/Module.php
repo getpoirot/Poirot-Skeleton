@@ -218,7 +218,7 @@ class Module implements iSapiModule
                     'match_whole' => true,
                 ),
                 'params'  => array(
-                    ListenerDispatch::CONF_KEY => function() { return array(); },
+                    ListenerDispatch::ACTIONS => function() { return array(); },
                 ),
             ),
         ));
