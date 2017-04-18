@@ -1,7 +1,10 @@
 <?php
 namespace Module\Foundation\Actions;
 
+use Poirot\Application\Interfaces\Sapi\iSapiServer;
 use Poirot\Application\Sapi\Module\ContainerForFeatureActions;
+use Poirot\Application\SapiCli;
+use Poirot\Application\SapiHttp;
 use Poirot\Ioc\Container;
 use Poirot\Ioc\Interfaces\iContainer;
 use Poirot\Ioc\Interfaces\Respec\iServicesAware;
@@ -24,11 +27,11 @@ abstract class aAction
     /**
      * Switch Another Module Actions
      *
-     * @param null $moduleName
+     * @param string $moduleName
      *
      * @return aAction
      */
-    function withModule($moduleName = null)
+    function withModule($moduleName)
     {
         $self = clone $this;
         $self->_currModule = $moduleName;
@@ -37,12 +40,35 @@ abstract class aAction
     }
 
     /**
+     * Retrieve Service From Module Namespace
+     *
+     * @return Container
+     */
+    function moduleServices()
+    {
+        $root = '/module/'.$this->_getModuleName();
+        $s    = $this->services()->from($root);
+        return $s;
+    }
+
+    /**
+     * Sapi Server
+     *
+     * @return iSapiServer|SapiHttp|SapiCli
+     */
+    function sapi()
+    {
+        $sapi = $this->services()->get('/sapi');
+        return $sapi;
+    }
+
+    /**
      * Call to neighbors module actions in container
      *
      * note: for more readability all magic calls start with
      *       upper case character.
      *
-     * - call neighbor nested actions
+     * - call neighbor nested actions (actions registered within current module)
      *   $this->Authorize()
      *
      * @param $method
@@ -94,22 +120,14 @@ abstract class aAction
         );
     }
 
-    /**
-     * Retrieve Service From Module Namespace
-     *
-     * @return Container
-     */
-    function IoC()
-    {
-        $root = '/module/'.$this->_getModuleName();
-        $s    = $this->services()->from($root);
-        return $s;
-    }
 
     // Implement iCService
 
     /**
      * Get Module Actions Container
+     *
+     * note: container nested to main container during module
+     *       loading
      *
      * @return ContainerForFeatureActions
      */
