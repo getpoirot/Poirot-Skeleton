@@ -29,7 +29,5 @@ class ResponseJson
 
         $body = json_encode($data);
         $this->setBody($body);
-
-        parent::__construct();
     }
 }

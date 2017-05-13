@@ -49,10 +49,16 @@ class Module implements iSapiModule
      *
      * @param iApplication|aSapi $sapi Application Instance
      *
+     * @return false|null False mean not setup with other module features (skip module)
      * @throws \Exception
      */
     function initialize($sapi)
     {
+        if (! $sapi instanceof SapiHttp )
+            // Sapi Is Not HTTP.
+            return false;
+
+
         // init requirements
         if (!getenv('HTTP_MOD_REWRITE'))
             throw new \RuntimeException('It seems that you don`t have "MOD_REWRITE" enabled on the server.');
