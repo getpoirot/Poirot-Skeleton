@@ -11,15 +11,16 @@ define('TIME_REQUEST_MICRO', microtime(true));
 $debug = getenv('DEBUG');
 define('DEBUG', ($debug && filter_var($debug, FILTER_VALIDATE_BOOLEAN)) ? $debug : false, false);
 
-define('DIR_SKELETON', dirname(__FILE__), false);
-define('DIR_VENDOR',       DIR_SKELETON.'/vendor', false);
+if (!defined('DIR_ROOT')) {
+    define('DIR_ROOT', dirname(__FILE__), false);
 
-// Setup autoLoading:
-if (file_exists(DIR_VENDOR.'/autoload.php'))
-    require_once DIR_VENDOR.'/autoload.php';
+    // Setup autoLoading:
+    if (file_exists(DIR_ROOT.'/vendor/autoload.php'))
+        require_once DIR_ROOT.'/vendor/autoload.php';
+}
 
-if (file_exists(DIR_VENDOR.'/poirot-autoload.php'))
-    require_once DIR_VENDOR.'/poirot-autoload.php';
+if (file_exists(__DIR__.'/vendor/poirot-autoload.php'))
+    require_once __DIR__.'/vendor/poirot-autoload.php';
 
 
 // Set environment settings:
@@ -32,12 +33,14 @@ $overrideEnvironment = (is_readable($dotEnv)) ? include_once $dotEnv : array();
 
 // Changeable Consts: (maybe defined through .env)
 
-!defined('PT_DIR_WWW') && define('PT_DIR_WWW', DIR_SKELETON, false);
+define('PT_DIR_SKELETON', __DIR__);
+
+!defined('PT_DIR_WWW') && define('PT_DIR_WWW', DIR_ROOT, false);
 !defined('PT_DIR_THEME_DEFAULT') && define('PT_DIR_THEME_DEFAULT', PT_DIR_WWW.'/theme', false);
 
 # by default application folder is in www public
 # it can be changed to any other folder like APP_DIR_WWW.'/../app-folder'
-!defined('PT_DIR_SOURCE') && define('PT_DIR_SOURCE',       DIR_SKELETON.'/src', false);
+!defined('PT_DIR_SOURCE') && define('PT_DIR_SOURCE',       PT_DIR_SKELETON.'/src', false);
 !defined('PT_DIR_CORE')   && define('PT_DIR_CORE',                PT_DIR_SOURCE.'/core', false);
 !defined('PT_DIR_CONFIG') && define('PT_DIR_CONFIG',              PT_DIR_SOURCE.'/config', false);
 !defined('PT_DIR_DATA')   && define('PT_DIR_DATA',                PT_DIR_SOURCE.'/data', false);

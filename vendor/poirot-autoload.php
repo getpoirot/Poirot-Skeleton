@@ -7,9 +7,9 @@ use Poirot\Loader\Autoloader\LoaderAutoloadNamespace;
 
 // TODO using compiled cache autoload
 
-if (!class_exists('\Poirot\Loader\Autoloader\LoaderAutoloadAggregate'))
+if (! class_exists('\Poirot\Loader\Autoloader\LoaderAutoloadAggregate') )
     // Used as base skeleton; it may also installed as composer package so the required packages is available.
-    require_once DIR_VENDOR . '/poirot/loader/' . '/Poirot/Loader/Autoloader/LoaderAutoloadAggregate.php';
+    require_once DIR_ROOT . '/vendor/poirot/loader' . '/Poirot/Loader/Autoloader/LoaderAutoloadAggregate.php';
 
 $namespaces = __DIR__.'/poirot-autoload-namespaces.php';
 $classmap   = __DIR__.'/poirot-autoload-classmap.php';

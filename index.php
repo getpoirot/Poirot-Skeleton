@@ -13,8 +13,7 @@ namespace Poirot
     require_once __DIR__.'/index.consist.php';
 
     # change cwd to the application root by default
-    chdir(__DIR__);
-    
+    chdir(DIR_ROOT);
 
     // Run the application:
     P\Std\ErrorStack::handleError(E_ERROR|E_RECOVERABLE_ERROR|E_USER_ERROR, function($error) { throw $error; });
