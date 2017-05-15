@@ -1,6 +1,9 @@
 <?php
-namespace Poirot\Application;
+namespace Poirot\Skeleton\Services;
 
+use Poirot\Application\Sapi\BuildSapi;
+use Poirot\Application\SapiCli;
+use Poirot\Application\SapiHttp;
 use Poirot\Ioc\Container\Service\aServiceContainer;
 
 
@@ -31,11 +34,14 @@ class ServiceSapiApplication
     function newService()
     {
         $setting = $this->getSetting();
+        $builder = new BuildSapi($setting);
 
-        if ($this->_isCommandLineMode())
-            $app = new SapiCli($setting);
+
+        // Give Current Container As ServiceManager To SAPI Application
+        if ( $this->_isCommandLineMode() )
+            $app = new SapiCli( $builder, $this->services() );
         else
-            $app = new SapiHttp($setting);
+            $app = new SapiHttp( $builder, $this->services() );
 
         return $app;
     }

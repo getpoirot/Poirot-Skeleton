@@ -5,7 +5,7 @@
  * - merged config will set as service with (app.config) name
  */
 
-return array(
+return [
     /**
      * @see BuildSapi
      */
@@ -15,38 +15,38 @@ return array(
          * this list used by Module Manager To Load Modules
          * @see \Poirot\Application\ModuleManager\AbstractModuleManager::loadModule
          */
-        array(
+        [
             // Enabled Base Module(s)
             'Foundation',
 
             # instance direct load module
             ## 'Application' => new Module()
-        ),
+        ],
     'module_manager' =>
-        array(
+        [
             # options setter
             /** @see Poirot\Application\Sapi\SapiModuleManagerOpts */
-            'dir_map' => array(
+            'dir_map' => [
                 # directory that application module folder exists
                 # 'myModule' => APP_DIR_APPLICATION.'/modules',
-            ),
+            ],
 
-            'modules_dir' => array(
+            'modules_dir' => [
                 # default modules directory
                 PT_DIR_CORE,
-            ),
-            'events' => array(
+                // ...
+            ],
+            'events' => [
                 /** @see \Poirot\Events\Event\BuildEvent */
                 #'listeners' => [
                    // ...
                 #],
                 #'then' => []// ...,
-            ),
-        ),
+            ],
+        ],
 
-
-    // Other Options Key Merged Into Config Service
-    // ...
-
-    'extra_config' => 'other extra configs can set like this one.'
-);
+    'default_config' => [
+        // Options Key Merged Into Config Service
+        'extra_merged_config' => 'extra',
+    ],
+];

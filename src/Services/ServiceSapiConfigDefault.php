@@ -1,7 +1,8 @@
 <?php
-namespace Poirot\Application;
+namespace Poirot\Skeleton\Services;
 
 use Poirot\Ioc\Container\Service\aServiceContainer;
+
 
 class ServiceSapiConfigDefault
     extends aServiceContainer
