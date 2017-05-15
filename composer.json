@@ -22,14 +22,9 @@
         , "poirot/std": "dev-devel"
         , "poirot/ioc": "dev-devel"
         , "poirot/application": "dev-devel"
+        , "poirot/cor-foundation": "dev-devel"
     }
     ,"require-dev": {
        "mmucklo/krumo": "^0.5.0"
     }
-    ,"repositories": [
-       { "type": "git" ,"url": "https://github.com/phPoirot/Std.git" }
-      ,{ "type": "git" ,"url": "https://github.com/phPoirot/Loader.git" }
-      ,{ "type": "git" ,"url": "https://github.com/phPoirot/IoC.git" }
-      ,{ "type": "git" ,"url": "https://github.com/phPoirot/Application.git" }
-    ]
 }

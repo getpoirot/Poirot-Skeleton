@@ -21,7 +21,7 @@ namespace Poirot
 
     # start application:
     $config = \Poirot\Config\load(PT_DIR_CONFIG.'/services');
-    $IoC    = new Container(new Container\BuildContainer($config));
+    $IoC    = new Container( new Container\BuildContainer($config) );
     IOC::GiveIoC($IoC);
 
     /** @var P\Application\SapiHttp|P\Application\SapiCli $application */
