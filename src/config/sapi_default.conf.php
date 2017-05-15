@@ -18,6 +18,7 @@ return [
         [
             // Enabled Base Module(s)
             'Foundation',
+            'HttpFoundation',
 
             # instance direct load module
             ## 'Application' => new Module()
