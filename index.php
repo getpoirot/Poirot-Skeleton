@@ -24,7 +24,7 @@ namespace Poirot
     $IoC    = new Container( new Container\BuildContainer($config) );
     IOC::GiveIoC($IoC);
 
-    /** @var P\Application\SapiHttp|P\Application\SapiCli $application */
+    /** @var P\Application\SapiHttp|P\Application\Sapi $application */
     $application = IOC::Sapi();
     $application->run();
 }

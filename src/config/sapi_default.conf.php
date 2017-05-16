@@ -19,6 +19,7 @@ return [
             // Enabled Base Module(s)
             'Foundation',
             'HttpFoundation',
+            'HttpRenderer',
 
             # instance direct load module
             ## 'Application' => new Module()

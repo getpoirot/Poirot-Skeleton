@@ -72,9 +72,12 @@ namespace Poirot
      *
      * @return bool
      */
-    function isCommandLine()
+    function isCommandLine($sapiName = null)
     {
-        return ( strpos(php_sapi_name(), 'cli') === 0 );
+        if ($sapiName === null)
+            $sapiName = php_sapi_name();
+
+        return ( strpos($sapiName, 'cli') === 0 );
     }
 }
 
