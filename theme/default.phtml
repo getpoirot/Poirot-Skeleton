@@ -1,6 +1,3 @@
-<?php
-/** @var \Module\Foundation\HttpSapi\ViewModelRenderer $this */
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +13,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="<?php echo $this->url('main/home') ?>">
+            <a class="navbar-brand" href="<?php echo \Module\HttpFoundation\Module::url('main/home') ?>">
 <!--                <img src="--><?php //echo \Module\Foundation\Module::path('www-assets') ?><!--/images/logo.png" alt="logo">-->
                 <h4>Application Platform</h4>
             </a>
