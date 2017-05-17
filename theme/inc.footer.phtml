@@ -1,6 +1,3 @@
-<?php
-/** @var \Module\Foundation\HttpSapi\ViewModelRenderer $this */
-?>
 <footer id="footer" class="midnight-blue">
     <div class="container">
         <div class="row">
@@ -17,6 +14,6 @@
     </div>
 </footer>
 
-<script src="<?php echo $this->path('www-assets') ?>/js/jquery.js"></script>
-<script src="<?php echo $this->path() ?>/js/bootstrap.min.js"></script>
-<script src="<?php echo $this->path() ?>/js/main.js"></script>
+<script src="<?php echo \Module\Foundation\Module::path('www-assets') ?>/js/jquery.js"></script>
+<script src="<?php echo \Module\Foundation\Module::path() ?>/js/bootstrap.min.js"></script>
+<script src="<?php echo \Module\Foundation\Module::path() ?>/js/main.js"></script>
