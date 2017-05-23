@@ -102,11 +102,12 @@ namespace Poirot\Config
      *
      * @param string $path file or dir path
      *
-     * @return StdArray
+     * @return StdArray|false
      */
     function load($path)
     {
-        $config = new StdArray();
+        $isLoaded = false;
+        $config   = new StdArray();
         
         $globPattern = $path;
         if (is_dir($path)) {
@@ -114,7 +115,7 @@ namespace Poirot\Config
             $globPattern = rtrim($globPattern, '/').'/*';
         }
 
-        if (!is_file($path))
+        if (! is_file($path) )
             // did not given exactly name of file
             $globPattern .= '.{,local.}conf.php';
 
@@ -132,27 +133,32 @@ namespace Poirot\Config
 
             ob_start();
             $fConf = include $filePath;
-            if (!is_array($fConf))
+            if (! is_array($fConf) )
                 throw new \RuntimeException(sprintf(
                     'Config file (%s) must provide array; given (%s).'
                     , $filePath
                     , \Poirot\Std\flatten($fConf)
                 ));
-
-            $config = $config->withMergeRecursive($fConf);
             ob_get_clean();
 
+            $config = $config->withMergeRecursive($fConf);
+
             ErrorStack::handleDone();
             ErrorStack::handleDone();
+
+            $isLoaded |= true;
         }
 
 
         # Looking in Default Config Directory
         if (dirname($path) !== PT_DIR_CONFIG) {
             $path = PT_DIR_CONFIG.'/'.ltrim(basename($path), '\\/');
-            $config    = $config->withMergeRecursive(load($path));
+            if (false !== $cnf = load($path)) {
+                $config = $config->withMergeRecursive($cnf);
+                $isLoaded |= true;
+            }
         }
 
-        return $config;
+        return ($isLoaded) ? $config : false;
     }
 }
