@@ -1,7 +1,7 @@
 <?php
 /* poirot-autoload.php @default poirot autoload */
 
-define('DIR_VENDOR', DIR_ROOT . '/vendor');
+define('DIR_VENDOR', PT_DIR_ROOT . '/vendor');
 
 
 if (! class_exists('\Poirot\Loader\Autoloader\LoaderAutoloadAggregate') )

@@ -11,12 +11,12 @@ define('TIME_REQUEST_MICRO', microtime(true));
 $debug = getenv('DEBUG');
 define('DEBUG', ($debug && filter_var($debug, FILTER_VALIDATE_BOOLEAN)) ? $debug : false, false);
 
-if (!defined('DIR_ROOT')) {
-    define('DIR_ROOT', dirname(__FILE__), false);
+if (!defined('PT_DIR_ROOT')) {
+    define('PT_DIR_ROOT', dirname(__FILE__), false);
 
     // Setup autoLoading:
-    if (file_exists(DIR_ROOT.'/vendor/autoload.php'))
-        require_once DIR_ROOT.'/vendor/autoload.php';
+    if (file_exists(PT_DIR_ROOT.'/vendor/autoload.php'))
+        require_once PT_DIR_ROOT.'/vendor/autoload.php';
 }
 
 if (file_exists(__DIR__.'/vendor/poirot-autoload.php'))
@@ -34,9 +34,6 @@ $overrideEnvironment = (is_readable($dotEnv)) ? include_once $dotEnv : array();
 // Changeable Consts: (maybe defined through .env)
 
 define('PT_DIR_SKELETON', __DIR__);
-
-!defined('PT_DIR_WWW') && define('PT_DIR_WWW', DIR_ROOT, false);
-!defined('PT_DIR_THEME_DEFAULT') && define('PT_DIR_THEME_DEFAULT', PT_DIR_WWW.'/theme', false);
 
 # by default application folder is in www public
 # it can be changed to any other folder like APP_DIR_WWW.'/../app-folder'
