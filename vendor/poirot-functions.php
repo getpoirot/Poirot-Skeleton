@@ -141,7 +141,7 @@ namespace Poirot\Config
                 ));
             ob_get_clean();
 
-            $config = $config->withMergeRecursive($fConf);
+            $config = $config->withMergeRecursive($fConf, false);
 
             ErrorStack::handleDone();
             ErrorStack::handleDone();
@@ -154,7 +154,7 @@ namespace Poirot\Config
         if (dirname($path) !== PT_DIR_CONFIG) {
             $path = PT_DIR_CONFIG.'/'.ltrim(basename($path), '\\/');
             if (false !== $cnf = load($path)) {
-                $config = $config->withMergeRecursive($cnf);
+                $config = $config->withMergeRecursive($cnf, false);
                 $isLoaded |= true;
             }
         }
