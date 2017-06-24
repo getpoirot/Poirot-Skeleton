@@ -32,7 +32,18 @@ return [
             //      or load specific modules for domain name, etc..
                 [
                     BuildContainer::INST => ServiceSapiConfigDefault::class,
-                    'setting' => \Poirot\Config\load(PT_DIR_CONFIG.'/sapi_default'),
+                    'setting' => \Poirot\Std\catchIt(
+                        function () {
+                            $config = PT_DIR_CONFIG.'/sapi_default';
+                            if ($conf = \Poirot\Config\load($config))
+                                return $conf;
+
+                            throw new \RuntimeException(sprintf(
+                                'Merged Config Named (%s) Has Error And Not Loaded.'
+                                , $config
+                            ));
+                        }
+                    ),
                 ],
         ],
 ];
