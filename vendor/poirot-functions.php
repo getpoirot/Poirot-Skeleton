@@ -151,15 +151,26 @@ namespace Poirot\Config
 
 
         # Looking in Default Config Directory
-        if (dirname($path) !== PT_DIR_CONFIG) {
-            if ( is_dir(dirname($path)) )
-                // Config within directory not in form of (oauth2client/server_credential)
-                // that loaded from subdirectory of config folder.
-                $path = basename($path);
+        $dirPath = dirname($path);
+        if (strpos($dirPath, PT_DIR_CONFIG) !== 0)
+        {
+            $name = ltrim( basename($path) , '\\/' );
 
-            $path = PT_DIR_CONFIG.'/'.ltrim($path, '\\/');
+            $cnf = false;
+            $stack = [$name];
+            $dirPath = str_replace(PT_DIR_CONFIG, '', $dirPath);
+            $dirPath = explode(DIRECTORY_SEPARATOR, ltrim($dirPath, DIRECTORY_SEPARATOR));
+            $maxDeep = 2;
+            while (false === $cnf) {
+                if ( 0 >= $maxDeep-- )
+                    break;
 
-            if (false !== $cnf = load($path)) {
+                $path = PT_DIR_CONFIG.'/'.implode('/', $stack);
+                $cnf = load($path);
+                array_unshift($stack, array_pop($dirPath));
+            }
+
+            if ($cnf) {
                 $config = $config->withMergeRecursive($cnf, false);
                 $isLoaded |= true;
             }
