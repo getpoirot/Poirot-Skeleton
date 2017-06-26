@@ -104,7 +104,7 @@ namespace Poirot\Config
      *
      * @return StdArray|false
      */
-    function load($path)
+    function load($path, $once = false)
     {
         $isLoaded = false;
         $config   = new StdArray();
@@ -152,7 +152,7 @@ namespace Poirot\Config
 
         # Looking in Default Config Directory
         $dirPath = dirname($path);
-        if (strpos($dirPath, PT_DIR_CONFIG) !== 0)
+        if (!$once && strpos($dirPath, PT_DIR_CONFIG) !== 0)
         {
             $name = ltrim( basename($path) , '\\/' );
 
@@ -166,7 +166,7 @@ namespace Poirot\Config
                     break;
 
                 $path = PT_DIR_CONFIG.'/'.implode('/', $stack);
-                $cnf = load($path);
+                $cnf = load($path, true);
                 array_unshift($stack, array_pop($dirPath));
             }
 
