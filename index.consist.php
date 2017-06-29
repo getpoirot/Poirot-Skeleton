@@ -11,17 +11,6 @@ define('TIME_REQUEST_MICRO', microtime(true));
 $debug = getenv('DEBUG');
 define('DEBUG', ($debug && filter_var($debug, FILTER_VALIDATE_BOOLEAN)) ? $debug : false, false);
 
-if (!defined('PT_DIR_ROOT')) {
-    define('PT_DIR_ROOT', dirname(__FILE__), false);
-
-    // Setup autoLoading:
-    if (file_exists(PT_DIR_ROOT.'/vendor/autoload.php'))
-        require_once PT_DIR_ROOT.'/vendor/autoload.php';
-}
-
-if (file_exists(__DIR__.'/vendor/poirot-autoload.php'))
-    require_once __DIR__.'/vendor/poirot-autoload.php';
-
 
 // Set environment settings:
 $dotEnv = __DIR__.'/.env.php';
@@ -31,8 +20,18 @@ $overrideEnvironment = (is_readable($dotEnv)) ? include_once $dotEnv : array();
     return     (defined('DEBUG') && constant('DEBUG')) ? 'dev'     : $default;
 })->apply($overrideEnvironment);
 
-// Changeable Consts: (maybe defined through .env)
 
+!defined('PT_DIR_ROOT') && define('PT_DIR_ROOT', dirname(__FILE__), false);
+
+// Setup autoLoading:
+if ( file_exists(PT_DIR_ROOT.'/vendor/autoload.php') )
+    require_once PT_DIR_ROOT.'/vendor/autoload.php';
+
+if (file_exists(__DIR__.'/vendor/poirot-autoload.php'))
+    require_once __DIR__.'/vendor/poirot-autoload.php';
+
+
+// Changeable Consts: (maybe defined through .env)
 define('PT_DIR_SKELETON', __DIR__);
 
 # by default application folder is in www public
