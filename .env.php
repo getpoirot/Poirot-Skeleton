@@ -15,5 +15,7 @@ return array(
     #    'PT_DIR_CONFIG' => ..,
     #    'PT_DIR_DATA' => ..,
     #    'PT_DIR_TMP' => ..,
+    #    'PT_SERVER_URL' => 'http://server-host/',
+    #    'PT_BASEURL' => '/sub_dir/',
     # ),
 );
