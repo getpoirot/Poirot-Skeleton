@@ -4,7 +4,7 @@ namespace Poirot
     use Poirot\View\ViewModel\RendererPhp;
 
 
-    class DecorateExceptionToHtml
+    class DecorateExceptionResponse
     {
         /** @var \Exception */
         protected $e;
@@ -27,6 +27,23 @@ namespace Poirot
         function __toString()
         {
             $e = $this->e;
+            if (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/json') {
+                $exception_code = $e->getCode();
+
+                $exRef = new \ReflectionClass($e);
+                $result = array(
+                    'status' => 'ERROR',
+                    'error'  => array(
+                        'state'   => $exRef->getShortName(),
+                        'code'    => $exception_code,
+                        'message' => $e->getMessage(),
+                    ),
+                );
+
+                header('Content-Type: application/json');
+                echo json_encode($result);
+                die;
+            }
 
             if (ob_get_level())
                 ## clean output buffer, display just error page
