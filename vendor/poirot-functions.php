@@ -40,6 +40,7 @@ namespace Poirot
                     ),
                 );
 
+                \Poirot\Http\Response\httpResponseCode(500);
                 header('Content-Type: application/json');
                 echo json_encode($result);
                 die;
