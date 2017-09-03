@@ -25,6 +25,7 @@
         , "poirot/cor-foundation": "dev-devel"
         , "poirot/cor-http_foundation": "dev-devel"
         , "poirot/cor-http_renderer": "dev-devel"
+        , "poirot/cor-cli_foundation": "dev-devel"
     }
     ,"require-dev": {
        "mmucklo/krumo": "^0.5.0"
