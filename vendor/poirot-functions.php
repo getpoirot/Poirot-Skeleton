@@ -102,6 +102,7 @@ namespace Poirot
 namespace Poirot\Config
 {
     use Poirot\Std\ErrorStack;
+    use Poirot\Std\Glob;
     use Poirot\Std\Type\StdArray;
 
     /**
@@ -137,7 +138,7 @@ namespace Poirot\Config
             // did not given exactly name of file
             $globPattern .= '.{,local.}conf.php';
 
-        foreach ( glob($globPattern, GLOB_BRACE) as $filePath ) {
+        foreach ( Glob::glob($globPattern, GLOB_BRACE) as $filePath ) {
             ErrorStack::handleException(function ($e) use ($filePath) {
                 ob_end_clean();
                 throw new \RuntimeException(

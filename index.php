@@ -24,7 +24,12 @@ namespace Poirot
     });
 
     # start application:
-    $config = \Poirot\Config\load(PT_DIR_CONFIG.'/services');
+    if (false === $config = \Poirot\Config\load(PT_DIR_CONFIG.'/services'))
+        throw new \Exception(sprintf(
+            'Cant Load IoC Services from config (%s)'
+            , PT_DIR_CONFIG.'/services'
+        ));
+
     $IoC    = new Container( new Container\BuildContainer($config) );
     IOC::GiveIoC($IoC);
 
