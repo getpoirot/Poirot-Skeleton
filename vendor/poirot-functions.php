@@ -27,6 +27,7 @@ namespace Poirot
         function __toString()
         {
             $e = $this->e;
+
             if (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/json') {
                 $exception_code = $e->getCode();
 
