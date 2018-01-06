@@ -120,6 +120,8 @@ namespace Poirot\Config
      * - then fallback into default config dir (PT_DIR_CONFIG)
      *   with basename(path) and merge loaded data
      *
+     * - PT_MULTI_SITE override configs by set env name
+     *
      * @param string $path file or dir path
      *
      * @return StdArray|false
@@ -127,10 +129,10 @@ namespace Poirot\Config
     function load($path, $once = false)
     {
         $isLoaded = false;
-        $config   = new StdArray();
+        $config   = new StdArray;
         
         $globPattern = $path;
-        if (is_dir($path)) {
+        if ( is_dir($path) ) {
             $globPattern = str_replace('\\', '/', $globPattern); // normalize path separator
             $globPattern = rtrim($globPattern, '/').'/*';
         }
@@ -170,29 +172,52 @@ namespace Poirot\Config
         }
 
 
-        # Looking in Default Config Directory
-        $dirPath = dirname($path);
-        if (!$once && strpos($dirPath, PT_DIR_CONFIG) !== 0)
-        {
-            $name = ltrim( basename($path) , '\\/' );
+        ## Looking in Default Config Directory
+        #
+        if (! $once) {
+            $fallBackDirectories = [PT_DIR_CONFIG, ];
 
-            $cnf = false;
-            $stack = [$name];
-            $dirPath = str_replace(PT_DIR_CONFIG, '', $dirPath);
-            $dirPath = explode(DIRECTORY_SEPARATOR, ltrim($dirPath, DIRECTORY_SEPARATOR));
-            $maxDeep = 2;
-            while (false === $cnf) {
-                if ( 0 >= $maxDeep-- )
-                    break;
+            // Check for multi-site config
+            //
+            if ( $siteName = getenv('PT_MULTI_SITE') )
+            {
+                $siteName = strtolower($siteName);
 
-                $path = PT_DIR_CONFIG.'/'.implode('/', $stack);
-                $cnf = load($path, true);
-                array_unshift($stack, array_pop($dirPath));
+                if ( $siteName != 'false' )
+                    array_push(
+                        $fallBackDirectories
+                        , PT_DIR_CONFIG.'/_site.'.$siteName
+                    );
             }
 
-            if ($cnf) {
-                $config = $config->withMergeRecursive($cnf, false);
-                $isLoaded |= true;
+            foreach ($fallBackDirectories as $fallBackDir)
+            {
+                $dirPath = dirname($path);
+
+                if (strpos($dirPath, $fallBackDir) !== 0)
+                {
+                    $name = ltrim( basename($path) , '\\/' );
+
+                    $cnf = false;
+                    $stack = [$name];
+                    $dirPath = realpath( str_replace($fallBackDir, '', $dirPath) );
+                    $dirPath = explode(DIRECTORY_SEPARATOR, ltrim($dirPath, DIRECTORY_SEPARATOR));
+
+                    $maxDeep = 2;
+                    while (false === $cnf) {
+                        if ( 0 >= $maxDeep-- )
+                            break;
+
+                        $tPath = $fallBackDir.'/'.implode('/', $stack);
+                        $cnf   = load($tPath, true);
+                        array_unshift($stack, array_pop($dirPath));
+                    }
+
+                    if ($cnf) {
+                        $config = $config->withMergeRecursive($cnf, false);
+                        $isLoaded |= true;
+                    }
+                }
             }
         }
 
