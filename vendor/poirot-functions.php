@@ -1,6 +1,8 @@
 <?php
 namespace Poirot
 {
+
+    use Poirot\Std\Environment\EnvServerDefault;
     use Poirot\View\ViewModel\RendererPhp;
 
 
@@ -40,6 +42,28 @@ namespace Poirot
                         'message' => $e->getMessage(),
                     ),
                 );
+
+                $isAllowDisplayExceptions = new EnvServerDefault();
+                $isAllowDisplayExceptions = $isAllowDisplayExceptions->getErrorReporting();
+
+                if ($isAllowDisplayExceptions) {
+                    do {
+                        $result = array_merge_recursive($result, array(
+                            'error' => array(
+                                '_debug_' => array(
+                                    'exception' => array(
+                                        array(
+                                            'message' => $e->getMessage(),
+                                            'class'   => get_class($e),
+                                            'file'    => $e->getFile(),
+                                            'line'    => $e->getLine(),
+                                        ),
+                                    ),
+                                ),
+                            ),
+                        ));
+                    } while ($e = $e->getPrevious());
+                }
 
                 \Poirot\Http\Response\httpResponseCode(500);
                 header('Content-Type: application/json');
