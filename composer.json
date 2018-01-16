@@ -21,6 +21,7 @@
         "poirot/loader": "dev-devel"
         , "poirot/std": "dev-devel"
         , "poirot/ioc": "dev-devel"
+        , "poirot/value-objects": "dev-devel"
         , "poirot/application": "dev-devel"
         , "poirot/cor-foundation": "dev-devel"
         , "poirot/cor-http_foundation": "dev-devel"
