@@ -1,12 +1,9 @@
 <?php
 /* poirot-autoload.php @default poirot autoload */
 
-define('DIR_VENDOR', PT_DIR_ROOT . '/vendor');
-
-
 if (! class_exists('\Poirot\Loader\Autoloader\LoaderAutoloadAggregate') )
     // Used as base skeleton; it may also installed as composer package so the required packages is available.
-    require_once DIR_VENDOR. '/poirot/loader' . '/Poirot/Loader/Autoloader/LoaderAutoloadAggregate.php';
+    require_once __DIR__. '/poirot/loader' . '/Poirot/Loader/Autoloader/LoaderAutoloadAggregate.php';
 
 
 // TODO using compiled cache autoload

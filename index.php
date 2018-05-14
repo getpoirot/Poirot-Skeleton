@@ -5,6 +5,7 @@ namespace Poirot
     use Poirot as P;
     use Poirot\Ioc\Container;
 
+
     (!defined('PHP_VERSION_ID') or PHP_VERSION_ID < 50306 )
     and exit('Needs at least PHP5.3; your current php version is ' . phpversion() . '.');
 
