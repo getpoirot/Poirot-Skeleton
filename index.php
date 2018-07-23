@@ -14,6 +14,8 @@ namespace Poirot
     P\Std\ErrorStack::handleError(E_ERROR|E_RECOVERABLE_ERROR|E_USER_ERROR, function($error) { throw $error; });
     P\Std\ErrorStack::handleException(function ($error) { echo new DecorateExceptionResponse($error); die; });
     P\Std\ErrorStack::handleException(function ($e) {
+        $exception = $e;
+
         if (PHP_SAPI == 'cli') {
             echo $e->getFile().'::'.$e->getLine().' > '.$e->getMessage()."\r\n";
             while ($e = $e->getPrevious()) {
@@ -21,7 +23,7 @@ namespace Poirot
             }
         }
 
-        throw $e; // pass it to up chain to handle
+        throw $exception; // pass it to up chain to handle
     });
 
     $application->run();
