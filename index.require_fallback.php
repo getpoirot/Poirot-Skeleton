@@ -1,4 +1,6 @@
 <?php
+## Access Application From Anywhere any Time
+# 
 namespace Poirot
 {
     use IOC;

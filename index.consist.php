@@ -9,9 +9,6 @@
 #
 define('TIME_REQUEST_MICRO', microtime(true));
 
-$debug = getenv('DEBUG');
-define('DEBUG', ($debug && filter_var($debug, FILTER_VALIDATE_BOOLEAN)) ? $debug : false, false);
-
 !defined('PT_DIR_ROOT') && define('PT_DIR_ROOT', dirname(__FILE__), false);
 
 
@@ -24,18 +21,21 @@ if ( file_exists(__DIR__.'/vendor/autoload.php') )
 require_once __DIR__.'/vendor/poirot-autoload.php';
 
 
+
 ## Set environment settings:
 #
-$dotEnv = ( file_exists(PT_DIR_ROOT.'/.env.php') )
-    ? PT_DIR_ROOT.'/.env.php'
-    : __DIR__.'/.env.php' ;
+// factory environment profile
+$dotEnv = \Poirot\Std\Environment\FactoryEnvironment::of(
+    function() {
+        return ($env_mode = getenv('PT_ENV_PROFILE')) ? $env_mode : 'default';
+    }
+);
 
-$overrideEnvironment = (is_readable($dotEnv)) ? include_once $dotEnv : array();
-\Poirot\Std\Environment\FactoryEnvironment::of(function() {
-    $default = ($env_mode = getenv('PT_ENVIRONMENT'))  ? $env_mode : 'default';
-    return     (defined('DEBUG') && constant('DEBUG')) ? 'dev'     : $default;
-})->apply($overrideEnvironment);
+// make it available through app. execution
+\Poirot\Std\Environment\FactoryEnvironment::setCurrentEnvironment($dotEnv);
 
+// apply environment system wide
+$dotEnv->apply($overrideEnvironment);
 
 
 ## Changeable Consts: (maybe defined through .env)
