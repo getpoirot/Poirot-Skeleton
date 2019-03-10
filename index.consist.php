@@ -4,6 +4,8 @@
  * - and get system folder structure and autoload
  * ! also separate application with pre-startup
  */
+use \Poirot\Std\Environment\FactoryEnvironment;
+
 
 ## Define Unchangeable Consts:
 #
@@ -17,7 +19,6 @@ define('TIME_REQUEST_MICRO', microtime(true));
 if ( file_exists(__DIR__.'/vendor/autoload.php') )
     require_once __DIR__.'/vendor/autoload.php';
 
-
 require_once __DIR__.'/vendor/poirot-autoload.php';
 
 
@@ -25,17 +26,14 @@ require_once __DIR__.'/vendor/poirot-autoload.php';
 ## Set environment settings:
 #
 // factory environment profile
-$dotEnv = \Poirot\Std\Environment\FactoryEnvironment::of(
-    function() {
-        return ($env_mode = getenv('PT_ENV_PROFILE')) ? $env_mode : 'default';
-    }
-);
-
-// make it available through app. execution
-\Poirot\Std\Environment\FactoryEnvironment::setCurrentEnvironment($dotEnv);
+$envProfile = getenv('PT_ENV_PROFILE') ?: 'default';
+$dotEnv     = FactoryEnvironment::of($envProfile);
 
 // apply environment system wide
-$dotEnv->apply($overrideEnvironment);
+$dotEnv->apply();
+
+// make it available through app. execution
+FactoryEnvironment::setCurrentEnvironment($dotEnv);
 
 
 ## Changeable Consts: (maybe defined through .env)
