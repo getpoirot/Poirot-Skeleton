@@ -4,13 +4,18 @@
  * - and get system folder structure and autoload
  * ! also separate application with pre-startup
  */
+use \Poirot\Std\Glob;
+use \Poirot\Std\Environment\FactoryEnvironment;
 
-## Define Unchangeable Consts:
+use \Poirot\Config\Reader\Aggregate;
+use \Poirot\Config\ResourceFactory;
+use \Poirot\Config\Reader\PhpArray;
+
+
+## Define Unchangeable Consts -----------------------------------------------------------------------------------------|
 #
+define('DS', DIRECTORY_SEPARATOR);
 define('TIME_REQUEST_MICRO', microtime(true));
-
-$debug = getenv('DEBUG');
-define('DEBUG', ($debug && filter_var($debug, FILTER_VALIDATE_BOOLEAN)) ? $debug : false, false);
 
 !defined('PT_DIR_ROOT') && define('PT_DIR_ROOT', dirname(__FILE__), false);
 
@@ -20,25 +25,33 @@ define('DEBUG', ($debug && filter_var($debug, FILTER_VALIDATE_BOOLEAN)) ? $debug
 if ( file_exists(__DIR__.'/vendor/autoload.php') )
     require_once __DIR__.'/vendor/autoload.php';
 
-
 require_once __DIR__.'/vendor/poirot-autoload.php';
 
 
-## Set environment settings:
+## Set environment settings -------------------------------------------------------------------------------------------|
 #
-$dotEnv = ( file_exists(PT_DIR_ROOT.'/.env.php') )
-    ? PT_DIR_ROOT.'/.env.php'
-    : __DIR__.'/.env.php' ;
+// read environment instruction from files
+// in order look for: .env | .env.local | .env.[PT_ENV] | .env.[PT_ENV] | and merge data
+$aggrConfReader = new Aggregate([]);
+$globPattern    = PT_DIR_ROOT.DS.'.env{,.local'.(($env = getenv('PT_ENV')) ? ",.$env,.$env.local" : '').'}{.php}';
+foreach ( Glob::glob($globPattern, GLOB_BRACE) as $filePath ) {
+    $aggrConfReader->addReader(
+        new PhpArray( ResourceFactory::createFromUri($filePath) )
+    );
+}
 
-$overrideEnvironment = (is_readable($dotEnv)) ? include_once $dotEnv : array();
-\Poirot\Std\Environment\FactoryEnvironment::of(function() {
-    $default = ($env_mode = getenv('PT_ENVIRONMENT'))  ? $env_mode : 'default';
-    return     (defined('DEBUG') && constant('DEBUG')) ? 'dev'     : $default;
-})->apply($overrideEnvironment);
+// factory environment profile
+$envProfile = getenv('PT_ENV_PROFILE') ?: 'default';
+$dotEnv     = FactoryEnvironment::of($envProfile, $aggrConfReader);
+
+// apply environment system wide
+$dotEnv->apply();
+
+// make it available through app. execution
+FactoryEnvironment::setCurrentEnvironment($dotEnv);
 
 
-
-## Changeable Consts: (maybe defined through .env)
+## Changeable Consts: (maybe defined through .env) --------------------------------------------------------------------|
 #
 define('PT_DIR_SKELETON', __DIR__);
 

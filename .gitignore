@@ -9,7 +9,7 @@
 build/
 nbproject
 
-composer.lock
+.env.local.php
 
 src/data/
 !src/data

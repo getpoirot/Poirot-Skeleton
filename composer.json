@@ -19,6 +19,7 @@
     }
     , "require": {
         "poirot/loader": "dev-devel"
+        , "poirot/config": "dev-devel"
         , "poirot/std": "dev-devel"
         , "poirot/ioc": "dev-devel"
         , "poirot/value-objects": "dev-devel"
@@ -33,5 +34,4 @@
     }
     , "minimum-stability": "dev"
     , "prefer-stable" : true
-
 }
