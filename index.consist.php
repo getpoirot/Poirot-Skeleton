@@ -4,11 +4,17 @@
  * - and get system folder structure and autoload
  * ! also separate application with pre-startup
  */
+use \Poirot\Std\Glob;
 use \Poirot\Std\Environment\FactoryEnvironment;
 
+use \Poirot\Config\Reader\Aggregate;
+use \Poirot\Config\ResourceFactory;
+use \Poirot\Config\Reader\PhpArray;
 
-## Define Unchangeable Consts:
+
+## Define Unchangeable Consts -----------------------------------------------------------------------------------------|
 #
+define('DS', DIRECTORY_SEPARATOR);
 define('TIME_REQUEST_MICRO', microtime(true));
 
 !defined('PT_DIR_ROOT') && define('PT_DIR_ROOT', dirname(__FILE__), false);
@@ -22,12 +28,21 @@ if ( file_exists(__DIR__.'/vendor/autoload.php') )
 require_once __DIR__.'/vendor/poirot-autoload.php';
 
 
-
-## Set environment settings:
+## Set environment settings -------------------------------------------------------------------------------------------|
 #
+// read environment instruction from files
+// in order look for: .env | .env.local | .env.[PT_ENV] | .env.[PT_ENV] | and merge data
+$aggrConfReader = new Aggregate([]);
+$globPattern    = PT_DIR_ROOT.DS.'.env{,.local'.(($env = getenv('PT_ENV')) ? ",.$env,.$env.local" : '').'}{.php}';
+foreach ( Glob::glob($globPattern, GLOB_BRACE) as $filePath ) {
+    $aggrConfReader->addReader(
+        new PhpArray( ResourceFactory::createFromUri($filePath) )
+    );
+}
+
 // factory environment profile
 $envProfile = getenv('PT_ENV_PROFILE') ?: 'default';
-$dotEnv     = FactoryEnvironment::of($envProfile);
+$dotEnv     = FactoryEnvironment::of($envProfile, $aggrConfReader);
 
 // apply environment system wide
 $dotEnv->apply();
@@ -36,7 +51,7 @@ $dotEnv->apply();
 FactoryEnvironment::setCurrentEnvironment($dotEnv);
 
 
-## Changeable Consts: (maybe defined through .env)
+## Changeable Consts: (maybe defined through .env) --------------------------------------------------------------------|
 #
 define('PT_DIR_SKELETON', __DIR__);
 
