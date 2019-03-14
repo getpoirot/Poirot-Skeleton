@@ -167,6 +167,9 @@ namespace Poirot\Config
         $isLoaded = false;
         $config   = new StdArray;
 
+
+        // TODO remove code clone of fallback from here
+
         if (strpos($path, rtrim( PT_DIR_CONFIG_INITIAL , '\\/' )) !== 0) {
             // First try too load on initial system directory
             $fallBackDirectories = [rtrim( PT_DIR_CONFIG_INITIAL , '\\/' ), ];
@@ -259,7 +262,7 @@ namespace Poirot\Config
 
         ## Looking in Default Config Directory
         #
-        // TODO here ..............
+        // TODO maybe PT_DIR_CONFIG is same as PT_DIR_CONFIG_INITIAL so must skipped
 
         if (! $once) {
             $fallBackDirectories = [rtrim( PT_DIR_CONFIG, '\\/' ), ];
