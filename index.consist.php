@@ -17,6 +17,10 @@ use \Poirot\Config\Reader\PhpArray;
 define('DS', DIRECTORY_SEPARATOR);
 define('TIME_REQUEST_MICRO', microtime(true));
 
+define('PT_DIR_SKELETON', __DIR__);
+define('PT_DIR_CONFIG_INITIAL', __DIR__.DS.'config'); // initial system pre-config unchangable but can overrided
+
+
 !defined('PT_DIR_ROOT') && define('PT_DIR_ROOT', dirname(__FILE__), false);
 
 
@@ -53,14 +57,12 @@ FactoryEnvironment::setCurrentEnvironment($dotEnv);
 
 ## Changeable Consts: (maybe defined through .env) --------------------------------------------------------------------|
 #
-define('PT_DIR_SKELETON', __DIR__);
-
 // by default application folder is in www public
 // it can be changed to any other folder like APP_DIR_WWW.'/../app-folder'
+!defined('PT_DIR_CONFIG') && define('PT_DIR_CONFIG',       PT_DIR_SKELETON.'/config', false);
+!defined('PT_DIR_DATA')   && define('PT_DIR_DATA',         PT_DIR_SKELETON.'/data', false);
+!defined('PT_DIR_TMP')    && define('PT_DIR_TMP',              PT_DIR_DATA.'/tmp', false);
 !defined('PT_DIR_SOURCE') && define('PT_DIR_SOURCE',       PT_DIR_SKELETON.'/src', false);
-!defined('PT_DIR_CORE')   && define('PT_DIR_CORE',                PT_DIR_SOURCE.'/core', false);
-!defined('PT_DIR_CONFIG') && define('PT_DIR_CONFIG',              PT_DIR_SOURCE.'/config', false);
-!defined('PT_DIR_DATA')   && define('PT_DIR_DATA',                PT_DIR_SOURCE.'/data', false);
-!defined('PT_DIR_TMP')    && define('PT_DIR_TMP',                    PT_DIR_DATA.'/tmp', false);
+!defined('PT_DIR_CORE')   && define('PT_DIR_CORE',             PT_DIR_SOURCE.'/core', false);
 
 !defined('PT_DIR_VENDOR') && define('PT_DIR_VENDOR',       PT_DIR_ROOT.'/vendor', false);

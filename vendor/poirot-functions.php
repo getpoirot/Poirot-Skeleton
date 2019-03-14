@@ -127,8 +127,10 @@ namespace Poirot
 namespace Poirot\Config
 {
     use Poirot\Std\ErrorStack;
+    use function Poirot\Std\generateShuffleCode;
     use Poirot\Std\Glob;
     use Poirot\Std\Type\StdArray;
+    use Poirot\Std\Type\StdString;
 
     /**
      * Load Config Files From Given Directory
@@ -144,21 +146,80 @@ namespace Poirot\Config
      * - then fallback into default config dir (PT_DIR_CONFIG)
      *   with basename(path) and merge loaded data
      *
-     * - PT_MULTI_SITE override configs by set env name
+     * - PT_SITE_NAME override configs by set env name
      *
      * @param string $path file or dir path
      *
      * @return StdArray|false
      */
-    function load($path, $once = false)
+    function load($path, $once = false, $raceHash = null)
     {
+        static $RACE_CHECK_HASH;
+
+        if (null == $RACE_CHECK_HASH)
+            // fresh load call
+            $RACE_CHECK_HASH = generateShuffleCode();
+
+        elseif($raceHash !== $RACE_CHECK_HASH)
+            throw new \RuntimeException('Conflict while loading config; another process interupt corent one');
+
+
         $isLoaded = false;
         $config   = new StdArray;
-        
+
+        if (strpos($path, rtrim( PT_DIR_CONFIG_INITIAL , '\\/' )) !== 0) {
+            // First try too load on initial system directory
+            $fallBackDirectories = [rtrim( PT_DIR_CONFIG_INITIAL , '\\/' ), ];
+
+            // Check for multi-site config
+            //
+            if ( $siteName = getenv('PT_SITE_NAME') )
+            {
+                $siteName = strtolower($siteName);
+
+                if ( $siteName != 'false' )
+                    array_push(
+                        $fallBackDirectories
+                        , StdString::safeJoin(DS, PT_DIR_CONFIG, '_site', $siteName)
+                    );
+            }
+
+            foreach ($fallBackDirectories as $fallBackDir)
+            {
+                $dirPath = dirname($path);
+
+                if (strpos($dirPath, $fallBackDir) !== 0)
+                {
+                    $name = ltrim( basename($path) , '\\/' );
+
+                    $cnf = false;
+                    $stack = [$name];
+                    $dirPath = realpath( str_replace($fallBackDir, '', $dirPath) );
+                    $dirPath = explode(DS, ltrim($dirPath, DS));
+
+                    $maxDeep = 2;
+                    while (false === $cnf) {
+                        if ( 0 >= $maxDeep-- )
+                            break;
+
+                        $tPath = StdString::safeJoin(DS, ...array_merge([$fallBackDir], $stack));
+                        $cnf   = load($tPath, true, $RACE_CHECK_HASH);
+                        array_unshift($stack, array_pop($dirPath));
+                    }
+
+                    if ($cnf) {
+                        $config = $config->withMergeRecursive($cnf, false);
+                        $isLoaded |= true;
+                    }
+                }
+            }
+        }
+
+
         $globPattern = $path;
         if ( is_dir($path) ) {
             $globPattern = str_replace('\\', '/', $globPattern); // normalize path separator
-            $globPattern = rtrim($globPattern, '/').'/*';
+            $globPattern = rtrim($globPattern, DS).DS.'*';
         }
 
         if (! is_file($path) )
@@ -198,19 +259,21 @@ namespace Poirot\Config
 
         ## Looking in Default Config Directory
         #
+        // TODO here ..............
+
         if (! $once) {
-            $fallBackDirectories = [PT_DIR_CONFIG, ];
+            $fallBackDirectories = [rtrim( PT_DIR_CONFIG, '\\/' ), ];
 
             // Check for multi-site config
             //
-            if ( $siteName = getenv('PT_MULTI_SITE') )
+            if ( $siteName = getenv('PT_SITE_NAME') )
             {
                 $siteName = strtolower($siteName);
 
                 if ( $siteName != 'false' )
                     array_push(
                         $fallBackDirectories
-                        , PT_DIR_CONFIG.'/_site.'.$siteName
+                        , StdString::safeJoin(DS, PT_DIR_CONFIG, '_site', $siteName)
                     );
             }
 
@@ -233,7 +296,7 @@ namespace Poirot\Config
                             break;
 
                         $tPath = $fallBackDir.'/'.implode('/', $stack);
-                        $cnf   = load($tPath, true);
+                        $cnf   = load($tPath, true, $RACE_CHECK_HASH);
                         array_unshift($stack, array_pop($dirPath));
                     }
 
@@ -244,6 +307,10 @@ namespace Poirot\Config
                 }
             }
         }
+
+        if (null === $raceHash)
+            $RACE_CHECK_HASH = null;
+
 
         return ($isLoaded) ? $config : false;
     }

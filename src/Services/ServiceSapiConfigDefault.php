@@ -32,7 +32,7 @@ class ServiceSapiConfigDefault
      */
     function newService()
     {
-        $config = $this->options;
+        $config = $this->getSettings();
         return $config;
     }
 
@@ -51,8 +51,25 @@ class ServiceSapiConfigDefault
     {
         // validating data not necessary here!
         // it will pass to ServiceSapiApplication
-        
+
         $this->options = $settings;
         return $this;
+    }
+
+    function getSettings()
+    {
+        if ($this->options)
+            return $this->options;
+
+
+        $config = \Poirot\Std\Type\StdString::safeJoin(DS, PT_DIR_CONFIG, 'sapi_default');
+        if (false === $conf = \Poirot\Config\load($config))
+            throw new \RuntimeException(sprintf(
+                'Merged Config Named (%s) Has Error And Not Loaded.'
+                , $config
+            ));
+
+
+        return $conf;
     }
 }

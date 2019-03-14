@@ -24,10 +24,11 @@ namespace Poirot
 
     ## start application:
     #
-    if (false === $config = \Poirot\Config\load(PT_DIR_CONFIG.'/services'))
+    $servicesConf = P\Std\Type\StdString::safeJoin(DS, PT_DIR_CONFIG, 'services');
+    if ( false === $config = \Poirot\Config\load($servicesConf) )
         throw new \Exception(sprintf(
             'Cant Load IoC Services from config (%s)'
-            , PT_DIR_CONFIG.'/services'
+            , $servicesConf
         ));
 
     $IoC    = new Container( new Container\BuildContainer($config) );
