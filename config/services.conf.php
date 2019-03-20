@@ -4,7 +4,6 @@
  * @see \Poirot\Ioc\Container\BuildContainer
  */
 
-use Poirot\Ioc\Container\BuildContainer;
 use Poirot\Skeleton\Services\ServiceSapiApplication;
 use Poirot\Skeleton\Services\ServiceSapiConfigDefault;
 
