@@ -17,12 +17,12 @@ src/data/**
 !src/data/readme.txt
 
 # Local configuration files #
-src/config/*.local.**
-src/config/*.local.php
-src/config/*.local.conf.php
-src/config/*/*.local.**
-src/config/*/*.local.php
-src/config/*/*.local.conf.php
+config/*.local.**
+config/*.local.php
+config/*.local.conf.php
+config/*/*.local.**
+config/*/*.local.php
+config/*/*.local.conf.php
 
 # modules
 src/core/*
