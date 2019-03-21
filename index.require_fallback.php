@@ -9,7 +9,6 @@ namespace Poirot
 
     if (! defined('FALLBACK_REQUIRED_POIROT') )
         // Only Access From Fallback Call Inside Poirot Skeleton
-        //
         die();
 
 

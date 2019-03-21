@@ -48,7 +48,11 @@ class Config
     function load()
     {
         if ( $this->_isProcessingLoad() )
-            throw new \RuntimeException('Conflict while loading config; another process interrupt current one');
+            throw new \RuntimeException(sprintf(
+                'Conflict while loading config (%s); another process interrupt loading (%s).'
+                    , $this->path
+                    , static::$isProcessingLoading
+            ));
 
         $this->_setFlagProcessingLoad();
 
@@ -211,6 +215,6 @@ class Config
 
     private function _setFlagProcessingLoad(bool $flag = true)
     {
-        static::$isProcessingLoading = $flag;
+        static::$isProcessingLoading = ($flag) ? $this->path : false;
     }
 }
