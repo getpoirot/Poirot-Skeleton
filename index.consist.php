@@ -48,6 +48,7 @@ foreach ( Glob::glob($globPattern, GLOB_BRACE) as $filePath ) {
 // factory environment profile
 $envProfile = getenv('PT_ENV_PROFILE') ?: 'default';
 $dotEnv     = FactoryEnvironment::of($envProfile, $aggrConfReader);
+$dotEnv->setTarget($env); // know what env. we are on from within application if needed
 
 // apply environment system wide
 $dotEnv->apply();
