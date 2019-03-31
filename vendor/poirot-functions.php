@@ -1,114 +1,36 @@
 <?php
 namespace Poirot
 {
+    use Poirot\Application\aSapi;
 
-    use Poirot\Std\Environment\EnvServerDefault;
-    use Poirot\View\ViewModel\RendererPhp;
-
-
-    class DecorateExceptionResponse
-    {
-        /** @var \Exception */
-        protected $e;
-
+    if (! function_exists('config')) {
         /**
-         * Constructor.
-         * @param \Exception $e
-         */
-        function __construct($e)
-        {
-            if (!($e instanceof \Throwable || $e instanceof \Exception) )
-                throw new \InvalidArgumentException(sprintf(
-                    'Invalid Argument (%s) must be an \Exception or \Throwable.'
-                    , get_class($e)
-                ));
-
-            $this->e = $e;
-        }
-
-        function __toString()
-        {
-            $e = $this->e;
-
-            if (isset($_SERVER['HTTP_ACCEPT']) && $_SERVER['HTTP_ACCEPT'] == 'application/json') {
-                $exception_code = $e->getCode();
-
-                $exRef = new \ReflectionClass($e);
-                $result = array(
-                    'status' => 'ERROR',
-                    'error'  => array(
-                        'state'   => $exRef->getShortName(),
-                        'code'    => $exception_code,
-                        'message' => $e->getMessage(),
-                    ),
-                );
-
-                $isAllowDisplayExceptions = new EnvServerDefault();
-                $isAllowDisplayExceptions = $isAllowDisplayExceptions->getErrorReporting();
-
-                if ($isAllowDisplayExceptions) {
-                    do {
-                        $result = array_merge_recursive($result, array(
-                            'error' => array(
-                                '_debug_' => array(
-                                    'exception' => array(
-                                        array(
-                                            'message' => $e->getMessage(),
-                                            'class'   => get_class($e),
-                                            'file'    => $e->getFile(),
-                                            'line'    => $e->getLine(),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                        ));
-                    } while ($e = $e->getPrevious());
-                }
-
-                \Poirot\Http\Response\httpResponseCode(500);
-                header('Content-Type: application/json');
-                echo json_encode($result);
-                die;
-            }
-
-            if (ob_get_level())
-                ## clean output buffer, display just error page
-                ob_end_clean();
-
-            try {
-                return $this->toHtml();
-            } catch(\Exception $ve) {
-                ## throw exception if can't render template
-                return sprintf(
-                    'Error While Rendering Exception Into HTML!!! (%s)'
-                    , $e->getMessage()
-                );
-            }
-        }
-
-        /**
-         * Print Exception Object Error Page
+         * Get Config Values
          *
-         * @return string
-         * @throws \Throwable
+         * Argument can passed and map to config if exists [$key][$_][$__] ..
+         *
+         * @param $key
+         * @param null $_
+         *
+         * @return mixed|null
+         * @throws \Exception
          */
-        function toHtml()
+        function config($key = null, $_ = null)
         {
-            $e = $this->e;
+            /** @var aSapi $config */
+            $app = \IOC::GetIoC()->get('/sapi');
 
-            try {
-                $renderer = new RendererPhp();
-                return $renderer->capture(
-                    __DIR__ . '/../.error.page.php'
-                    , array('exception' => $e)
-                );
-            } catch(\Exception $ve) {
-                ## throw exception if can't render template
-                throw $e;
+            $config = $app->config();
+            foreach (func_get_args() as $key) {
+                if (! isset($config[$key]) )
+                    return null;
+
+                $config = $config[$key];
             }
+
+            return $config;
         }
     }
-
 
     /**
      * Is Sapi Command Line?
