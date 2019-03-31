@@ -7,6 +7,7 @@ use Poirot\Std\Type\StdArray;
 use Poirot\Std\Type\StdString;
 
 
+// TODO using Poirot\Config
 class Config
 {
     /** @var string */
