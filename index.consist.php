@@ -36,7 +36,7 @@ require_once __DIR__.'/vendor/poirot-autoload.php';
 #
 // read environment instruction from files
 // in order look for: .env | .env.local | .env.[PT_ENV] | .env.[PT_ENV] | and merge data
-$env         = getenv('PT_ENV'); // TODO --env for cli applications
+$env         = \Poirot\getEnv('PT_ENV'); // TODO --env for cli applications
 $globPattern = PT_DIR_ROOT.DS.'.env{,.local'.(($env) ? ",.$env,.$env.local" : '').'}{.php}';
 $aggrConfReader = new Aggregate([]);
 foreach ( Glob::glob($globPattern, GLOB_BRACE) as $filePath ) {
@@ -46,7 +46,7 @@ foreach ( Glob::glob($globPattern, GLOB_BRACE) as $filePath ) {
 }
 
 // factory environment profile
-$envProfile = getenv('PT_ENV_PROFILE') ?: 'default';
+$envProfile = \Poirot\getEnv('PT_ENV_PROFILE') ?: 'default';
 $dotEnv     = FactoryEnvironment::of($envProfile, $aggrConfReader);
 $dotEnv->setTarget($env); // know what env. we are on from within application if needed
 

@@ -3,6 +3,11 @@ namespace Poirot
 {
     use Poirot\Application\aSapi;
 
+    const ENV_DIR  = 'directory';
+    const ENV_BOOL = 'boolean';
+    const ENV_CSV  = 'commaseprated';
+
+
     if (! function_exists('config')) {
         /**
          * Get Config Values
@@ -30,6 +35,41 @@ namespace Poirot
 
             return $config;
         }
+    }
+
+    /**
+     * Get Environment Variable
+     *
+     * @param string     $key
+     * @param string     $typeHint
+     * @param mixed|null $typeHintOption
+     *
+     * @return string|bool|array|null
+     */
+    function getEnv(string $key = null, $typeHint = null)
+    {
+        $r = null;
+        if (array_key_exists($key, $_ENV))
+            $r = $_ENV[$key];
+        elseif (array_key_exists($key, $_SERVER))
+            $r = $_SERVER[$key];
+
+        switch ($typeHint) {
+            case ENV_BOOL:
+                $r = filter_var($r, FILTER_VALIDATE_BOOLEAN);
+                break;
+            case ENV_DIR:
+                $r = rtrim( $r , '\\/' );
+                break;
+            case ENV_CSV:
+                if (false === $delimiter = func_get_arg(2))
+                    $delimiter = ',';
+
+                $r = explode($delimiter, $r);
+                break;
+        }
+
+        return $r;
     }
 
     /**

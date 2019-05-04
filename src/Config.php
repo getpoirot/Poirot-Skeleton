@@ -141,7 +141,7 @@ class Config
             {
                 $siteName = strtolower($siteName);
 
-                if ( $siteName != 'false' ) {
+                if (! filter_var($siteName, FILTER_VALIDATE_BOOLEAN) ) {
                     $tPath = StdString::safeJoin(DS, PT_DIR_CONFIG, '_site', $siteName);
                     $cnf = $this->_loadGlobPattern($tPath);
 
