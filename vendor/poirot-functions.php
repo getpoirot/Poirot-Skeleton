@@ -2,6 +2,7 @@
 namespace Poirot
 {
     use Poirot\Application\aSapi;
+    use Poirot\Application\Interfaces\iApplication;
 
     const ENV_DIR  = 'directory';
     const ENV_BOOL = 'boolean';
@@ -23,7 +24,7 @@ namespace Poirot
         function config($key = null, $_ = null)
         {
             /** @var aSapi $config */
-            $app = \IOC::GetIoC()->get('/sapi');
+            $app = \IOC::GetIoC()->get(iApplication::class);
 
             $config = $app->config();
             foreach (func_get_args() as $key) {

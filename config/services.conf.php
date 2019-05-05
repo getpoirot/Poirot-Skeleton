@@ -3,16 +3,15 @@
  * container builder options
  * @see \Poirot\Ioc\Container\BuildContainer
  */
-
 use Poirot\Skeleton\Services\ServiceSapiApplication;
 use Poirot\Skeleton\Services\ServiceSapiConfigDefault;
+
 
 return [
     'implementations' =>
      // services interface implementation contract
         [
             'sapi'   => \Poirot\Application\Interfaces\iApplication::class,
-            'config' => \Poirot\Std\Interfaces\Struct\iDataEntity::class,
         ],
     'services' =>
         [
