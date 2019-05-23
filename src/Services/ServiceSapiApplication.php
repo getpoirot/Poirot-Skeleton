@@ -26,9 +26,8 @@ class ServiceSapiApplication
 
 
     /**
-     * Create Service
-     *
-     * @return mixed
+     * @inheritdoc
+     * @return Sapi
      */
     function newService()
     {
@@ -39,6 +38,9 @@ class ServiceSapiApplication
 
 
         $builder = new BuildSapi($setting);
+        // We inject same service that application will created on and
+        // share this as application main(root) service.
+        // also cause that this service be available through IOC::getIOC()
         $app     = new Sapi( $builder, $this->services() );
 
         return $app;
