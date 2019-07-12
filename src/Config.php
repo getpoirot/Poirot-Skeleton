@@ -87,7 +87,7 @@ class Config
 
 
         if ($preConfig = $this->_loadFromDirectories($fallBackDirectories) )
-            $config = ($config) ? $preConfig->withMergeRecursive($config) : $preConfig;
+            $config = ($config) ? $config->withMergeRecursive($preConfig) : $preConfig;
 
 
         $this->_setFlagProcessingLoad(false);
