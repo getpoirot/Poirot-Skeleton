@@ -102,6 +102,7 @@ namespace Poirot\Config
      */
     function load(string $path)
     {
+        // TODO check when main directory path not found; and found on fallback
         $configLoader = new Config($path);
         return $configLoader->load();
     }
