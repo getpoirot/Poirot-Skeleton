@@ -18,7 +18,7 @@ define('DS', DIRECTORY_SEPARATOR);
 define('TIME_REQUEST_MICRO', microtime(true));
 
 define('PT_DIR_SKELETON', __DIR__);
-define('PT_DIR_CONFIG_INITIAL', __DIR__.DS.'config'); // initial system pre-config unchangable but can overrided
+define('PT_DIR_CONFIG_INITIAL', __DIR__.DS.'config'); // initial system pre-config unchangeable but can override
 
 
 !defined('PT_DIR_ROOT') && define('PT_DIR_ROOT', dirname(__FILE__), false);
@@ -35,9 +35,10 @@ require_once __DIR__.'/vendor/poirot-autoload.php';
 ## Set environment settings -------------------------------------------------------------------------------------------|
 #
 // read environment instruction from files
-// in order look for: .env | .env.local | .env.[PT_ENV] | .env.[PT_ENV] | and merge data
-$env         = \Poirot\getEnv('PT_ENV'); // TODO --env for cli applications
-$globPattern = PT_DIR_ROOT.DS.'.env{,.local'.(($env) ? ",.$env,.$env.local" : '').'}{.php}';
+// in order look for: .env | .env.local | .env.[PT_ENV] | .env.[PT_ENV].local | and merge data
+if ($env = \Poirot\getEnv('PT_ENV')) // TODO --env for cli applications
+    $globPattern = PT_DIR_ROOT.DS.'.env{,.local'.(($env) ? ",.$env,.$env.local" : '').'}{.php}';
+
 $aggrConfReader = new Aggregate([]);
 foreach ( Glob::glob($globPattern, GLOB_BRACE) as $filePath ) {
     $aggrConfReader->addReader(

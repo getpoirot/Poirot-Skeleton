@@ -50,8 +50,15 @@ return [
             ],
         ],
 
+    /*
+     * This property specifies an array of globally accessible application parameters.
+     * Instead of using hardcoded numbers and strings everywhere in your code, it is a
+     * good practice to define them as application parameters in a single place and use
+     * the parameters in places where needed. For example, you may define the thumbnail
+     * image size as a parameter
+     */
     'default_config' => [
         // Options Key Merged Into Config Service
-        'extra_merged_config' => 'extra',
+        # 'thumbnail.size' => [128, 128],
     ],
 ];
