@@ -36,8 +36,9 @@ require_once __DIR__.'/vendor/poirot-autoload.php';
 #
 // read environment instruction from files
 // in order look for: .env | .env.local | .env.[PT_ENV] | .env.[PT_ENV].local | and merge data
-if ($env = \Poirot\getEnv('PT_ENV')) // TODO --env for cli applications
-    $globPattern = PT_DIR_ROOT.DS.'.env{,.local'.(($env) ? ",.$env,.$env.local" : '').'}{.php}';
+// TODO --env for cli applications
+$env = \Poirot\getEnv('PT_ENV');
+$globPattern = PT_DIR_ROOT.DS.'.env{,.local'.(($env) ? ",.$env,.$env.local" : '').'}{.php}';
 
 $aggrConfReader = new Aggregate([]);
 foreach ( Glob::glob($globPattern, GLOB_BRACE) as $filePath ) {

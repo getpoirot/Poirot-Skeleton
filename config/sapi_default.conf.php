@@ -3,52 +3,44 @@
  * Default Sapi Application Options
  *
  * - merged config will set as service with (app.config) name
+ *
+ * @see BuildSapi
  */
-
 return [
-    /**
-     * @see BuildSapi
-     */
 
-    'modules' =>
-        /**
-         * this list used by Module Manager To Load Modules
-         * @see \Poirot\Application\ModuleManager\AbstractModuleManager::loadModule
-         */
-        [
-            // Enabled Base Module(s)
-            'Foundation',
+    'modules' => [
+        // Enabled Base Module(s)
+        'Foundation',
 
-            'HttpFoundation',
-            'HttpRenderer',
+        'HttpFoundation',
+        'HttpRenderer',
 
-            'CliFoundation',
+        'CliFoundation',
 
-            # instance direct load module
-            ## 'Application' => new Module()
+        // instance direct load module
+        # 'Application' => new Module()
+    ],
+
+    'module_manager' => [
+        # options setter
+        'dir_map' => [
+            # directory that application module folder exists
+            # 'myModule' => APP_DIR_APPLICATION.'/modules',
         ],
-    'module_manager' =>
-        [
-            # options setter
-            /** @see Poirot\Application\Sapi\SapiModuleManagerOpts */
-            'dir_map' => [
-                # directory that application module folder exists
-                # 'myModule' => APP_DIR_APPLICATION.'/modules',
-            ],
 
-            'modules_dir' => [
-                # default modules directory
-                PT_DIR_CORE,
-                // ...
-            ],
-            'events' => [
-                /** @see \Poirot\Events\Event\BuildEvent */
-                #'listeners' => [
-                   // ...
-                #],
-                #'then' => []// ...,
-            ],
+        'modules_dir' => [
+            # default modules directory
+            PT_DIR_CORE,
+            // ...
         ],
+        'events' => [
+            /** @see \Poirot\Events\Event\BuildEvent */
+            #'listeners' => [
+            // ...
+            #],
+            #'then' => []// ...,
+        ],
+    ],
 
     /*
      * This property specifies an array of globally accessible application parameters.

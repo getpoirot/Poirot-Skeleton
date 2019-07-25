@@ -76,14 +76,16 @@ namespace Poirot
     /**
      * Is Sapi Command Line?
      *
+     * @param null|string $sapiName
+     *
      * @return bool
      */
-    function isCommandLine($sapiName = null)
+    function isCommandLine(?string $sapiName = null)
     {
         if ($sapiName === null)
             $sapiName = php_sapi_name();
 
-        return ( strpos($sapiName, 'cli') === 0 );
+        return $sapiName == 'cli';
     }
 }
 
