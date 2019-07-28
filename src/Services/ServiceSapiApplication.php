@@ -3,45 +3,41 @@ namespace Poirot\Skeleton\Services;
 
 use Poirot\Application\Sapi\BuildSapi;
 use Poirot\Application\Sapi;
+use Poirot\Application\SapiCli;
+use Poirot\Application\SapiHttp;
 use Poirot\Ioc\Container\Service\aServiceContainer;
+use function Poirot\isCommandLine;
 
 
 class ServiceSapiApplication
     extends aServiceContainer
 {
-    /** @var string Service Name */
     protected $name = 'sapi'; // default service name
-
-    /**
-     * Indicate to allow overriding service
-     * with another service
-     *
-     * @var boolean
-     */
     protected $allowOverride = true;
-
-    // setters
 
     protected $setting;
 
 
     /**
      * @inheritdoc
+     *
      * @return Sapi
+     * @throws \Exception
      */
     function newService()
     {
         $setting = $this->getSetting();
         // Give Current Container As ServiceManager To SAPI Application
-        if (! $this->_isCommandLineMode() )
-            VOID; // maybe default modules
-
-
-        $builder = new BuildSapi($setting);
         // We inject same service that application will created on and
         // share this as application main(root) service.
         // also cause that this service be available through IOC::getIOC()
-        $app     = new Sapi( $builder, $this->services() );
+        if ( isCommandLine() ) {
+            $app = new SapiCli( new BuildSapi($setting), $this->services() );
+            $app->setEnabledModules(['Foundation', 'CliFoundation', ]);
+        } else {
+            $app = new SapiHttp( new BuildSapi($setting), $this->services() );
+            $app->setEnabledModules(['Foundation', 'HttpFoundation', 'HttpRenderer', ]);
+        }
 
         return $app;
     }
@@ -71,6 +67,7 @@ class ServiceSapiApplication
      * Get Config
      *
      * @return \Traversable|array
+     * @throws \Exception
      */
     function getSetting()
     {
@@ -78,9 +75,10 @@ class ServiceSapiApplication
 
         if (is_string($setting)) {
             ## it is service
-            if (!$this->services()->has($setting))
+            if (! $this->services()->has($setting) )
                 throw new \InvalidArgumentException(sprintf(
                     'Service with name (%s) defined as Sapi Config but not found.'
+                    , $setting
                 ));
 
             $services = $this->services();
@@ -88,13 +86,5 @@ class ServiceSapiApplication
         }
 
         return $setting;
-    }
-
-
-    // ...
-
-    protected function _isCommandLineMode()
-    {
-        return ( strpos(php_sapi_name(), 'cli') === 0 );
     }
 }

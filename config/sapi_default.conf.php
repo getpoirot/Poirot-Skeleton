@@ -9,14 +9,18 @@
 return [
 
     'modules' => [
-        // Enabled Base Module(s)
-        'Foundation',
+        // Enabled Default Module(s)
+        #'Foundation',
 
-        'HttpFoundation',
-        'HttpRenderer',
+        /** @see \Poirot\Skeleton\Services\ServiceSapiApplication */
+        ## SapiHttp
+        #'HttpFoundation',
+        #'HttpRenderer',
 
-        'CliFoundation',
+        ## SapiCLI
+        #'CliFoundation',
 
+        // modules also can defined as early instance
         // instance direct load module
         # 'Application' => new Module()
     ],

@@ -30,7 +30,7 @@ namespace Poirot
             , $servicesConf
         ));
 
-    $IoC    = new Container( new Container\BuildContainer($config) );
+    $IoC = new Container( new Container\BuildContainer($config) );
     IOC::GiveIoC($IoC);
 
     /** @var P\Application\Sapi $application */
