@@ -33,10 +33,16 @@ class ServiceSapiApplication
         // also cause that this service be available through IOC::getIOC()
         if ( isCommandLine() ) {
             $app = new SapiCli( new BuildSapi($setting), $this->services() );
-            $app->setEnabledModules(['Foundation', 'CliFoundation', ]);
+            $app->setEnabledModules(array_merge(
+                ['Foundation', 'CliFoundation', ],
+                $app->getEnabledModules()
+            ));
         } else {
             $app = new SapiHttp( new BuildSapi($setting), $this->services() );
-            $app->setEnabledModules(['Foundation', 'HttpFoundation', 'HttpRenderer', ]);
+            $app->setEnabledModules(array_merge(
+                ['Foundation', 'HttpFoundation', 'HttpRenderer', ],
+                $app->getEnabledModules()
+            ));
         }
 
         return $app;
@@ -46,8 +52,8 @@ class ServiceSapiApplication
      * Set Sapi Config
      *
      * ! String for service attain to settings
-     * 
-     * @param string|array|\Traversable $setting 
+     *
+     * @param string|array|\Traversable $setting
      *
      * @return $this
      */
