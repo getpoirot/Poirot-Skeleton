@@ -27,11 +27,6 @@ return [
         //      or load specific modules for domain name, etc..
         'sapi.setting' => new \Poirot\Ioc\instance(
             ServiceSapiConfigDefault::class
-            /*
-            , [
-                'setting' => (array) | \Traversable
-            ]
-            */
         ),
     ],
 ];

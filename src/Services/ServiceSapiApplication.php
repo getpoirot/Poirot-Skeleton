@@ -1,7 +1,6 @@
 <?php
 namespace Poirot\Skeleton\Services;
 
-use Poirot\Application\Sapi\BuildSapi;
 use Poirot\Application\Sapi;
 use Poirot\Application\SapiCli;
 use Poirot\Application\SapiHttp;
@@ -27,25 +26,53 @@ class ServiceSapiApplication
     function newService()
     {
         $setting = $this->getSetting();
+
         // Give Current Container As ServiceManager To SAPI Application
         // We inject same service that application will created on and
         // share this as application main(root) service.
         // also cause that this service be available through IOC::getIOC()
+
+        $modules = $setting['modules'] ?? [];
         if ( isCommandLine() ) {
-            $app = new SapiCli( new BuildSapi($setting), $this->services() );
-            $app->setEnabledModules(array_merge(
+            $sapi = new SapiCli( $this->services() );
+
+            $modules = array_merge(
                 ['Foundation', 'CliFoundation', ],
-                $app->getEnabledModules()
-            ));
+                $modules
+            );
+
         } else {
-            $app = new SapiHttp( new BuildSapi($setting), $this->services() );
-            $app->setEnabledModules(array_merge(
+            $sapi = new SapiHttp( $this->services() );
+
+            $modules = array_merge(
                 ['Foundation', 'HttpFoundation', 'HttpRenderer', ],
-                $app->getEnabledModules()
+                $modules
+            );
+        }
+
+
+        ## Sapi Settings as a Builder Extension
+        #
+        $builder = $setting['sapi'] ?? [];
+        if (! empty($builder) ) {
+            $sapi->register(new Sapi\Extensions\ConfigBuilderExtension(
+                $builder
             ));
         }
 
-        return $app;
+        ## Module Manager Extension
+        #
+        $moduleManager = $setting['module_manager'] ?? [];
+        $modularExt = (new Sapi\Extensions\ModularSapiExtension)
+            ->setModules($modules)
+            ->setModuleManager(
+                new Sapi\ModuleManager($moduleManager)
+            );
+
+        $sapi->register($modularExt);
+
+
+        return $sapi;
     }
 
     /**
@@ -80,7 +107,6 @@ class ServiceSapiApplication
         $setting = $this->setting;
 
         if (is_string($setting)) {
-            ## it is service
             if (! $this->services()->has($setting) )
                 throw new \InvalidArgumentException(sprintf(
                     'Service with name (%s) defined as Sapi Config but not found.'
