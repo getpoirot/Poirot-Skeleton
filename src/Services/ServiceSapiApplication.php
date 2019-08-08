@@ -5,7 +5,6 @@ use Poirot\Application\Sapi;
 use Poirot\Application\SapiCli;
 use Poirot\Application\SapiHttp;
 use Poirot\Ioc\Container\Service\aServiceContainer;
-use function Poirot\isCommandLine;
 
 
 class ServiceSapiApplication
@@ -33,7 +32,7 @@ class ServiceSapiApplication
         // also cause that this service be available through IOC::getIOC()
 
         $modules = $setting['modules'] ?? [];
-        if ( isCommandLine() ) {
+        if ( \Poirot\isCommandLine() ) {
             $sapi = new SapiCli( $this->services() );
 
             $modules = array_merge(
